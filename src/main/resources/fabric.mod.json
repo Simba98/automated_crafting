@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "automated_crafting",
+  "version": "${version}",
+
+  "name": "Example Mod",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/supersaiyansubtlety/automated_crafting"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/automated_crafting/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.fabricmc.automated_crafting.AutomatedCrafting"
+    ],
+    "client": [
+      "net.fabricmc.automated_crafting.AutomatedCraftingClient"
+    ]
+  },
+  "mixins": [
+    "automated_crafting.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}

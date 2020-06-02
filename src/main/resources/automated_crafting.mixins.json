@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.fabricmc.automated_crafting.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "AutomatedCraftingMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
