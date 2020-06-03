@@ -4,6 +4,7 @@
   "package": "net.fabricmc.automated_crafting.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ContainerAccessor"
   ],
   "client": [
     "AutomatedCraftingMixin"

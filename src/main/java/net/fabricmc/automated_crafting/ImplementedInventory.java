@@ -16,7 +16,7 @@ public interface ImplementedInventory extends Inventory {
      * Gets the item list of this inventory.
      * Must return the same instance every time it's called.
      */
-    DefaultedList<ItemStack> getItems();
+    DefaultedList<ItemStack> getInventory();
     // Creation
     /**
      * Creates an inventory from the item list.
@@ -36,7 +36,7 @@ public interface ImplementedInventory extends Inventory {
      */
     @Override
     default int getInvSize() {
-        return getItems().size();
+        return getInventory().size();
     }
     /**
      * @return true if this inventory has only empty stacks, false otherwise
@@ -56,7 +56,7 @@ public interface ImplementedInventory extends Inventory {
      */
     @Override
     default ItemStack getInvStack(int slot) {
-        return getItems().get(slot);
+        return getInventory().get(slot);
     }
     /**
      * Takes a stack of the size from the slot.
@@ -65,7 +65,7 @@ public interface ImplementedInventory extends Inventory {
      */
     @Override
     default ItemStack takeInvStack(int slot, int count) {
-        ItemStack result = Inventories.splitStack(getItems(), slot, count);
+        ItemStack result = Inventories.splitStack(getInventory(), slot, count);
         if (!result.isEmpty()) {
             markDirty();
         }
@@ -77,7 +77,7 @@ public interface ImplementedInventory extends Inventory {
     @Override
     default ItemStack removeInvStack(int slot) {
 //        markDirty();
-        return Inventories.removeStack(getItems(), slot);
+        return Inventories.removeStack(getInventory(), slot);
     }
     /**
      * Replaces the current stack in the {@code slot} with the provided stack.
@@ -86,17 +86,17 @@ public interface ImplementedInventory extends Inventory {
      */
     @Override
     default void setInvStack(int slot, ItemStack stack) {
-        getItems().set(slot, stack);
+        getInventory().set(slot, stack);
         if (stack.getCount() > getInvMaxStackAmount()) {
             stack.setCount(getInvMaxStackAmount());
         }
     }
     /**
-     * Clears {@linkplain #getItems() the item list}}.
+     * Clears {@linkplain #getInventory() the item list}}.
      */
     @Override
     default void clear() {
-        getItems().clear();
+        getInventory().clear();
     }
     @Override
     default void markDirty() {

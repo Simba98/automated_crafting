@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.automated_crafting.AutomatedCrafting"
+      "net.fabricmc.automated_crafting.AutomatedCraftingInit"
     ],
     "client": [
-      "net.fabricmc.automated_crafting.AutomatedCraftingClient"
+      "net.fabricmc.automated_crafting.AutomatedCraftingClientInit"
     ]
   },
   "mixins": [

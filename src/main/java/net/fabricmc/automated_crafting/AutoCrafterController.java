@@ -14,12 +14,12 @@ public class AutoCrafterController extends CottonCraftingController {
 
         WGridPanel root = new WGridPanel();
         setRootPanel(root);
-        root.setSize(200, 140);
+        root.setSize(150, 140);
 
-        WItemSlot itemSlot = WItemSlot.of(blockInventory, 1, 3, 3);
+        WItemSlot itemSlot = WItemSlot.of(blockInventory, 0, 3, 3);
         root.add(itemSlot, 2, 1);
 
-        WItemSlot outputSlot = WItemSlot.of(blockInventory, 0);
+        WItemSlot outputSlot = WItemSlot.outputOf(blockInventory, 9).setModifiable(false);
         root.add(outputSlot, 6, 2);
 
         root.add(this.createPlayerInventoryPanel(), 0, 5);
