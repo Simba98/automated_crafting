@@ -1,8 +1,7 @@
-package net.fabricmc.automated_crafting;
+package net.sssubtlety.automated_crafting;
 
-import net.fabricmc.automated_crafting.mixin.ContainerAccessor;
+import net.sssubtlety.automated_crafting.mixin.ContainerAccessor;
 import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DefaultedList;

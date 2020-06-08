@@ -1,6 +1,6 @@
-package net.fabricmc.automated_crafting.mixin;
+package net.sssubtlety.automated_crafting.mixin;
 
-import net.fabricmc.automated_crafting.AutoCrafterBlockEntity;
+import net.sssubtlety.automated_crafting.AutoCrafterBlockEntity;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

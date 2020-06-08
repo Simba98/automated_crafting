@@ -15,6 +15,7 @@ repositories {
 		name = "CottonMC"
 		url = "http://server.bbkr.space:8081/artifactory/libs-release"
 	}
+	jcenter()
 }
 
 dependencies {
@@ -27,6 +28,12 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	// GUI library
 	modImplementation "io.github.cottonmc:LibGui:1.10.0+1.15.2"
+	//Config library
+	modApi "me.sargunvohra.mcmods:autoconfig1u:2.2.0"
+	//Config menu support
+	modImplementation "io.github.prospector:modmenu:1.10.2+build.32"
+	//Config GUI support
+	modApi "me.shedaniel.cloth:config-2:2.14.1"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.

@@ -3,13 +3,13 @@
   "id": "automated_crafting",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Automated Crafting",
+  "description": "Adds a simple autocrafter block. Has a simple mode and a... not simple mode. ",
   "authors": [
-    "Me!"
+    "supersaiyansubtlety"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
+    "homepage": "https://github.com/supersaiyansubtlety/automated_crafting",
     "sources": "https://github.com/supersaiyansubtlety/automated_crafting"
   },
 
@@ -19,10 +19,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.automated_crafting.AutomatedCraftingInit"
+      "net.sssubtlety.automated_crafting.AutomatedCraftingInit"
     ],
     "client": [
-      "net.fabricmc.automated_crafting.AutomatedCraftingClientInit"
+      "net.sssubtlety.automated_crafting.AutomatedCraftingClientInit"
+    ],
+    "modmenu": [
+      "net.sssubtlety.automated_crafting.AutomatedCraftingModMenuIntegration"
     ]
   },
   "mixins": [

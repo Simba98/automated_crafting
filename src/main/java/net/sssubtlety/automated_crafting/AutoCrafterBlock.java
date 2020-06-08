@@ -1,4 +1,4 @@
-package net.fabricmc.automated_crafting;
+package net.sssubtlety.automated_crafting;
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
@@ -6,12 +6,9 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
@@ -23,7 +20,6 @@ import net.minecraft.util.math.BlockPointerImpl;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Overwrite;
 
 import java.util.Random;
 

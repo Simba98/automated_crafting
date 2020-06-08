@@ -1,4 +1,4 @@
-package net.fabricmc.automated_crafting.mixin;
+package net.sssubtlety.automated_crafting.mixin;
 
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;

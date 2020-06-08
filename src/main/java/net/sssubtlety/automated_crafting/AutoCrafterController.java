@@ -1,4 +1,4 @@
-package net.fabricmc.automated_crafting;
+package net.sssubtlety.automated_crafting;
 
 import io.github.cottonmc.cotton.gui.CottonCraftingController;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;

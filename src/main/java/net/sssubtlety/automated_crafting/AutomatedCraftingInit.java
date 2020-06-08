@@ -1,10 +1,10 @@
-package net.fabricmc.automated_crafting;
+package net.sssubtlety.automated_crafting;
 
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.fabricmc.fabric.api.tools.FabricToolTags;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.block.MaterialColor;
 import net.minecraft.block.entity.BlockEntityType;
@@ -32,5 +32,8 @@ public class AutomatedCraftingInit implements ModInitializer {
 		AUTO_CRAFTER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", BlockEntityType.Builder.create(AutoCrafterBlockEntity::new, AUTO_CRAFTER).build(null));
 
 		ContainerProviderRegistry.INSTANCE.registerFactory(AutoCrafterBlock.ID, (syncId, id, player, buf) -> new AutoCrafterController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())));
+
+		//Register config class
+		AutoConfig.register(AutomatedCraftingConfig.class, GsonConfigSerializer::new);
 	}
 }

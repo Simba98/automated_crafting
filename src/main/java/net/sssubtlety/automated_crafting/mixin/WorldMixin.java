@@ -1,6 +1,6 @@
-package net.fabricmc.automated_crafting.mixin;
+package net.sssubtlety.automated_crafting.mixin;
 
-import net.fabricmc.automated_crafting.AutoCrafterBlockEntity;
+import net.sssubtlety.automated_crafting.AutoCrafterBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

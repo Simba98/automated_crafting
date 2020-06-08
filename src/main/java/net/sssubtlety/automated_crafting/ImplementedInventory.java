@@ -1,4 +1,4 @@
-package net.fabricmc.automated_crafting;
+package net.sssubtlety.automated_crafting;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;

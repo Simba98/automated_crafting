@@ -1,4 +1,4 @@
-package net.fabricmc.automated_crafting.mixin;
+package net.sssubtlety.automated_crafting.mixin;
 
 import net.minecraft.container.Container;
 import net.minecraft.container.ContainerType;

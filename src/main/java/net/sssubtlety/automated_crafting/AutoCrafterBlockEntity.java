@@ -1,6 +1,7 @@
-package net.fabricmc.automated_crafting;
+package net.sssubtlety.automated_crafting;
 
-import net.fabricmc.automated_crafting.mixin.CraftingInventoryAccessor;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,7 +22,9 @@ import java.util.LinkedList;
 public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory {
     private final CraftingInventoryWithOutput craftingInventory;
     private Recipe<CraftingInventory> recipeCache;
-    private static final boolean SIMPLE_MODE = true;
+    private static final boolean SIMPLE_MODE = AutoConfig.getConfigHolder(AutomatedCraftingConfig.class).getConfig().simpleMode;
+
+
     private static LinkedList<AutoCrafterBlockEntity> allInstances = new LinkedList<>();
 
     public AutoCrafterBlockEntity() {

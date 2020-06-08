@@ -1,6 +1,6 @@
-package net.fabricmc.automated_crafting;
+package net.sssubtlety.automated_crafting;
 
-import net.fabricmc.automated_crafting.mixin.CraftingInventoryAccessor;
+import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.minecraft.container.Container;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
