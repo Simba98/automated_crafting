@@ -8,11 +8,6 @@
           "type": "minecraft:item",
           "name": "automated_crafting:auto_crafter"
         }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
       ]
     }
   ]
