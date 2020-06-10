@@ -1,6 +1,5 @@
 package net.sssubtlety.automated_crafting;
 
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.container.Container;
@@ -19,17 +18,16 @@ import net.minecraft.util.math.Direction;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory {
+public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, AutoCrafterSharedData {
     private final CraftingInventoryWithOutput craftingInventory;
     private Recipe<CraftingInventory> recipeCache;
-    private static final boolean SIMPLE_MODE = AutoConfig.getConfigHolder(AutomatedCraftingConfig.class).getConfig().simpleMode;
 
 
     private static LinkedList<AutoCrafterBlockEntity> allInstances = new LinkedList<>();
 
     public AutoCrafterBlockEntity() {
         super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY);
-        craftingInventory = new CraftingInventoryWithOutput(AutoCrafterController.GRID_WIDTH, AutoCrafterController.GRID_HEIGHT);
+        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, SIMPLE_MODE ? 2 : 1, SIMPLE_MODE);
         recipeCache = null;
     }
 
@@ -63,9 +61,12 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         Recipe<CraftingInventory> recipe = getRecipe();//this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingInventory, this.world).orElse(null);
         if(recipe != null) {
             if(tryOutput(recipe.getOutput())) {
-                for (int iSlot = 0; iSlot < AutoCrafterController.OUTPUT_SLOT; iSlot++) {
+                for (int iSlot = SIMPLE_MODE ? getInvSize() : 0; iSlot < OUTPUT_SLOT; iSlot++) {
                     this.craftingInventory.takeInvStack(iSlot, 1);
                 }
+            }
+            else {
+                world.playLevelEvent(1001, pos, 0);
             }
         }
         else {
@@ -75,9 +76,14 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     private boolean tryOutput(ItemStack output) {
-        ItemStack oldOutput = this.getInventory().get(AutoCrafterController.OUTPUT_SLOT);
+        if (SIMPLE_MODE && !recipeCache.matches(getIsolatedInputInv(), world)) {
+            System.out.println("tryOutput found insufficient resources. ");
+
+            return false;
+        }
+        ItemStack oldOutput = this.getInventory().get(OUTPUT_SLOT);
         if(oldOutput.isEmpty()) {
-            this.getInventory().set(AutoCrafterController.OUTPUT_SLOT, output.copy());
+            this.getInventory().set(OUTPUT_SLOT, output.copy());
             return true;
         }
         else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() > oldOutput.getCount() + output.getCount()){
@@ -85,8 +91,17 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
             oldOutput.increment(output.getCount());
             return true;
         }
-        world.playLevelEvent(1001, pos, 0);
+        System.out.println("tryOutput found no space in output slot. ");
         return false;
+    }
+
+    private CraftingInventory getIsolatedInputInv() {
+        CraftingInventory tempInventory = new CraftingInventory(new InventoryContainer(0), 3, 3);
+        for(int slot = getInvSize(); slot < OUTPUT_SLOT; slot++)
+        {
+            tempInventory.setInvStack(slot - getInvSize(), getInvStackList().get(slot));
+        }
+        return tempInventory;
     }
 
     private Recipe<CraftingInventory> getRecipe() {
@@ -126,6 +141,10 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         }
     }
 
+    private void isPowered() {
+
+    }
+
     /**
      * start of SidedInventory implementations
      */
@@ -143,15 +162,18 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     @Override
     public boolean canInsertInvStack(int slot, ItemStack stack, Direction direction) {
         //nothing external can insert into output slot
-        if (slot == AutoCrafterController.OUTPUT_SLOT) {
+        if (slot == OUTPUT_SLOT) {
             return false;
         }
 
         if(SIMPLE_MODE) {
-            if(this.getInventory().get(slot).getCount() > 1) {
-                return false;
-            }
-            return !this.getInventory().get(slot).isEmpty();
+//            if(this.getInventory().get(slot).getCount() > 1) {
+//                return false;
+//            }
+//            return !this.getInventory().get(slot).isEmpty();
+
+            return slot >= getInvSize() && this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot - getInvSize()).isItemEqual(stack);
+
         }
         else {
             return this.getInventory().get(slot).isEmpty();
@@ -162,10 +184,10 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     public boolean canExtractInvStack(int slot, ItemStack stack, Direction direction) {
         //players and hoppers can take from output,
         //hoppers can't take from input slots
-//        if(slot == AutoCrafterController.OUTPUT_SLOT || direction == null) { return true; }
+//        if(slot == OUTPUT_SLOT || direction == null) { return true; }
 //        return false;
         if(SIMPLE_MODE) {
-            return slot == AutoCrafterController.OUTPUT_SLOT;
+            return slot == OUTPUT_SLOT;
         }
         else {
             return true;
@@ -198,7 +220,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
      */
     @Override
     public int getInvSize() {
-        return getInventory().size();
+        return craftingInventory.getInvSize();
     }
     /**
      * end of Inventory implementations

@@ -10,21 +10,30 @@ import net.minecraft.util.DefaultedList;
 import java.util.Iterator;
 
 public class CraftingInventoryWithOutput extends CraftingInventory {
-    public CraftingInventoryWithOutput(Container container, int width, int height) {
+    private final int invMaxStackAmount;
+    private final boolean templated;
+
+    public CraftingInventoryWithOutput(Container container, int width, int height, int outputs, int invMaxStackAmount, boolean templated) {
         super(container, width, height);
+        ((CraftingInventoryAccessor)this).setInventory(DefaultedList.ofSize((width * height * (templated ? 2 : 1)) + outputs, ItemStack.EMPTY));
+        this.invMaxStackAmount = invMaxStackAmount;
+        this.templated = templated;
     }
 
     public CraftingInventoryWithOutput(Container container, int width, int height, int outputs) {
-        super(container, width, height);
-        ((CraftingInventoryAccessor)this).setInventory(DefaultedList.ofSize(width * height + outputs, ItemStack.EMPTY));
+        this(container, width, height, outputs, 64, false);
     }
 
-    public CraftingInventoryWithOutput(int width, int height, int outputs) {
-        this(new InventoryContainer(0), width, height, outputs);
+    public CraftingInventoryWithOutput(int width, int height, int outputs, int invMaxStackAmount) {
+        this(new InventoryContainer(0), width, height, outputs, invMaxStackAmount, false);
     }
 
     public CraftingInventoryWithOutput(int width, int height) {
         this(new InventoryContainer(0), width, height, 1);
+    }
+
+    public CraftingInventoryWithOutput(int width, int height, int invMaxStackAmount, boolean templated) {
+        this(new InventoryContainer(0), width, height, 1, invMaxStackAmount, templated);
     }
 
     @Override
@@ -35,14 +44,19 @@ public class CraftingInventoryWithOutput extends CraftingInventory {
     @Override
     public void provideRecipeInputs(RecipeFinder recipeFinder) {
         System.out.println("provideRecipeInputs called");
-        Iterator var2 = ((CraftingInventoryAccessor)this).getInventory().iterator();
+        Iterator invItr = ((CraftingInventoryAccessor)this).getInventory().iterator();
 
-        if(!var2.hasNext()) { return; }
-        while(true) {
-            ItemStack itemStack = (ItemStack)var2.next();
-            if(!var2.hasNext()) { break; }
-            recipeFinder.addNormalItem(itemStack);
+        if(!invItr.hasNext()) { return; }
+
+        for (int remaining = this.getInvSize(); remaining >= 0; remaining--) {
+            recipeFinder.addNormalItem((ItemStack)invItr.next());
         }
+
         System.out.println("provideRecipeInputs' recipeFinder.size(): " + recipeFinder.idToAmountMap.size());
+    }
+
+    @Override
+    public int getInvMaxStackAmount() {
+        return invMaxStackAmount;
     }
 }
