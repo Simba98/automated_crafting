@@ -141,10 +141,6 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         }
     }
 
-    private void isPowered() {
-
-    }
-
     /**
      * start of SidedInventory implementations
      */

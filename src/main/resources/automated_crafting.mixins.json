@@ -7,7 +7,6 @@
     "ContainerAccessor",
     "CraftingInventoryAccessor",
     "MinecraftServerMixin",
-    "WItemSlotAccessor",
     "WorldMixin"
   ],
   "client": [
