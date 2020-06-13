@@ -14,7 +14,7 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/automated_crafting/icon.png",
+  "icon": "assets/automated_crafting/automated_crafting_icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -35,9 +35,9 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.15.x"
+    "minecraft": "1.15.2"
   },
   "suggests": {
-    "flamingo": "*"
+    "modmenu": "1.10.2+build.32"
   }
 }

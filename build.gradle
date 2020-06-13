@@ -3,11 +3,12 @@ plugins {
 	id 'maven-publish'
 }
 
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
 
 repositories {
@@ -25,15 +26,21 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 	// GUI library
-	modImplementation "io.github.cottonmc:LibGui:1.10.0+1.15.2"
+	modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
 	//Config library
-	modApi "me.sargunvohra.mcmods:autoconfig1u:2.2.0"
-	//Config menu support
-	modImplementation "io.github.prospector:modmenu:1.10.2+build.32"
+	modApi "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig1u_version}"
 	//Config GUI support
-	modApi "me.shedaniel.cloth:config-2:2.14.1"
+	modApi "me.shedaniel.cloth:config-2:${project.cloth_config_2_version}"
+	//Config menu support
+	modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
+
+	include "io.github.cottonmc:LibGui:${project.libgui_version}"
+	//Config library
+	include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig1u_version}"
+	//Config GUI support
+	include "me.shedaniel.cloth:config-2:${project.cloth_config_2_version}"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.

@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "automated_crafting:block/auto_crafter" }
+    "powered=false": { "model": "automated_crafting:block/auto_crafter" },
+    "powered=true": { "model": "automated_crafting:block/auto_crafter_powered" }
   }
 }

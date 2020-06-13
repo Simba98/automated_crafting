@@ -11,13 +11,11 @@ import java.util.Iterator;
 
 public class CraftingInventoryWithOutput extends CraftingInventory {
     private final int invMaxStackAmount;
-    private final boolean templated;
 
     public CraftingInventoryWithOutput(Container container, int width, int height, int outputs, int invMaxStackAmount, boolean templated) {
         super(container, width, height);
         ((CraftingInventoryAccessor)this).setInventory(DefaultedList.ofSize((width * height * (templated ? 2 : 1)) + outputs, ItemStack.EMPTY));
         this.invMaxStackAmount = invMaxStackAmount;
-        this.templated = templated;
     }
 
     public CraftingInventoryWithOutput(Container container, int width, int height, int outputs) {
@@ -34,6 +32,10 @@ public class CraftingInventoryWithOutput extends CraftingInventory {
 
     public CraftingInventoryWithOutput(int width, int height, int invMaxStackAmount, boolean templated) {
         this(new InventoryContainer(0), width, height, 1, invMaxStackAmount, templated);
+    }
+
+    public void onContentChanged() {
+        ((CraftingInventoryAccessor)this).getContainer().onContentChanged(this);
     }
 
     @Override

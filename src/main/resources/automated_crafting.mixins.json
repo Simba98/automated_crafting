@@ -9,9 +9,6 @@
     "MinecraftServerMixin",
     "WorldMixin"
   ],
-  "client": [
-    "AutomatedCraftingMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   }

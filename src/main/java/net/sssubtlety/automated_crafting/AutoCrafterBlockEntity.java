@@ -21,6 +21,7 @@ import java.util.LinkedList;
 public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, AutoCrafterSharedData {
     private final CraftingInventoryWithOutput craftingInventory;
     private Recipe<CraftingInventory> recipeCache;
+//    private final Container container = new InventoryContainer(0);
 
 
     private static LinkedList<AutoCrafterBlockEntity> allInstances = new LinkedList<>();
@@ -71,27 +72,26 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         }
         else {
             world.playLevelEvent(1001, pos, 0);
-            System.out.println("tryCraft found no valid recipe. ");
+//            System.out.println("tryCraft found no valid recipe. ");
         }
     }
 
     private boolean tryOutput(ItemStack output) {
         if (SIMPLE_MODE && !recipeCache.matches(getIsolatedInputInv(), world)) {
-            System.out.println("tryOutput found insufficient resources. ");
+//            System.out.println("tryOutput found insufficient resources. ");
 
             return false;
         }
         ItemStack oldOutput = this.getInventory().get(OUTPUT_SLOT);
-        if(oldOutput.isEmpty()) {
-            this.getInventory().set(OUTPUT_SLOT, output.copy());
+        if (oldOutput.isEmpty()) {
+            this.setInvStack(OUTPUT_SLOT, output.copy());
             return true;
-        }
-        else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() > oldOutput.getCount() + output.getCount()){
+        } else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() > oldOutput.getCount() + output.getCount()){
             //outputs are same item and output can fit in stack
             oldOutput.increment(output.getCount());
             return true;
         }
-        System.out.println("tryOutput found no space in output slot. ");
+//        System.out.println("tryOutput found no space in output slot. ");
         return false;
     }
 
@@ -107,29 +107,29 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     private Recipe<CraftingInventory> getRecipe() {
         if(recipeCache == null) {
             recipeCache = this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingInventory, this.world).orElse(null);
-            if(recipeCache == null) {
-                System.out.println("getRecipe replaced null cache with null. ");
-            } else {
-                System.out.println("getRecipe replaced null cache with new recipe for: " + recipeCache.getOutput().getItem().getTranslationKey());
-            }
+//            if(recipeCache == null) {
+//                System.out.println("getRecipe replaced null cache with null. ");
+//            } else {
+//                System.out.println("getRecipe replaced null cache with new recipe for: " + recipeCache.getOutput().getItem().getTranslationKey());
+//            }
         }
         else if(!recipeCache.matches(this.craftingInventory, world)) {
-            System.out.println("getRecipe replacing miss-matched cache recipe for: " + recipeCache.getOutput().getItem().getTranslationKey());
+//            System.out.println("getRecipe replacing miss-matched cache recipe for: " + recipeCache.getOutput().getItem().getTranslationKey());
             recipeCache = this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingInventory, this.world).orElse(null);
-            if(recipeCache == null) {
-                System.out.println("getRecipe replaced miss-matched cache with null");
-            } else {
-                System.out.println("getRecipe replaced miss-matched cache with new recipe for: " + recipeCache.getOutput().getItem().getTranslationKey());
-            }
+//            if(recipeCache == null) {
+//                System.out.println("getRecipe replaced miss-matched cache with null");
+//            } else {
+//                System.out.println("getRecipe replaced miss-matched cache with new recipe for: " + recipeCache.getOutput().getItem().getTranslationKey());
+//            }
         }
-        else {
-            System.out.println("getRecipe found cached recipe matches. ");
-        }
+//        else {
+//            System.out.println("getRecipe found cached recipe matches. ");
+//        }
         return recipeCache;
     }
 
     public static void clearRecipeCaches() {
-        System.out.println("clearRecipeCaches called with allInstances.size() = " + allInstances.size());
+//        System.out.println("clearRecipeCaches called with allInstances.size() = " + allInstances.size());
         for (Iterator<AutoCrafterBlockEntity> iterator = allInstances.iterator(); iterator.hasNext();) {
             AutoCrafterBlockEntity instance = iterator.next();
             if (instance == null) {
@@ -193,23 +193,32 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
      * end of SidedInventory implementations
      * start of LootableContainerBlockEntity implementations
      */
+    @Override
     protected DefaultedList<ItemStack> getInvStackList() {
         return this.getInventory();
     }
 
+    @Override
     protected void setInvStackList(DefaultedList<ItemStack> list) {
         ((CraftingInventoryAccessor)this.craftingInventory).setInventory(list);
     }
 
+    @Override
     protected Text getContainerName() {
         return new TranslatableText("container.dispenser", new Object[0]);
     }
 
+    @Override
     protected Container createContainer(int i, PlayerInventory playerInventory) {
         throw new IllegalStateException("Dummy method body invoked. A critical mixin failure has occurred.");
 //        return new CraftingTableContainer(i, playerInventory, BlockContext.create(world, pos));
                 //new Generic3x3Container(i, playerInventory, this);
     }
+
+//    @Override
+//    public void setInvStack(int slot, ItemStack stack) {
+//        this.craftingInventory.setInvStack(slot, stack);
+//    }
     /**
      * end of LootableContainerBlockEntity implementations
      * start of Inventory implementations

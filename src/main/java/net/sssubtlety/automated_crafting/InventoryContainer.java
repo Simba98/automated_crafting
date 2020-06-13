@@ -19,9 +19,9 @@ public class InventoryContainer extends Container {
     @Override
     public boolean canUse(PlayerEntity player) { return false; }
 
-    public DefaultedList<ItemStack> getInventory() {
-        return ((ContainerAccessor)this).getTrackedStacks();
-    }
+//    public DefaultedList<ItemStack> getInventory() {
+//        return ((ContainerAccessor)this).getTrackedStacks();
+//    }
 
     public void setInventory(DefaultedList<ItemStack> stacks) {
         ((ContainerAccessor)this).setTrackedStacks(stacks);

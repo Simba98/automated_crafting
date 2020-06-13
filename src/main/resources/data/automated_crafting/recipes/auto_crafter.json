@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#-#",
+    "#>#",
+    "#=#"
+  ],
+  "key": {
+    "-": {
+      "item": "minecraft:iron_trapdoor"
+    },
+    ">" : {
+      "item": "minecraft:comparator"
+    },
+    "=" : {
+      "item": "minecraft:smooth_stone_slab"
+    },
+    "#" : {
+      "tag": "automated_crafting:stripped_logs"
+    }
+  },
+  "result": {
+    "item": "automated_crafting:auto_crafter"
+  }
+}
