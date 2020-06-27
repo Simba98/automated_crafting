@@ -1,45 +1,48 @@
 package net.sssubtlety.automated_crafting;
 
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.CraftingScreenHandler;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.collection.DefaultedList;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
-import net.minecraft.container.Container;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeFinder;
-import net.minecraft.util.DefaultedList;
 
 import java.util.Iterator;
 
 public class CraftingInventoryWithOutput extends CraftingInventory {
     private final int invMaxStackAmount;
+    private static final CraftingScreenHandler dummyHandler = new CraftingScreenHandler(0, new PlayerInventory(null));
 
-    public CraftingInventoryWithOutput(Container container, int width, int height, int outputs, int invMaxStackAmount, boolean templated) {
-        super(container, width, height);
+    public CraftingInventoryWithOutput(ScreenHandler handler, int width, int height, int outputs, int invMaxStackAmount, boolean templated) {
+        super(handler, width, height);
         ((CraftingInventoryAccessor)this).setInventory(DefaultedList.ofSize((width * height * (templated ? 2 : 1)) + outputs, ItemStack.EMPTY));
         this.invMaxStackAmount = invMaxStackAmount;
     }
 
-    public CraftingInventoryWithOutput(Container container, int width, int height, int outputs) {
-        this(container, width, height, outputs, 64, false);
+    public CraftingInventoryWithOutput(ScreenHandler handler, int width, int height, int outputs) {
+        this(handler, width, height, outputs, 64, false);
     }
 
     public CraftingInventoryWithOutput(int width, int height, int outputs, int invMaxStackAmount) {
-        this(new InventoryContainer(0), width, height, outputs, invMaxStackAmount, false);
+        this(dummyHandler, width, height, outputs, invMaxStackAmount, false);
     }
 
     public CraftingInventoryWithOutput(int width, int height) {
-        this(new InventoryContainer(0), width, height, 1);
+        this(dummyHandler, width, height, 1);
     }
 
     public CraftingInventoryWithOutput(int width, int height, int invMaxStackAmount, boolean templated) {
-        this(new InventoryContainer(0), width, height, 1, invMaxStackAmount, templated);
+        this(dummyHandler, width, height, 1, invMaxStackAmount, templated);
     }
 
     public void onContentChanged() {
-        ((CraftingInventoryAccessor)this).getContainer().onContentChanged(this);
+        ((CraftingInventoryAccessor)this).getHandler().onContentChanged(this);
     }
 
     @Override
-    public int getInvSize() {
+    public int size() {
         return this.getWidth() * this.getHeight();
     }
 
@@ -50,7 +53,7 @@ public class CraftingInventoryWithOutput extends CraftingInventory {
 
         if(!invItr.hasNext()) { return; }
 
-        for (int remaining = this.getInvSize(); remaining >= 0; remaining--) {
+        for (int remaining = this.size(); remaining >= 0; remaining--) {
             recipeFinder.addNormalItem((ItemStack)invItr.next());
         }
 
@@ -58,7 +61,7 @@ public class CraftingInventoryWithOutput extends CraftingInventory {
     }
 
     @Override
-    public int getInvMaxStackAmount() {
+    public int getMaxCountPerStack() {
         return invMaxStackAmount;
     }
 }

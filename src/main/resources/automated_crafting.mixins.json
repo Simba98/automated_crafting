@@ -4,8 +4,8 @@
   "package": "net.sssubtlety.automated_crafting.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ContainerAccessor",
     "CraftingInventoryAccessor",
+    "CraftingScreenHandlerAccessor",
     "MinecraftServerMixin",
     "WorldMixin"
   ],

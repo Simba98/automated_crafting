@@ -8,11 +8,13 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.*;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPointerImpl;
 import net.minecraft.util.math.BlockPos;
@@ -48,12 +50,14 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) return ActionResult.CONSUME;
+//        if (world.isClient) return ActionResult.CONSUME;
+//
+//        BlockEntity be = world.getBlockEntity(pos);
+//        if (be!=null && be instanceof AutoCrafterBlockEntity) {
+//            ContainerProviderRegistry.INSTANCE.openContainer(AutoCrafterBlock.ID, player, (packetByteBuf -> packetByteBuf.writeBlockPos(pos)));
+//        }
 
-        BlockEntity be = world.getBlockEntity(pos);
-        if (be!=null && be instanceof AutoCrafterBlockEntity) {
-            ContainerProviderRegistry.INSTANCE.openContainer(AutoCrafterBlock.ID, player, (packetByteBuf -> packetByteBuf.writeBlockPos(pos)));
-        }
+        player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
 
         return ActionResult.SUCCESS;
     }
@@ -81,7 +85,7 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
             //de-powering
             world.setBlockState(pos, state.with(POWERED, false), 2);
         }
-        //else !is+!was powered
+        //else !is && !was powered
         //staying un-powered
     }
 
@@ -93,15 +97,15 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
     }
 
     @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof AutoCrafterBlockEntity) {
-                ItemScatterer.spawn(world, pos, ((AutoCrafterBlockEntity)blockEntity).getInventory());
-                world.updateHorizontalAdjacent(pos, this);
+                ItemScatterer.spawn(world, pos, (AutoCrafterBlockEntity)blockEntity);
+                world.updateNeighbors(pos, this);
             }
 
-            super.onBlockRemoved(state, world, pos, newState, moved);
+            super.onStateReplaced(state, world, pos, newState, moved);
         }
     }
 
@@ -120,10 +124,10 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
         DefaultedList<ItemStack> inventory = blockEntity.getInventory();
         int inputsOccupied = 0;
 
-        for (int slot = (SIMPLE_MODE ? blockEntity.getInvSize() : 0); slot < OUTPUT_SLOT; slot++) {
+        for (int slot = (SIMPLE_MODE ? blockEntity.size() : 0); slot < OUTPUT_SLOT; slot++) {
             if(!inventory.get(slot).isEmpty()) { inputsOccupied++; }
         }
-        float inputFillRatio = ((float)inputsOccupied) / blockEntity.getInvSize();
+        float inputFillRatio = ((float)inputsOccupied) / blockEntity.size();
 
         ItemStack outputStack = inventory.get(OUTPUT_SLOT);
         float outputFillRatio = ((float)outputStack.getCount()) / outputStack.getMaxCount();

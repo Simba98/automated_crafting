@@ -1,8 +1,12 @@
 package net.sssubtlety.automated_crafting;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.*;
+import net.minecraft.util.collection.DefaultedList;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
@@ -12,13 +16,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.*;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.Direction;
+import net.sssubtlety.automated_crafting.mixin.CraftingScreenHandlerAccessor;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, AutoCrafterSharedData {
+public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, AutoCrafterSharedData, NamedScreenHandlerFactory {
     private final CraftingInventoryWithOutput craftingInventory;
     private Recipe<CraftingInventory> recipeCache;
 //    private final Container container = new InventoryContainer(0);
@@ -48,10 +52,9 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     // Deserialize the BlockEntity
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         Inventories.fromTag(tag, ((CraftingInventoryAccessor)this.craftingInventory).getInventory());
-//        number = tag.getInt("number");
     }
 
     public DefaultedList<ItemStack> getInventory() {
@@ -62,16 +65,16 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         Recipe<CraftingInventory> recipe = getRecipe();//this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingInventory, this.world).orElse(null);
         if(recipe != null) {
             if(tryOutput(recipe.getOutput())) {
-                for (int iSlot = SIMPLE_MODE ? getInvSize() : 0; iSlot < OUTPUT_SLOT; iSlot++) {
-                    this.craftingInventory.takeInvStack(iSlot, 1);
+                for (int iSlot = SIMPLE_MODE ? size() : 0; iSlot < OUTPUT_SLOT; iSlot++) {
+                    this.craftingInventory.removeStack(iSlot, 1);
                 }
             }
             else {
-                world.playLevelEvent(1001, pos, 0);
+                world.syncWorldEvent(1001, pos, 0);
             }
         }
         else {
-            world.playLevelEvent(1001, pos, 0);
+            world.syncWorldEvent(1001, pos, 0);
 //            System.out.println("tryCraft found no valid recipe. ");
         }
     }
@@ -84,7 +87,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         }
         ItemStack oldOutput = this.getInventory().get(OUTPUT_SLOT);
         if (oldOutput.isEmpty()) {
-            this.setInvStack(OUTPUT_SLOT, output.copy());
+            this.setStack(OUTPUT_SLOT, output.copy());
             return true;
         } else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() > oldOutput.getCount() + output.getCount()){
             //outputs are same item and output can fit in stack
@@ -96,10 +99,12 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     private CraftingInventory getIsolatedInputInv() {
-        CraftingInventory tempInventory = new CraftingInventory(new InventoryContainer(0), 3, 3);
-        for(int slot = getInvSize(); slot < OUTPUT_SLOT; slot++)
+        //GenericContainerScreenHandler(ScreenHandlerType.CRAFTING, 0, new PlayerInventory(null)
+        CraftingInventory tempInventory = ((CraftingScreenHandlerAccessor) new CraftingScreenHandler(0, new PlayerInventory(null))).getInput();
+
+        for(int slot = size(); slot < OUTPUT_SLOT; slot++)
         {
-            tempInventory.setInvStack(slot - getInvSize(), getInvStackList().get(slot));
+            tempInventory.setStack(slot - size(), getInvStackList().get(slot));
         }
         return tempInventory;
     }
@@ -145,9 +150,11 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
      * start of SidedInventory implementations
      */
     @Override
-    public int[] getInvAvailableSlots(Direction var1) {
-        // Just return an array of all slots
+    public int[] getAvailableSlots(Direction side) {
         int[] result = new int[getInventory().size()];
+        int firstAvailableSlot = SIMPLE_MODE ? size() : 0;
+
+        // Create an array of indices of slots that can be inserted into
         for (int i = 0; i < result.length; i++) {
             result[i] = i;
         }
@@ -156,20 +163,14 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     @Override
-    public boolean canInsertInvStack(int slot, ItemStack stack, Direction direction) {
+    public boolean canInsert(int slot, ItemStack stack, Direction dir) {
         //nothing external can insert into output slot
         if (slot == OUTPUT_SLOT) {
             return false;
         }
 
         if(SIMPLE_MODE) {
-//            if(this.getInventory().get(slot).getCount() > 1) {
-//                return false;
-//            }
-//            return !this.getInventory().get(slot).isEmpty();
-
-            return slot >= getInvSize() && this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot - getInvSize()).isItemEqual(stack);
-
+            return slot >= size() && this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot - size()).isItemEqual(stack);
         }
         else {
             return this.getInventory().get(slot).isEmpty();
@@ -177,7 +178,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     @Override
-    public boolean canExtractInvStack(int slot, ItemStack stack, Direction direction) {
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         //players and hoppers can take from output,
         //hoppers can't take from input slots
 //        if(slot == OUTPUT_SLOT || direction == null) { return true; }
@@ -209,11 +210,20 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     @Override
-    protected Container createContainer(int i, PlayerInventory playerInventory) {
+    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
         throw new IllegalStateException("Dummy method body invoked. A critical mixin failure has occurred.");
-//        return new CraftingTableContainer(i, playerInventory, BlockContext.create(world, pos));
-                //new Generic3x3Container(i, playerInventory, this);
     }
+
+//    @Override
+//    public Text getDisplayName() {
+//        // Using the block name as the screen title
+//        return new TranslatableText(getCachedState().getBlock().getTranslationKey());
+//    }
+//
+//    @Override
+//    public ScreenHandler createMenu(int syncId, PlayerInventory inventory, PlayerEntity player) {
+//        return new AutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.create(world, pos));
+//    }
 
 //    @Override
 //    public void setInvStack(int slot, ItemStack stack) {
@@ -224,9 +234,11 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
      * start of Inventory implementations
      */
     @Override
-    public int getInvSize() {
-        return craftingInventory.getInvSize();
+    public int size() {
+        return craftingInventory.size();
     }
+
+
     /**
      * end of Inventory implementations
      */
