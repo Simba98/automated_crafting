@@ -1,4 +1,4 @@
-package net.sssubtlety.automated_crafting;
+package disabled_java;
 
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;

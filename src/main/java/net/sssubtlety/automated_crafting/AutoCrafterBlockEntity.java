@@ -1,22 +1,25 @@
 package net.sssubtlety.automated_crafting;
 
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.*;
-import net.minecraft.util.collection.DefaultedList;
-import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeType;
+import net.minecraft.screen.CraftingScreenHandler;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
+import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.sssubtlety.automated_crafting.mixin.CraftingScreenHandlerAccessor;
 
 import java.util.Iterator;
@@ -28,7 +31,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 //    private final Container container = new InventoryContainer(0);
 
 
-    private static LinkedList<AutoCrafterBlockEntity> allInstances = new LinkedList<>();
+    private static final LinkedList<AutoCrafterBlockEntity> allInstances = new LinkedList<>();
 
     public AutoCrafterBlockEntity() {
         super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY);
@@ -100,7 +103,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     private CraftingInventory getIsolatedInputInv() {
         //GenericContainerScreenHandler(ScreenHandlerType.CRAFTING, 0, new PlayerInventory(null)
-        CraftingInventory tempInventory = ((CraftingScreenHandlerAccessor) new CraftingScreenHandler(0, new PlayerInventory(null))).getInput();
+        CraftingInventory tempInventory = ((CraftingScreenHandlerAccessor) (new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
 
         for(int slot = size(); slot < OUTPUT_SLOT; slot++)
         {
@@ -185,8 +188,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 //        return false;
         if(SIMPLE_MODE) {
             return slot == OUTPUT_SLOT;
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -206,12 +208,28 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     protected Text getContainerName() {
-        return new TranslatableText("container.dispenser", new Object[0]);
+        return new TranslatableText("block.automated_crafting.auto_crafter", new Object[0]);
     }
+
+//    @Override
+//    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+//        BlockState state = this.world.getBlockState(pos);
+//        NamedScreenHandlerFactory factory = state.getBlock().createScreenHandlerFactory(state, world, pos);
+//        if(factory != null) {
+//            return factory.createMenu(syncId, playerInventory, playerInventory.player);
+//        } else {
+//            throw new IllegalStateException("AutoCrafterBlockEntity's createScreenHandler could not create factory. ");
+//        }
+//    }
+
+//    @Override
+//    public ScreenHandler createMenu(int syncId, PlayerInventory inventory, PlayerEntity player) {
+//        return new AutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.create(world, pos));
+//    }
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        throw new IllegalStateException("Dummy method body invoked. A critical mixin failure has occurred.");
+        return new AutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(world, pos));
     }
 
 //    @Override

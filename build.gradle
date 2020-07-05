@@ -34,7 +34,7 @@ dependencies {
 	//Config GUI support
 	modApi "me.shedaniel.cloth:config-2:${project.cloth_config_2_version}"
 	//Config menu support
-	modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
+//	modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
 
 	include "io.github.cottonmc:LibGui:${project.libgui_version}"
 	//Config library

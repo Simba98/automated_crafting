@@ -23,9 +23,6 @@
     ],
     "client": [
       "net.sssubtlety.automated_crafting.AutomatedCraftingClientInit"
-    ],
-    "modmenu": [
-      "net.sssubtlety.automated_crafting.AutomatedCraftingModMenuIntegration"
     ]
   },
   "mixins": [

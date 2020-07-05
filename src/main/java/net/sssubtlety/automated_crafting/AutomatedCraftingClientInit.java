@@ -7,15 +7,11 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.render.RenderLayer;
 
-
-
 public class AutomatedCraftingClientInit implements ClientModInitializer {
     @Override
     @Environment(EnvType.CLIENT)
     public void onInitializeClient() {
-
-        BlockRenderLayerMap.INSTANCE.putBlock(AutomatedCraftingInit.AUTO_CRAFTER, RenderLayer.getTranslucent());
-        ScreenRegistry.register(AutomatedCraftingInit.AUTO_CRAFTER_SCREEN_HANDLER_TYPE, (gui, player, title) -> new AutoCrafterScreen(gui, player, title));
+        BlockRenderLayerMap.INSTANCE.putBlock(AutomatedCraftingInit.AUTO_CRAFTER, RenderLayer.getSolid());
+        ScreenRegistry.<AutoCrafterGuiDescription, AutoCrafterScreen>register(AutomatedCraftingInit.AUTO_CRAFTER_SCREEN_HANDLER_TYPE, (gui, playerInventory, titleText) -> new AutoCrafterScreen(gui, playerInventory.player, titleText));
     }
-
 }
