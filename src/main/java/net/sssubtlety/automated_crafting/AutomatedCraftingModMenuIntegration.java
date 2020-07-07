@@ -1,4 +1,4 @@
-package disabled_java;
+package net.sssubtlety.automated_crafting;
 
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
@@ -29,7 +29,7 @@ public class AutomatedCraftingModMenuIntegration implements ModMenuApi {
         };
     }
 
-    @Override
+//    @Override
     public Optional<Supplier<Screen>> getConfigScreen(Screen screen) {
         return Optional.of(AutoConfig.getConfigScreen(AutomatedCraftingConfig.class, screen));
     }
