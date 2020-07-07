@@ -7,6 +7,9 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
 
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.GRID_HEIGHT;
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.GRID_WIDTH;
+
 public class SimpleAutoCrafterGuiDescription extends AbstractAutoCrafterGuiDescription {
 
     public SimpleAutoCrafterGuiDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {

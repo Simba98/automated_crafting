@@ -7,10 +7,11 @@ import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
 import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
 
-public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescription implements AutoCrafterSharedData {
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
+
+public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescription {
     protected final static int GRID_PIXELS = 18;
     protected final static int CRAFT_GRID_Y_OFFSET = -4;
 

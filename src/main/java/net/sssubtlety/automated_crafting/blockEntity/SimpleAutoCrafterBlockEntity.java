@@ -3,8 +3,9 @@ package net.sssubtlety.automated_crafting.blockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
-import net.sssubtlety.automated_crafting.guiDescription.ComplexAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDescription;
+
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.OUTPUT_SLOT;
 
 public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity {
 //    private static final GuiConstructor<AbstractAutoCrafterGuiDescription> guiConstructor = SIMPLE_MODE ?

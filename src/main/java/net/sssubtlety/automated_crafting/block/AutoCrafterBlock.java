@@ -21,14 +21,15 @@ import net.minecraft.util.math.BlockPointerImpl;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
-import net.sssubtlety.automated_crafting.blockEntity.AbstractAutoCrafterBlockEntity;
 import net.sssubtlety.automated_crafting.block.complexity.ComplexityMode;
 import net.sssubtlety.automated_crafting.block.connectivity.Connectivity;
+import net.sssubtlety.automated_crafting.blockEntity.AbstractAutoCrafterBlockEntity;
 
 import java.util.Random;
 
-public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> extends BlockWithEntity implements AutoCrafterSharedData { //implements BlockEntityProvider {
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.OUTPUT_SLOT;
+
+public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> extends BlockWithEntity { //implements BlockEntityProvider {
     public static final Identifier ID = new Identifier("automated_crafting", "auto_crafter");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
 

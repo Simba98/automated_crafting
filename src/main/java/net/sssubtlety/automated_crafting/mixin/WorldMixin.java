@@ -1,5 +1,6 @@
 package net.sssubtlety.automated_crafting.mixin;
 
+import net.sssubtlety.automated_crafting.blockEntity.AbstractAutoCrafterBlockEntity;
 import net.sssubtlety.automated_crafting.blockEntity.ComplexAutoCrafterBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
@@ -12,20 +13,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(World.class)
 public class WorldMixin {
-    @Inject(method = "removeBlockEntity", at = @At("HEAD"))
-    public void preRemoveBlockEntity(BlockPos blockPos, CallbackInfo info) {
-        if(((World)(Object)this).isClient()) { return; }
-        BlockEntity blockEntity = ((World)(Object)this).getBlockEntity(blockPos);
-        if(blockEntity instanceof ComplexAutoCrafterBlockEntity) {
-            ComplexAutoCrafterBlockEntity.untrackInstance((ComplexAutoCrafterBlockEntity)blockEntity);
-        }
-    }
-
-    @Inject(method = "addBlockEntity", at = @At("HEAD"))
-    public void preAddBlockEntity(BlockEntity blockEntity, CallbackInfoReturnable<Boolean> infoReturnable) {
-        if(((World)(Object)this).isClient()) { return; }
-        if(blockEntity instanceof ComplexAutoCrafterBlockEntity) {
-            ComplexAutoCrafterBlockEntity.trackInstance((ComplexAutoCrafterBlockEntity)blockEntity);
-        }
-    }
+//    @Inject(method = "removeBlockEntity", at = @At("HEAD"))
+//    public void preRemoveBlockEntity(BlockPos blockPos, CallbackInfo info) {
+//        if(((World)(Object)this).isClient()) { return; }
+//        BlockEntity blockEntity = ((World)(Object)this).getBlockEntity(blockPos);
+//        if(blockEntity instanceof AbstractAutoCrafterBlockEntity) {
+//            AbstractAutoCrafterBlockEntity.untrackInstance((ComplexAutoCrafterBlockEntity)blockEntity);
+//        }
+//    }
+//
+//    @Inject(method = "addBlockEntity", at = @At("HEAD"))
+//    public void preAddBlockEntity(BlockEntity blockEntity, CallbackInfoReturnable<Boolean> infoReturnable) {
+//        if(((World)(Object)this).isClient()) { return; }
+//        if(blockEntity instanceof AbstractAutoCrafterBlockEntity) {
+//            AbstractAutoCrafterBlockEntity.trackInstance((ComplexAutoCrafterBlockEntity)blockEntity);
+//        }
+//    }
 }
