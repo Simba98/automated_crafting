@@ -15,26 +15,30 @@ public class CraftingInventoryWithOutput extends CraftingInventory {
     private final int invMaxStackAmount;
     private static final CraftingScreenHandler dummyHandler = new CraftingScreenHandler(0, new PlayerInventory(null));
 
-    public CraftingInventoryWithOutput(ScreenHandler handler, int width, int height, int outputs, int invMaxStackAmount, boolean templated) {
+    public CraftingInventoryWithOutput(ScreenHandler handler, int width, int height, int outputs, int invMaxStackAmount, int apparentInvCount) {
         super(handler, width, height);
-        ((CraftingInventoryAccessor)this).setInventory(DefaultedList.ofSize((width * height * (templated ? 2 : 1)) + outputs, ItemStack.EMPTY));
+        ((CraftingInventoryAccessor)this).setInventory(DefaultedList.ofSize(width * height * apparentInvCount + outputs, ItemStack.EMPTY));
         this.invMaxStackAmount = invMaxStackAmount;
     }
 
     public CraftingInventoryWithOutput(ScreenHandler handler, int width, int height, int outputs) {
-        this(handler, width, height, outputs, 64, false);
+        this(handler, width, height, outputs, 64, 1);
     }
 
-    public CraftingInventoryWithOutput(int width, int height, int outputs, int invMaxStackAmount) {
-        this(dummyHandler, width, height, outputs, invMaxStackAmount, false);
+    public CraftingInventoryWithOutput(int width, int height, int outputs, int invMaxStackAmount, int apparentInvCount) {
+        this(dummyHandler, width, height, outputs, invMaxStackAmount, apparentInvCount);
+    }
+
+    public CraftingInventoryWithOutput(int width, int height, int outputs, int apparentInvCount) {
+        this(dummyHandler, width, height, outputs, 64, apparentInvCount);
+    }
+
+    public CraftingInventoryWithOutput(int width, int height, int apparentInvCount) {
+        this(dummyHandler, width, height, 1, 64, apparentInvCount);
     }
 
     public CraftingInventoryWithOutput(int width, int height) {
         this(dummyHandler, width, height, 1);
-    }
-
-    public CraftingInventoryWithOutput(int width, int height, int invMaxStackAmount, boolean templated) {
-        this(dummyHandler, width, height, 1, invMaxStackAmount, templated);
     }
 
     public void onContentChanged() {
@@ -48,7 +52,7 @@ public class CraftingInventoryWithOutput extends CraftingInventory {
 
     @Override
     public void provideRecipeInputs(RecipeFinder recipeFinder) {
-        System.out.println("provideRecipeInputs called");
+//        System.out.println("provideRecipeInputs called");
         Iterator invItr = ((CraftingInventoryAccessor)this).getInventory().iterator();
 
         if(!invItr.hasNext()) { return; }

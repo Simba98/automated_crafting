@@ -1,6 +1,6 @@
 package net.sssubtlety.automated_crafting.mixin;
 
-import net.sssubtlety.automated_crafting.AutoCrafterBlockEntity;
+import net.sssubtlety.automated_crafting.blockEntity.ComplexAutoCrafterBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,16 +16,16 @@ public class WorldMixin {
     public void preRemoveBlockEntity(BlockPos blockPos, CallbackInfo info) {
         if(((World)(Object)this).isClient()) { return; }
         BlockEntity blockEntity = ((World)(Object)this).getBlockEntity(blockPos);
-        if(blockEntity instanceof AutoCrafterBlockEntity) {
-            AutoCrafterBlockEntity.untrackInstance((AutoCrafterBlockEntity)blockEntity);
+        if(blockEntity instanceof ComplexAutoCrafterBlockEntity) {
+            ComplexAutoCrafterBlockEntity.untrackInstance((ComplexAutoCrafterBlockEntity)blockEntity);
         }
     }
 
     @Inject(method = "addBlockEntity", at = @At("HEAD"))
     public void preAddBlockEntity(BlockEntity blockEntity, CallbackInfoReturnable<Boolean> infoReturnable) {
         if(((World)(Object)this).isClient()) { return; }
-        if(blockEntity instanceof AutoCrafterBlockEntity) {
-            AutoCrafterBlockEntity.trackInstance((AutoCrafterBlockEntity)blockEntity);
+        if(blockEntity instanceof ComplexAutoCrafterBlockEntity) {
+            ComplexAutoCrafterBlockEntity.trackInstance((ComplexAutoCrafterBlockEntity)blockEntity);
         }
     }
 }

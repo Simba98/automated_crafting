@@ -1,8 +1,7 @@
-package net.sssubtlety.automated_crafting;
+package net.sssubtlety.automated_crafting.blockEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
@@ -14,36 +13,56 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
+import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
+import net.sssubtlety.automated_crafting.CraftingInventoryWithOutput;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.sssubtlety.automated_crafting.mixin.CraftingScreenHandlerAccessor;
+import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, AutoCrafterSharedData, NamedScreenHandlerFactory {
+public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, AutoCrafterSharedData, NamedScreenHandlerFactory {
     private final CraftingInventoryWithOutput craftingInventory;
-    private Recipe<CraftingInventory> recipeCache;
-//    private final Container container = new InventoryContainer(0);
+    protected Recipe<CraftingInventory> recipeCache;
+    protected abstract GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor();
+
+//            (syncId, playerInventory, _world, _pos) -> (new AutoCrafterSimpleGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos))):
+//            (syncId, playerInventory, _world, _pos) -> (new AutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos)));
 
 
-    private static final LinkedList<AutoCrafterBlockEntity> allInstances = new LinkedList<>();
+    private static final LinkedList<AbstractAutoCrafterBlockEntity> allInstances = new LinkedList<>();
 
-    public AutoCrafterBlockEntity() {
+    protected abstract int getInvMaxStackCount();
+
+    protected abstract int getApparentInvCount();
+
+    public abstract int getInputSlotInd();
+
+    protected abstract boolean optionalOutputCheck();
+
+    protected abstract boolean insertCheck(int slot, ItemStack stack);
+
+    protected abstract boolean extractCheck(int slot);
+
+    public AbstractAutoCrafterBlockEntity() {
         super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY);
-        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, SIMPLE_MODE ? 2 : 1, SIMPLE_MODE);
+        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, getInvMaxStackCount(), getApparentInvCount());//SIMPLE_MODE ? 2 : 1
         recipeCache = null;
     }
 
-    public static void untrackInstance(AutoCrafterBlockEntity blockEntity) {
+    public static void untrackInstance(AbstractAutoCrafterBlockEntity blockEntity) {
         allInstances.remove(blockEntity);
     }
 
-    public static void trackInstance(AutoCrafterBlockEntity blockEntity) {
+    public static void trackInstance(AbstractAutoCrafterBlockEntity blockEntity) {
         allInstances.push(blockEntity);
     }
 
@@ -68,22 +87,23 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         Recipe<CraftingInventory> recipe = getRecipe();//this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, this.craftingInventory, this.world).orElse(null);
         if(recipe != null) {
             if(tryOutput(recipe.getOutput())) {
-                for (int iSlot = SIMPLE_MODE ? size() : 0; iSlot < OUTPUT_SLOT; iSlot++) {
+                for (int iSlot = getInputSlotInd(); iSlot < OUTPUT_SLOT; iSlot++) {//SIMPLE_MODE ? size() : 0
                     this.craftingInventory.removeStack(iSlot, 1);
                 }
             }
-            else {
+            else if (world != null) {
                 world.syncWorldEvent(1001, pos, 0);
             }
         }
-        else {
+        else if (world != null) {
             world.syncWorldEvent(1001, pos, 0);
 //            System.out.println("tryCraft found no valid recipe. ");
         }
     }
 
+
     private boolean tryOutput(ItemStack output) {
-        if (SIMPLE_MODE && !recipeCache.matches(getIsolatedInputInv(), world)) {
+        if (optionalOutputCheck()) { //SIMPLE_MODE && !recipeCache.matches(getIsolatedInputInv(), world)
 //            System.out.println("tryOutput found insufficient resources. ");
 
             return false;
@@ -101,9 +121,8 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         return false;
     }
 
-    private CraftingInventory getIsolatedInputInv() {
-        //GenericContainerScreenHandler(ScreenHandlerType.CRAFTING, 0, new PlayerInventory(null)
-        CraftingInventory tempInventory = ((CraftingScreenHandlerAccessor) (new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
+    protected CraftingInventory getIsolatedInputInv() {
+        CraftingInventory tempInventory = ((CraftingScreenHandlerAccessor)(new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
 
         for(int slot = size(); slot < OUTPUT_SLOT; slot++)
         {
@@ -138,8 +157,8 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     public static void clearRecipeCaches() {
 //        System.out.println("clearRecipeCaches called with allInstances.size() = " + allInstances.size());
-        for (Iterator<AutoCrafterBlockEntity> iterator = allInstances.iterator(); iterator.hasNext();) {
-            AutoCrafterBlockEntity instance = iterator.next();
+        for (Iterator<AbstractAutoCrafterBlockEntity> iterator = allInstances.iterator(); iterator.hasNext();) {
+            AbstractAutoCrafterBlockEntity instance = iterator.next();
             if (instance == null) {
                 // Remove the current element from the iterator and the list.
                 iterator.remove();
@@ -155,7 +174,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     @Override
     public int[] getAvailableSlots(Direction side) {
         int[] result = new int[getInventory().size()];
-        int firstAvailableSlot = SIMPLE_MODE ? size() : 0;
+//        int firstAvailableSlot = SIMPLE_MODE ? size() : 0;
 
         // Create an array of indices of slots that can be inserted into
         for (int i = 0; i < result.length; i++) {
@@ -172,26 +191,32 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
             return false;
         }
 
-        if(SIMPLE_MODE) {
-            return slot >= size() && this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot - size()).isItemEqual(stack);
-        }
-        else {
-            return this.getInventory().get(slot).isEmpty();
-        }
+
+        return insertCheck(slot, stack);
+//        if(SIMPLE_MODE) {
+//            return slot >= size() && this.getInventory().get(slot).isEmpty() && this.getInventory().get(slot - size()).isItemEqual(stack);
+//        }
+//        else {
+//            return this.getInventory().get(slot).isEmpty();
+//        }
     }
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+    public boolean canExtract(int slot, ItemStack stack, Direction dir)
+    {
         //players and hoppers can take from output,
         //hoppers can't take from input slots
 //        if(slot == OUTPUT_SLOT || direction == null) { return true; }
 //        return false;
-        if(SIMPLE_MODE) {
-            return slot == OUTPUT_SLOT;
-        } else {
-            return true;
-        }
+
+        return extractCheck(slot);
+//        if(SIMPLE_MODE) {
+//            return slot == OUTPUT_SLOT;
+//        } else {
+//            return true;
+//        }
     }
+
     /**
      * end of SidedInventory implementations
      * start of LootableContainerBlockEntity implementations
@@ -229,7 +254,8 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new AutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(world, pos));
+//        return new AutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(world, pos));
+        return getGuiConstructor().construct(syncId, playerInventory, world, pos);
     }
 
 //    @Override
@@ -260,5 +286,10 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     /**
      * end of Inventory implementations
      */
+
+    @FunctionalInterface
+    protected interface GuiConstructor<C extends AbstractAutoCrafterGuiDescription> {
+        C construct(int syncId, PlayerInventory playerInventory, World world, BlockPos pos);
+    }
 
 }

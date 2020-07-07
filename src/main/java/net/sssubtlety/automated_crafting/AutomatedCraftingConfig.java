@@ -7,4 +7,12 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 public class AutomatedCraftingConfig implements ConfigData {
     boolean simpleMode = true;
     boolean quasiConnectivity = false;
+
+    public boolean isSimpleMode() {
+        return simpleMode;
+    }
+
+    public boolean isQuasiConnected() {
+        return quasiConnectivity;
+    }
 }

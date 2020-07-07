@@ -1,6 +1,5 @@
 package net.sssubtlety.automated_crafting;
 
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -8,7 +7,6 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -20,15 +18,17 @@ import net.minecraft.util.math.BlockPointerImpl;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.sssubtlety.automated_crafting.blockEntity.AbstractAutoCrafterBlockEntity;
+import net.sssubtlety.automated_crafting.blockEntity.ComplexAutoCrafterBlockEntity;
 
 import java.util.Random;
 
-public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterSharedData { //implements BlockEntityProvider {
+public class OLDAutoCrafterBlock extends BlockWithEntity implements AutoCrafterSharedData { //implements BlockEntityProvider {
     static final Identifier ID = new Identifier("automated_crafting", "auto_crafter");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
 
 
-    public AutoCrafterBlock(Settings settings)
+    public OLDAutoCrafterBlock(Settings settings)
     {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(POWERED, false));
@@ -45,7 +45,7 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
 
     @Override
     public BlockEntity createBlockEntity(BlockView blockView) {
-        return new AutoCrafterBlockEntity();
+        return new ComplexAutoCrafterBlockEntity();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         BlockPointerImpl blockPointerImpl = new BlockPointerImpl(world, pos);
-        ((AutoCrafterBlockEntity)blockPointerImpl.getBlockEntity()).tryCraft();
+        ((AbstractAutoCrafterBlockEntity)blockPointerImpl.getBlockEntity()).tryCraft();
         world.updateNeighborsAlways(pos, this);
     }
 
@@ -100,8 +100,8 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() != newState.getBlock()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof AutoCrafterBlockEntity) {
-                ItemScatterer.spawn(world, pos, (AutoCrafterBlockEntity)blockEntity);
+            if (blockEntity instanceof AbstractAutoCrafterBlockEntity) {
+                ItemScatterer.spawn(world, pos, (AbstractAutoCrafterBlockEntity)blockEntity);
                 world.updateNeighbors(pos, this);
             }
 
@@ -116,7 +116,7 @@ public class AutoCrafterBlock extends BlockWithEntity implements AutoCrafterShar
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        AutoCrafterBlockEntity blockEntity = (AutoCrafterBlockEntity) world.getBlockEntity(pos);
+        ComplexAutoCrafterBlockEntity blockEntity = (ComplexAutoCrafterBlockEntity) world.getBlockEntity(pos);
         if(blockEntity == null) {
             System.err.println("automated_crafting: getComparatorOutput received null block entity. ");
         }
