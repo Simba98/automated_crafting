@@ -44,6 +44,8 @@ public class AutomatedCraftingInit implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
+
+		//Register config class
 		AutoConfig.register(AutomatedCraftingConfig.class, GsonConfigSerializer::new);
 
 		AUTO_CRAFTER = getAutoCrafterBlock();
@@ -65,7 +67,6 @@ public class AutomatedCraftingInit implements ModInitializer {
 		Registry.register(Registry.ITEM, new Identifier("automated_crafting", "auto_crafter"), new BlockItem(AUTO_CRAFTER, new Item.Settings().group(ItemGroup.MISC)));
 		AUTO_CRAFTER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", BlockEntityType.Builder.create((SIMPLE_MODE ? SimpleAutoCrafterBlockEntity::new : ComplexAutoCrafterBlockEntity::new), AUTO_CRAFTER).build(null));
 
-		//Register config class
 		AUTO_CRAFTER_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerSimple(AutoCrafterBlock.ID, SIMPLE_MODE ?
 			(syncId, inventory) -> (new SimpleAutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY)) :
 			(syncId, inventory) -> (new ComplexAutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY))

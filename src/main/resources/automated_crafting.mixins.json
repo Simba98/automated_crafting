@@ -6,8 +6,7 @@
   "mixins": [
     "CraftingInventoryAccessor",
     "CraftingScreenHandlerAccessor",
-    "MinecraftServerMixin",
-    "WorldMixin"
+    "MinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

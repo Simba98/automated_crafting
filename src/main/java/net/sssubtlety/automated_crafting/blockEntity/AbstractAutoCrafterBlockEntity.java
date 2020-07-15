@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
 import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
 import net.sssubtlety.automated_crafting.CraftingInventoryWithOutput;
+import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 import net.sssubtlety.automated_crafting.mixin.CraftingScreenHandlerAccessor;
@@ -51,14 +52,6 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, getInvMaxStackCount(), getApparentInvCount());//SIMPLE_MODE ? 2 : 1
         recipeCache = null;
     }
-
-//    public static void untrackInstance(AbstractAutoCrafterBlockEntity blockEntity) {
-//        allInstances.remove(blockEntity);
-//    }
-
-//    public static void trackInstance(AbstractAutoCrafterBlockEntity blockEntity) {
-//        allInstances.push(blockEntity);
-//    }
 
     // Serialize the BlockEntity
     public CompoundTag toTag(CompoundTag tag) {
@@ -112,10 +105,9 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     protected CraftingInventory getIsolatedInputInv() {
-        CraftingInventory tempInventory = ((CraftingScreenHandlerAccessor)(new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
+        CraftingInventory tempInventory = new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT);//((CraftingScreenHandlerAccessor)(new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
 
-        for(int slot = size(); slot < OUTPUT_SLOT; slot++)
-        {
+        for(int slot = size(); slot < OUTPUT_SLOT; slot++) {
             tempInventory.setStack(slot - size(), getInvStackList().get(slot));
         }
         return tempInventory;
