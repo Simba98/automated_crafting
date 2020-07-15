@@ -6,7 +6,7 @@ It's required the mod be installed on both client and server. 
 
 It adds a single block: the Automated Crafting Table
 
-![Automated Crafting Table](https://media.forgecdn.net/avatars/279/35/637276073169454803.png)
+![Automated Crafting Table](https://shft.cl/img/l/lh4.googleusercontent.com-3729709478633236.png)
 
 Basically, you insert items (with hoppers and droppers) so that a recipe pattern is in its inventory, then give it a redstone signal and it crafts the recipe. 
 
@@ -20,7 +20,7 @@ These configs can be changed either using Mod Menu (if it's installed), or by ed
 
 In simple mode, the crafting bench has two 3x3 grids
 
-![Simple Mode GUI](https://media.forgecdn.net/attachments/thumbnails/301/456/310/172/auto_crafter_simple_mode.png)
+![Simple Mode GUI](https://shft.cl/img/l/lh3.googleusercontent.com-3729351876759961.png)
 
 - The left grid is the 'Template' grid. Only players can interact with it. This is where your recipe pattern goes. 
 
@@ -28,13 +28,13 @@ In simple mode, the crafting bench has two 3x3 grids
 
 In non-simple mode, there's only one 3x3 grid. Hoppers and players can both insert+extract from the grid. 
 
-![Less-simple Mode GUI](https://media.forgecdn.net/attachments/thumbnails/297/255/310/172/non-simple-mode-gui.png)
+![Less-simple Mode GUI](https://shft.cl/img/l/lh6.googleusercontent.com-3729755174563747.png)
 
 This mode is very similar to the autocrafter [showcased here](https://www.youtube.com/watch?v=2_HL309IZ0M).
 
 Both modes feature a single output slot that hoppers can pull from. This is the only slot hoppers can pull from in simple mode. 
 
-![quasi-connectivity](https://media.forgecdn.net/attachments/thumbnails/297/256/310/172/quasi-connectivity.png)
+![quasi-connectivity](https://shft.cl/img/l/lh3.googleusercontent.com-3729789011976985.png)
 
 Quasi-connectivity allows the Automated Crafting Table to be powered from blocks farther above it, in the same way pistons, droppers, and dispensers behave in vanilla. 
 
