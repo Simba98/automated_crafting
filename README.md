@@ -6,7 +6,7 @@ It's required the mod be installed on both client and server. 
 
 It adds a single block: the Automated Crafting Table
 
-![Automated Crafting Table](https://shft.cl/img/l/lh4.googleusercontent.com-3729709478633236.png)
+![Automated Crafting Table](https://shft.cl/img/l/lh6.googleusercontent.com-4257019419025668.png)
 
 Basically, you insert items (with hoppers and droppers) so that a recipe pattern is in its inventory, then give it a redstone signal and it crafts the recipe. 
 
