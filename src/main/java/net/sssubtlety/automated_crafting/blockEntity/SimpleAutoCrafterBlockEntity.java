@@ -38,13 +38,22 @@ public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity
 
     @Override
     protected boolean insertCheck(int slot, ItemStack stack) {
-        return slot >= size() &&
+        return isInputSlot(slot) &&
                 this.getInventory().get(slot).isEmpty() &&
-                this.getInventory().get(slot - size()).isItemEqual(stack);
+                inputSlotMatchesTemplate(slot, stack);
     }
 
     @Override
-    protected boolean extractCheck(int slot) {
-        return slot == OUTPUT_SLOT;
+    protected boolean extractCheck(int slot, ItemStack stack) {
+        return slot == OUTPUT_SLOT ||
+        isInputSlot(slot) && !inputSlotMatchesTemplate(slot, stack);
+    }
+
+    protected boolean isInputSlot(int slot) {
+        return slot != OUTPUT_SLOT && slot >= size();
+    }
+
+    protected boolean inputSlotMatchesTemplate(int slot, ItemStack stack) {
+        return this.getInventory().get(slot - size()).isItemEqual(stack);
     }
 }

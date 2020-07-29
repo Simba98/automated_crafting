@@ -38,6 +38,6 @@
     "minecraft": ">=1.16"
   },
   "suggests": {
-    "modmenu": "1.12.2+build.17"
+    "modmenu": ">=1.12.2+build.17"
   }
 }

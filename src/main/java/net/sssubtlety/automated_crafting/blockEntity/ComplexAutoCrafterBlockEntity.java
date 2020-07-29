@@ -40,7 +40,7 @@ public class ComplexAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntit
     }
 
     @Override
-    protected boolean extractCheck(int slot) {
+    protected boolean extractCheck(int slot, ItemStack stack) {
         return true;
     }
 }

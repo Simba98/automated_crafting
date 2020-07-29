@@ -167,6 +167,11 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         return Math.max(Math.round(totalFillRatio * 15), min);
     }
 
+//    @Override
+//    public boolean emitsRedstonePower(BlockState state) {
+//        return true;
+//    }
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(POWERED);

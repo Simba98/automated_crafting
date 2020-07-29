@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Recipe;
@@ -45,7 +46,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     public abstract int getInputSlotInd();
     protected abstract boolean optionalOutputCheck();
     protected abstract boolean insertCheck(int slot, ItemStack stack);
-    protected abstract boolean extractCheck(int slot);
+    protected abstract boolean extractCheck(int slot, ItemStack stack);
 
     public AbstractAutoCrafterBlockEntity() {
         super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY);
@@ -75,7 +76,13 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         if(recipe != null) {
             if(tryOutput(recipe.getOutput())) {
                 for (int iSlot = getInputSlotInd(); iSlot < OUTPUT_SLOT; iSlot++) {//SIMPLE_MODE ? size() : 0
-                    this.craftingInventory.removeStack(iSlot, 1);
+                    Item slotItem = this.internalGetStack(iSlot).getItem();
+                    if (slotItem.hasRecipeRemainder())
+                        //replace with remainders
+                        this.craftingInventory.setStack(iSlot, new ItemStack(slotItem.getRecipeRemainder()));
+                    else
+                        //decrement stack, should be empty afterward
+                        this.craftingInventory.removeStack(iSlot, 1);
                 }
             }
             else if (world != null) {
@@ -133,6 +140,10 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         return recipeCache;
     }
 
+    protected ItemStack internalGetStack(int slot) {
+        return slot >= OUTPUT_SLOT ? ItemStack.EMPTY : ((CraftingInventoryAccessor)this.craftingInventory).getInventory().get(slot);
+    }
+
 //    public static void clearRecipeCaches() {
 //        for (Iterator<AbstractAutoCrafterBlockEntity> iterator = allInstances.iterator(); iterator.hasNext();) {
 //            AbstractAutoCrafterBlockEntity instance = iterator.next();
@@ -172,7 +183,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir)
     {
-        return extractCheck(slot);
+        return extractCheck(slot, stack);
     }
 
     /**
