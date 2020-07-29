@@ -33,13 +33,25 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
     public static final Identifier ID = new Identifier("automated_crafting", "auto_crafter");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
 
-    C connectivity;
-    M mode;
-    public AutoCrafterBlock(Settings settings, Class<C> connectivity, Class<M> mode) throws IllegalAccessException, InstantiationException {
+    protected final C connectivity;
+    protected final M mode;
+    private final boolean redirectsRedstone;
+
+    public AutoCrafterBlock(Settings settings, Class<C> connectivity, Class<M> mode, boolean redirectsRedstone) throws IllegalAccessException, InstantiationException {
         super(settings);
         this.connectivity = connectivity.newInstance();
         this.mode = mode.newInstance();
+        this.redirectsRedstone = redirectsRedstone;
     }
+
+//    public AutoCrafterBlock(Settings settings, C connectivity, M mode, boolean redirectsRedstone)
+//    {
+//        super(settings);
+//        this.connectivity = connectivity;
+//        this.mode = mode;
+//        this.redirectsRedstone = redirectsRedstone;
+//        setDefaultState(getStateManager().getDefaultState().with(POWERED, false));
+//    }
 
     protected boolean isPowered(World world, BlockPos pos) {
         return connectivity.isPowered(world, pos);
@@ -61,11 +73,6 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
 //    {
 //        return new AutoCrafterBlockEntity();
 //    }
-    public AutoCrafterBlock(Settings settings)
-    {
-        super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(POWERED, false));
-    }
 
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
@@ -75,8 +82,6 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
 //    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext ctx) {
 //        return VoxelShapes.cuboid(0f, 0f, 0f, 1f, 1.0f, 0.5f);
 //    }
-
-
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -167,10 +172,10 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         return Math.max(Math.round(totalFillRatio * 15), min);
     }
 
-//    @Override
-//    public boolean emitsRedstonePower(BlockState state) {
-//        return true;
-//    }
+    @Override
+    public boolean emitsRedstonePower(BlockState state) {
+        return redirectsRedstone;
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

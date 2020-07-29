@@ -10,11 +10,11 @@ It adds a single block: the Automated Crafting Table
 
 Basically, you insert items (with hoppers and droppers) so that a recipe pattern is in its inventory, then give it a redstone signal and it crafts the recipe. 
 
-It has two configs:
-
+It has three configs:
 - simple mode (default = true)
-
 - enable quasi-connectivity(default = false)
+- redirect redstone dust (default = false)
+
 
 These configs can be changed either using Mod Menu (if it's installed), or by editing '.minecraft/config/automated_crafting.json'
 
@@ -39,6 +39,14 @@ Both modes feature a single output slot that hoppers can pull from. This is the 
 Quasi-connectivity allows the Automated Crafting Table to be powered from blocks farther above it, in the same way pistons, droppers, and dispensers behave in vanilla. 
 
 The slabs mark positions that can only power the Crafter if quasi-connectivity is enabled. 
+
+Enabling redstone dust redirection make redstone dust next to the Automated Crafting Table point into the table. 
+
+![redstone redirection](https://lh3.googleusercontent.com/htZi6YomFySjcSAnroeg9vps6a4smwcjK-Tw_a8ONQpXVSnd4Sr731sryXJFixfU9kyROxpdE1qfVLVdTm2oLsQxDf-tvaAca8Yp0TvXpp52gLlAS_K9AlievEYPfQOnjREBocxXmWP6JWy-DwbHbQEuZ4emWITJwS2TrG2OOUjTZjQAjp15TY0GI1CXacWEHXbpx4RajjH_e-1P9VCFpwPXn5oDfwMBgKSYu8ejNRLPrYAP2821rmvb8CXnwpZHwkOPX86uqviD534bcZVrkHZom4WNolpS9Ga9cbByBTO054htkFN5kBfDzwXTQx8SteFecEU20j8kVnvOO79IWKnFMUbFwycfVfbAKKMYh-HY9brfv965dC1ngWi3VCGZlgstXxc6BbmdMdRKsBVZj8RdGuwFg-zeZ8RhIbPYyu7pzpIz2x9kN1LVmt2ENwxFMgvNzewcUDXZ4WyD6YP8N-aVqIU6yFYZVkOJGtO7TUc_e8Nw-30QgUBXRvXb3DVW-OKm1cZM0xHNgH4lFzn6lCeIm82cksojeLDuUFNFRg2bVPSmBWwWH4oYAjxK-kLceezwVNNux2UudbuLpFEaJ67Feq4gVjHmMrgqmtDN8Pud39BzUE9kB9UcMcoxR0atW7rNh26WJiJEKj4v2tNpnxU2zTjLsl8GgOhdtNVZ55SbJ0_xxw6VeXDCwakeTRHwlOG1=w800-h500-k-ft)
+
+Here is the recipe. Any stripped wood or logs may be substituted for those shown. 
+
+![recipe](https://lh3.googleusercontent.com/yMvEWd7sOwhxDpsvlEQBXdFwX-fpwG_T3tlITGYNfR6CM2s3s55X9sudybASEHdABbx5g2D1TiUaM0Iv2BbMgYoD2WrjN3pY5LPYOZooKUfJ8nHv6KZQYHvBTeJxoRR9OmNuEPp1PZ14cGbeFe8HWWVKOfThhd3spf_Xr2qmjnD8kX8I0ig_x83IyRwQd6kg7adwtqyPWw7TPkmqZS6Mt5WMQTjVvPJJI1MB5ay5vx4oer-hR_W69_qAiGgpNrL9vCsM841SzFLz6hmWKhwpJHb56vM8T_4QOH2j1TdJUpQBl_Z0mocSdKp2OZbK0mmgKc_h6EY5mnkDD8VE3a_QaYWo_-BemUGUeUdcrjK0FtBX_VTkckVTN4InuOGd4HhkiyUSgbDjspuhoJJRP3HbOB0CPwXmgIVpTcPJRwBTYYWED0EaxEB_f68SyfXquifo-Xd51CDdFMMvaRKYY7atVm0YJWkdA61hxKcaeQSoJ2ecjGyJ6chtMaAbOOaPYI-OwYRRvjQ7ZNeIQCCEY6XJFGqjAAF3RI0KoUJvNZJtYIYkJmL6ZZk88Dr2SeH3w8-kmHUiT-ElGtSIVVPmfWDdVijYZ-0IJOvS6aB2msOUa2qgTzTMgdscwpa4ez97gF9ryosw_bcqQML0ejzaJhRa2Ep-LC_e7gLnxk3KL4ztlUR9An7E8lq4-2yOlBu6gM4qTOB9=w800-h500-k-ft)
 
 Download the [Fabric API for Minecraft 1.16.1 here](https://www.curseforge.com/minecraft/mc-mods/fabric-api/files/all?filter-game-version=1738749986%3a70886)
 

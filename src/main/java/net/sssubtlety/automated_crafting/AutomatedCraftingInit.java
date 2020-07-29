@@ -18,10 +18,6 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.sssubtlety.automated_crafting.block.AutoCrafterBlock;
-import net.sssubtlety.automated_crafting.block.complexity.ComplexMode;
-import net.sssubtlety.automated_crafting.block.complexity.SimpleMode;
-import net.sssubtlety.automated_crafting.block.connectivity.BasicConnectivity;
-import net.sssubtlety.automated_crafting.block.connectivity.QuasiConnectivity;
 import net.sssubtlety.automated_crafting.blockEntity.AbstractAutoCrafterBlockEntity;
 import net.sssubtlety.automated_crafting.blockEntity.ComplexAutoCrafterBlockEntity;
 import net.sssubtlety.automated_crafting.blockEntity.SimpleAutoCrafterBlockEntity;
@@ -29,8 +25,7 @@ import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDe
 import net.sssubtlety.automated_crafting.guiDescription.ComplexAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDescription;
 
-import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.QUASI_CONNECTIVITY;
-import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.SIMPLE_MODE;
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public class AutomatedCraftingInit implements ModInitializer {
 	// an instance of our new item
@@ -76,23 +71,28 @@ public class AutomatedCraftingInit implements ModInitializer {
 
 	private static Block getAutoCrafterBlock() throws RuntimeException {
 		try {
-			if (SIMPLE_MODE) {
-				if (QUASI_CONNECTIVITY) {
-					//both enabled
-					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), QuasiConnectivity.class, SimpleMode.class);
-				} else {
-					//only simple mode enabled
-					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), BasicConnectivity.class, SimpleMode.class);
-				}
-			} else {
-				if (QUASI_CONNECTIVITY) {
-					//only quasi connectivity enabled
-					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), QuasiConnectivity.class, ComplexMode.class);
-				} else {
-					//neither enabled
-					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), BasicConnectivity.class, ComplexMode.class);
-				}
-			}
+//			if (SIMPLE_MODE) {
+//				if (QUASI_CONNECTIVITY) {
+//					//both enabled
+//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), QuasiConnectivity.class, SimpleMode.class);
+//				} else {
+//					//only simple mode enabled
+//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), BasicConnectivity.class, SimpleMode.class);
+//				}
+//			} else {
+//				if (QUASI_CONNECTIVITY) {
+//					//only quasi connectivity enabled
+//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), QuasiConnectivity.class, ComplexMode.class);
+//				} else {
+//					//neither enabled
+//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), BasicConnectivity.class, ComplexMode.class);
+//				}
+//			}
+			return new AutoCrafterBlock<> (FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(),
+					CONNECTIVITY_CLASS,
+					COMPLEXITY_CLASS,
+					REDIRECTS_REDSTONE
+			);
 		} catch (IllegalAccessException | InstantiationException e) {
 			throw new RuntimeException("Unable to construct auto crafter block", e);
 		}

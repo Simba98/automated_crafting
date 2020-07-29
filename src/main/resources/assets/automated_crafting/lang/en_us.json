@@ -5,6 +5,8 @@
   "text.autoconfig.automated_crafting.option.simpleMode.@Tooltip": "All changes require a restart",
   "text.autoconfig.automated_crafting.option.quasiConnectivity": "Enable Quasi-Connectivity",
   "text.autoconfig.automated_crafting.option.quasiConnectivity.@Tooltip": "All changes require a restart",
+  "text.autoconfig.automated_crafting.option.redirectsRedstone": "Enable Redstone Dust Redirection",
+  "text.autoconfig.automated_crafting.option.redirectsRedstone.@Tooltip": "All changes require a restart",
   "text.autoconfig.automated_crafting.title": "Automated Crafting Configuration"
 
 }
