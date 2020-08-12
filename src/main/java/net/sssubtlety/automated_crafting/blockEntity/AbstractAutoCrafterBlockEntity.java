@@ -12,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -25,20 +24,18 @@ import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
 import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
 import net.sssubtlety.automated_crafting.CraftingInventoryWithOutput;
 import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
+import net.sssubtlety.automated_crafting.block.AutoCrafterBlock;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
-import net.sssubtlety.automated_crafting.mixin.CraftingScreenHandlerAccessor;
 
 import java.util.function.Supplier;
 
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory {
-    private final CraftingInventoryWithOutput craftingInventory;
+    protected final CraftingInventoryWithOutput craftingInventory;
     private int validationKey = Integer.MIN_VALUE;
     protected Recipe<CraftingInventory> recipeCache;
-
-//    private static final LinkedList<AbstractAutoCrafterBlockEntity> allInstances = new LinkedList<>();
 
     protected abstract GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor();
     protected abstract int getInvMaxStackCount();
@@ -50,11 +47,12 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
     public AbstractAutoCrafterBlockEntity() {
         super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY);
-        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, getInvMaxStackCount(), getApparentInvCount());//SIMPLE_MODE ? 2 : 1
+        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, 1, getInvMaxStackCount(), getApparentInvCount());//SIMPLE_MODE ? 2 : 1
         recipeCache = null;
     }
 
     // Serialize the BlockEntity
+    @Override
     public CompoundTag toTag(CompoundTag tag) {
         // Save the current value of the number to the tag
         Inventories.toTag(tag, ((CraftingInventoryAccessor)this.craftingInventory).getInventory());
@@ -62,6 +60,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     // Deserialize the BlockEntity
+    @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         Inventories.fromTag(tag, ((CraftingInventoryAccessor)this.craftingInventory).getInventory());
@@ -74,8 +73,9 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     public void tryCraft() {
         Recipe<CraftingInventory> recipe = getRecipe();
         if(recipe != null) {
-            if(tryOutput(recipe.getOutput())) {
-                for (int iSlot = getInputSlotInd(); iSlot < OUTPUT_SLOT; iSlot++) {//SIMPLE_MODE ? size() : 0
+            OutputAction outputAction = canOutput(recipe.getOutput());
+            if(outputAction != OutputAction.FAIL) {//tryOutput(recipe.getOutput())) {
+                for (int iSlot = getInputSlotInd(); iSlot < OUTPUT_SLOT; iSlot++) {
                     Item slotItem = this.internalGetStack(iSlot).getItem();
                     if (slotItem.hasRecipeRemainder())
                         //replace with remainders
@@ -84,31 +84,51 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
                         //decrement stack, should be empty afterward
                         this.craftingInventory.removeStack(iSlot, 1);
                 }
+
+                ItemStack output = recipe.getOutput().copy();
+                if (outputAction == OutputAction.SET)
+                    this.setStackWithoutCrafting(OUTPUT_SLOT, output);
+                else //outputAction == OutputAction.INCREMENT
+                    this.getInventory().get(OUTPUT_SLOT).increment(output.getCount());
             }
-            else if (world != null) {
+            else if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY && world != null) {
                 world.syncWorldEvent(1001, pos, 0);
             }
         }
-        else if (world != null) {
+        else if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY && world != null) {
             world.syncWorldEvent(1001, pos, 0);
         }
     }
 
 
-    private boolean tryOutput(ItemStack output) {
+//    private boolean tryOutput(ItemStack output) {
+//        if (optionalOutputCheck()) {
+//            return false;
+//        }
+//        ItemStack oldOutput = this.getInventory().get(OUTPUT_SLOT);
+//        if (oldOutput.isEmpty()) {
+//            this.setStackWithoutCrafting(OUTPUT_SLOT, output.copy());
+//            return true;
+//        } else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() > oldOutput.getCount() + output.getCount()){
+//            //outputs are same item and output can fit in stack
+//            oldOutput.increment(output.getCount());
+//            return true;
+//        }
+//        return false;
+//    }
+
+    private OutputAction canOutput(ItemStack output) {
         if (optionalOutputCheck()) {
-            return false;
+            return OutputAction.FAIL;
         }
         ItemStack oldOutput = this.getInventory().get(OUTPUT_SLOT);
         if (oldOutput.isEmpty()) {
-            this.setStack(OUTPUT_SLOT, output.copy());
-            return true;
-        } else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() > oldOutput.getCount() + output.getCount()){
+            return OutputAction.SET;
+        } else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() >= oldOutput.getCount() + output.getCount()) {
             //outputs are same item and output can fit in stack
-            oldOutput.increment(output.getCount());
-            return true;
+            return OutputAction.INCREMENT;
         }
-        return false;
+        return OutputAction.FAIL;
     }
 
     protected CraftingInventory getIsolatedInputInv() {
@@ -144,17 +164,14 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         return slot >= OUTPUT_SLOT ? ItemStack.EMPTY : ((CraftingInventoryAccessor)this.craftingInventory).getInventory().get(slot);
     }
 
-//    public static void clearRecipeCaches() {
-//        for (Iterator<AbstractAutoCrafterBlockEntity> iterator = allInstances.iterator(); iterator.hasNext();) {
-//            AbstractAutoCrafterBlockEntity instance = iterator.next();
-//            if (instance == null) {
-//                // Remove the current element from the iterator and the list.
-//                iterator.remove();
-//            } else {
-//                instance.recipeCache = null;
-//            }
-//        }
-//    }
+    protected void tryCraftContinuously() {
+        if (CRAFTS_CONTINUOUSLY && world != null && world.getBlockState(pos).get(AutoCrafterBlock.POWERED))
+            tryCraft();
+    }
+
+    public enum OutputAction {
+        FAIL, SET, INCREMENT
+    }
 
     /**
      * start of SidedInventory implementations
@@ -184,6 +201,30 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     public boolean canExtract(int slot, ItemStack stack, Direction dir)
     {
         return extractCheck(slot, stack);
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        ItemStack removedStack = super.removeStack(slot, amount);
+        tryCraftContinuously();
+        return removedStack;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot) {
+        ItemStack removedStack = super.removeStack(slot);
+        tryCraftContinuously();
+        return removedStack;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        super.setStack(slot, stack);
+        tryCraftContinuously();
+    }
+
+    protected void setStackWithoutCrafting(int slot, ItemStack stack) {
+        super.setStack(slot, stack);
     }
 
     /**

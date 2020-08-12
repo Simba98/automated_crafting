@@ -1,6 +1,7 @@
 package net.sssubtlety.automated_crafting;
 
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.ConfigHolder;
 import net.sssubtlety.automated_crafting.AutomatedCraftingConfig;
 import net.sssubtlety.automated_crafting.block.complexity.ComplexMode;
 import net.sssubtlety.automated_crafting.block.complexity.ComplexityMode;
@@ -9,13 +10,17 @@ import net.sssubtlety.automated_crafting.block.connectivity.BasicConnectivity;
 import net.sssubtlety.automated_crafting.block.connectivity.Connectivity;
 import net.sssubtlety.automated_crafting.block.connectivity.QuasiConnectivity;
 
-public class AutoCrafterSharedData {
-    public static final boolean SIMPLE_MODE = AutoConfig.getConfigHolder(AutomatedCraftingConfig.class).getConfig().isSimpleMode();
+public abstract class AutoCrafterSharedData {
+    private static final AutomatedCraftingConfig CONFIG = AutoConfig.getConfigHolder(AutomatedCraftingConfig.class).getConfig();
+    
+    public static final boolean SIMPLE_MODE = CONFIG.isSimpleMode();
 
-    public static final boolean QUASI_CONNECTIVITY = AutoConfig.getConfigHolder(AutomatedCraftingConfig.class).getConfig().isQuasiConnected();
+    public static final boolean QUASI_CONNECTIVITY = CONFIG.isQuasiConnected();
 
-    public static final boolean REDIRECTS_REDSTONE = AutoConfig.getConfigHolder(AutomatedCraftingConfig.class).getConfig().doesRedirectRedstone();
+    public static final boolean REDIRECTS_REDSTONE = CONFIG.doesRedirectRedstone();
 
+    public static final boolean CRAFTS_CONTINUOUSLY = CONFIG.doesCraftContinuously();
+    
     public static final Class<? extends ComplexityMode> COMPLEXITY_CLASS = SIMPLE_MODE ? SimpleMode.class : ComplexMode.class;
 
     public static final Class<? extends Connectivity> CONNECTIVITY_CLASS = QUASI_CONNECTIVITY ? QuasiConnectivity .class : BasicConnectivity.class;

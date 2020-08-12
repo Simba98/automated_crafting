@@ -16,6 +16,21 @@ repositories {
 		name = "CottonMC"
 		url = "http://server.bbkr.space:8081/artifactory/libs-release"
 	}
+
+	maven {
+		name = "CurseMaven"
+		url = "https://www.cursemaven.com"
+	}
+
+	maven {
+		name = "Spinnery"
+		url  "https://dl.bintray.com/spinnery/Spinnery"
+	}
+	maven {
+		name = "JitPack"
+		url 'https://jitpack.io'
+	}
+
 	jcenter()
 }
 
@@ -41,6 +56,10 @@ dependencies {
 	include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig1u_version}"
 	//Config GUI support
 	include "me.shedaniel.cloth:config-2:${project.cloth_config_2_version}"
+
+	//DEV TEST
+//	compile "curse.maven:slotlink:3029408"
+	modRuntime 'com.github.badasintended:slotlink:slotlink-1.1.2'
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.

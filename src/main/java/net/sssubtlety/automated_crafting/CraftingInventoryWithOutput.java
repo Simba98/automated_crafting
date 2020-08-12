@@ -2,6 +2,7 @@ package net.sssubtlety.automated_crafting;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.collection.DefaultedList;
@@ -12,7 +13,7 @@ import net.minecraft.recipe.RecipeFinder;
 
 import java.util.Iterator;
 
-public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler {
+public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler implements Inventory {
     private final int invMaxStackAmount;
 
     public CraftingInventoryWithOutput(int width, int height, int outputs, int invMaxStackAmount, int apparentInvCount) {
@@ -47,6 +48,11 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
         for (int remaining = this.size(); remaining >= 0; remaining--) {
             recipeFinder.addNormalItem((ItemStack)invItr.next());
         }
+    }
+
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        return getStack(slot).isEmpty() && stack.getCount() <= getMaxCountPerStack();
     }
 
     @Override

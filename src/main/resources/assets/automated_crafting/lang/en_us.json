@@ -7,6 +7,9 @@
   "text.autoconfig.automated_crafting.option.quasiConnectivity.@Tooltip": "All changes require a restart",
   "text.autoconfig.automated_crafting.option.redirectsRedstone": "Enable Redstone Dust Redirection",
   "text.autoconfig.automated_crafting.option.redirectsRedstone.@Tooltip": "All changes require a restart",
+  "text.autoconfig.automated_crafting.option.craftContinuously": "Craft Continuously While Powered",
+  "text.autoconfig.automated_crafting.option.craftContinuously.@Tooltip": "All changes require a restart",
+
   "text.autoconfig.automated_crafting.title": "Automated Crafting Configuration"
 
 }

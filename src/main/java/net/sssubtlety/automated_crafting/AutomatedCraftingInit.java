@@ -43,22 +43,7 @@ public class AutomatedCraftingInit implements ModInitializer {
 		//Register config class
 		AutoConfig.register(AutomatedCraftingConfig.class, GsonConfigSerializer::new);
 
-		AUTO_CRAFTER = getAutoCrafterBlock();
-
-		Registry.register(Registry.BLOCK, AutoCrafterBlock.ID, AUTO_CRAFTER);
-//		if (SIMPLE_MODE) {
-//			if (QUASI_CONNECTIVITY) {
-//				//both enabled
-//			} else {
-//				//only simple mode enabled
-//			}
-//		} else {
-//			if (QUASI_CONNECTIVITY) {
-//				//only quasi connectivity enabled
-//			} else {
-//				//neither enabled
-//			}
-//		}
+		AUTO_CRAFTER = Registry.register(Registry.BLOCK, AutoCrafterBlock.ID, getAutoCrafterBlock());
 		Registry.register(Registry.ITEM, new Identifier("automated_crafting", "auto_crafter"), new BlockItem(AUTO_CRAFTER, new Item.Settings().group(ItemGroup.MISC)));
 		AUTO_CRAFTER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", BlockEntityType.Builder.create((SIMPLE_MODE ? SimpleAutoCrafterBlockEntity::new : ComplexAutoCrafterBlockEntity::new), AUTO_CRAFTER).build(null));
 
@@ -71,27 +56,9 @@ public class AutomatedCraftingInit implements ModInitializer {
 
 	private static Block getAutoCrafterBlock() throws RuntimeException {
 		try {
-//			if (SIMPLE_MODE) {
-//				if (QUASI_CONNECTIVITY) {
-//					//both enabled
-//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), QuasiConnectivity.class, SimpleMode.class);
-//				} else {
-//					//only simple mode enabled
-//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), BasicConnectivity.class, SimpleMode.class);
-//				}
-//			} else {
-//				if (QUASI_CONNECTIVITY) {
-//					//only quasi connectivity enabled
-//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), QuasiConnectivity.class, ComplexMode.class);
-//				} else {
-//					//neither enabled
-//					return new AutoCrafterBlock<>(FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(), BasicConnectivity.class, ComplexMode.class);
-//				}
-//			}
 			return new AutoCrafterBlock<> (FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(),
 					CONNECTIVITY_CLASS,
-					COMPLEXITY_CLASS,
-					REDIRECTS_REDSTONE
+					COMPLEXITY_CLASS
 			);
 		} catch (IllegalAccessException | InstantiationException e) {
 			throw new RuntimeException("Unable to construct auto crafter block", e);
