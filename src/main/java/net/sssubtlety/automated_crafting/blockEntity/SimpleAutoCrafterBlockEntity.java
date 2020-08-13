@@ -40,8 +40,7 @@ public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity
     protected boolean insertCheck(int slot, ItemStack stack) {
         return isInputSlot(slot) &&
                 this.getInventory().get(slot).isEmpty() &&
-//                stack.getCount() == 1 &&
-//                this.craftingInventory.isValid(slot, stack) &&
+                this.craftingInventory.isValid(slot, stack) &&
                 inputSlotMatchesTemplate(slot, stack);
     }
 

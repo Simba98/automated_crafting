@@ -59,7 +59,7 @@ dependencies {
 
 	//DEV TEST
 //	compile "curse.maven:slotlink:3029408"
-	modRuntime 'com.github.badasintended:slotlink:slotlink-1.1.2'
+//	modRuntime 'com.github.badasintended:slotlink:slotlink-1.1.4'
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
