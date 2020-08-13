@@ -51,7 +51,6 @@ public class AutomatedCraftingInit implements ModInitializer {
 			(syncId, inventory) -> (new SimpleAutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY)) :
 			(syncId, inventory) -> (new ComplexAutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY))
 		);
-		//		ContainerProviderRegistry.INSTANCE.registerFactory(AutoCrafterBlock.ID, (syncId, id, player, buf) -> new AutoCrafterGuiDescription(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())));
 	}
 
 	private static Block getAutoCrafterBlock() throws RuntimeException {

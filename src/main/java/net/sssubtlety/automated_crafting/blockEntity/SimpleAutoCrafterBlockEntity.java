@@ -8,9 +8,6 @@ import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDesc
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.OUTPUT_SLOT;
 
 public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity {
-//    private static final GuiConstructor<AbstractAutoCrafterGuiDescription> guiConstructor = SIMPLE_MODE ?
-//            (syncId, playerInventory, _world, _pos) -> (new AutoCrafterSimpleGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos))):
-
     @Override
     protected GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor() {
         return (syncId, playerInventory, _world, _pos) -> (new SimpleAutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos)));

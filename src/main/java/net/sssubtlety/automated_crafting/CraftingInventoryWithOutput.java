@@ -1,15 +1,10 @@
 package net.sssubtlety.automated_crafting;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.screen.CraftingScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.collection.DefaultedList;
-import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeFinder;
+import net.minecraft.util.collection.DefaultedList;
+import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 
 import java.util.Iterator;
 

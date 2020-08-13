@@ -5,7 +5,6 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,6 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPointerImpl;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
@@ -50,7 +48,7 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         return connectivity.isPowered(world, pos);
     }
 
-    protected void tryCraft(World world, BlockPos pos) {
+    protected void tryCraft(ServerWorld world, BlockPos pos) {
         BlockPointerImpl blockPointerImpl = new BlockPointerImpl(world, pos);
         ((AbstractAutoCrafterBlockEntity)blockPointerImpl.getBlockEntity()).tryCraft();
         world.updateNeighborsAlways(pos, this);

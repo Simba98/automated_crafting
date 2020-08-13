@@ -100,23 +100,6 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         }
     }
 
-
-//    private boolean tryOutput(ItemStack output) {
-//        if (optionalOutputCheck()) {
-//            return false;
-//        }
-//        ItemStack oldOutput = this.getInventory().get(OUTPUT_SLOT);
-//        if (oldOutput.isEmpty()) {
-//            this.setStackWithoutCrafting(OUTPUT_SLOT, output.copy());
-//            return true;
-//        } else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() > oldOutput.getCount() + output.getCount()){
-//            //outputs are same item and output can fit in stack
-//            oldOutput.increment(output.getCount());
-//            return true;
-//        }
-//        return false;
-//    }
-
     private OutputAction canOutput(ItemStack output) {
         if (optionalOutputCheck()) {
             return OutputAction.FAIL;

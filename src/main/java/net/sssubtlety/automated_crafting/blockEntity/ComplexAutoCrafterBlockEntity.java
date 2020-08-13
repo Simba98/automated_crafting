@@ -6,9 +6,6 @@ import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDe
 import net.sssubtlety.automated_crafting.guiDescription.ComplexAutoCrafterGuiDescription;
 
 public class ComplexAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity {
-//    private static final GuiConstructor<AbstractAutoCrafterGuiDescription> guiConstructor = SIMPLE_MODE ?
-//            (syncId, playerInventory, _world, _pos) -> (new AutoCrafterSimpleGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos))):
-
     @Override
     protected AbstractAutoCrafterBlockEntity.GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor() {
         return (syncId, playerInventory, _world, _pos) -> (new ComplexAutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos)));

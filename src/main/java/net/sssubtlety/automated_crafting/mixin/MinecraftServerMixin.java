@@ -15,7 +15,6 @@ import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.updateVali
 public class MinecraftServerMixin {
     @Inject(at = @At("TAIL"), method = "reloadResources")
     private void onReloadDataPacks(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-//        AbstractAutoCrafterBlockEntity.clearRecipeCaches();
         updateValidationKey();
     }
 }

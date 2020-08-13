@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + "+" + project.minecraft_version
+version = project.mod_version + "+" + project.compatible_minecraft_versions
 group = project.maven_group
 
 repositories {
@@ -36,26 +36,26 @@ repositories {
 
 dependencies {
 	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft "com.mojang:minecraft:" + project.minecraft_version
+	mappings "net.fabricmc:yarn:" + project.yarn_mappings
+	modImplementation "net.fabricmc:fabric-loader:" + project.loader_version
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:" + project.fabric_api_version
 	// GUI library
-	modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
+	modImplementation ("io.github.cottonmc:LibGui:" + project.libgui_version) { exclude module: 'fabric-api' }
 	//Config library
-	modApi "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig1u_version}"
+	modApi ("me.sargunvohra.mcmods:autoconfig1u:" + project.autoconfig1u_version) { exclude module: 'fabric-api' }
 	//Config GUI support
-	modApi "me.shedaniel.cloth:config-2:${project.cloth_config_2_version}"
+	modApi ("me.shedaniel.cloth:config-2:" + project.cloth_config_2_version) { exclude module: 'fabric-api' }
 	//Config menu support
-	modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
+	modImplementation ("io.github.prospector:modmenu:" + project.modmenu_version) { exclude module: 'fabric-api' }
 
-	include "io.github.cottonmc:LibGui:${project.libgui_version}"
+	include "io.github.cottonmc:LibGui:" + project.libgui_version
 	//Config library
-	include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig1u_version}"
+	include "me.sargunvohra.mcmods:autoconfig1u:" + project.autoconfig1u_version
 	//Config GUI support
-	include "me.shedaniel.cloth:config-2:${project.cloth_config_2_version}"
+	include "me.shedaniel.cloth:config-2:" + project.cloth_config_2_version
 
 	//DEV TEST
 //	compile "curse.maven:slotlink:3029408"

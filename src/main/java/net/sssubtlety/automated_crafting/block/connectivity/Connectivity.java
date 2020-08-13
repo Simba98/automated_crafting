@@ -5,6 +5,4 @@ import net.minecraft.world.World;
 
 public interface Connectivity {
     boolean isPowered(World world, BlockPos pos);
-
-//    boolean isPoweredImplementation(World world, BlockPos pos);
 }
