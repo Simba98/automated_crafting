@@ -1,0 +1,1 @@
+- 1.3.4 (26 Aug. 2021): Switched from using `ItemStack.getRecipeRemainder` to `CraftingRecipe.getRemainingStacks`. 

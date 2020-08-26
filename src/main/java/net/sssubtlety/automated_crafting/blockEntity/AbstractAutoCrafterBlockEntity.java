@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Recipe;
@@ -74,16 +73,19 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         Recipe<CraftingInventory> recipe = getRecipe();
         if(recipe != null) {
             OutputAction outputAction = canOutput(recipe.getOutput());
-            if(outputAction != OutputAction.FAIL) {//tryOutput(recipe.getOutput())) {
+            if(outputAction != OutputAction.FAIL) {
+                DefaultedList<ItemStack> remainingStacks = recipe.getRemainingStacks(this.craftingInventory);
+                ItemStack slotRemainder;
                 for (int iSlot = getInputSlotInd(); iSlot < OUTPUT_SLOT; iSlot++) {
-                    Item slotItem = this.internalGetStack(iSlot).getItem();
-                    if (slotItem.hasRecipeRemainder())
-                        //replace with remainders
-                        this.craftingInventory.setStack(iSlot, new ItemStack(slotItem.getRecipeRemainder()));
-                    else
-                        //decrement stack, should be empty afterward
+                    slotRemainder = remainingStacks.get(iSlot - getInputSlotInd());
+                    if (slotRemainder.isEmpty())
+                        //decrement stack
                         this.craftingInventory.removeStack(iSlot, 1);
+                    else
+                        //set remainder
+                        this.craftingInventory.setStack(iSlot, slotRemainder);
                 }
+
 
                 ItemStack output = recipe.getOutput().copy();
                 if (outputAction == OutputAction.SET)
@@ -143,9 +145,9 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         return recipeCache;
     }
 
-    protected ItemStack internalGetStack(int slot) {
-        return slot >= OUTPUT_SLOT ? ItemStack.EMPTY : ((CraftingInventoryAccessor)this.craftingInventory).getInventory().get(slot);
-    }
+//    protected ItemStack internalGetStack(int slot) {
+//        return slot >= OUTPUT_SLOT ? ItemStack.EMPTY : ((CraftingInventoryAccessor)this.craftingInventory).getInventory().get(slot);
+//    }
 
     protected void tryCraftContinuously() {
         if (CRAFTS_CONTINUOUSLY && world != null && world.getBlockState(pos).get(AutoCrafterBlock.POWERED))

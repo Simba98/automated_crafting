@@ -26,6 +26,9 @@
     ],
     "modmenu": [
       "net.sssubtlety.automated_crafting.AutomatedCraftingModMenuIntegration"
+    ],
+    "flaminhot": [
+      "net.sssubtlety.automated_crafting.FlaminHotCompat"
     ]
   },
   "mixins": [
