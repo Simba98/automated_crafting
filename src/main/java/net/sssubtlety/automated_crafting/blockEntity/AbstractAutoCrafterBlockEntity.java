@@ -163,11 +163,12 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
      */
     @Override
     public int[] getAvailableSlots(Direction side) {
-        int[] result = new int[getInventory().size()];
+        int[] result = new int[this.size()];
 
+        int inputSlotInd = getInputSlotInd();
         // Create an array of indices of slots that can be inserted into
         for (int i = 0; i < result.length; i++) {
-            result[i] = i;
+            result[i] = i + inputSlotInd;
         }
 
         return result;

@@ -74,10 +74,10 @@ dependencies {
 	//DEV TEST
 //	compile "curse.maven:slotlink:3029408"
 //	modRuntime 'com.github.badasintended:slotlink:slotlink-1.1.4'
-//	modCompile "alexiil.mc.lib:libblockattributes-all:0.7.0"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.5.0"
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-chunk:2.5.0"
-	modRuntime "curse.maven:flamin_hot:3041192"
+	modCompile "alexiil.mc.lib:libblockattributes-all:0.8.1"
+//	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.5.0"
+//	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-chunk:2.5.0"
+//	modRuntime "curse.maven:flamin_hot:3041192"
 //	modRuntime "com.github.DashEightMate:flamin-hot:beta-0.0.2"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
