@@ -120,23 +120,15 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     protected CraftingInventory getIsolatedInputInv() {
-//        CraftingInventory tempInventory = new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT);//((CraftingScreenHandlerAccessor)(new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
-//
-//        ((CraftingInventoryAccessor) tempInventory).getInventory();
-//
-//        for(int slot = size(); slot < OUTPUT_SLOT; slot++) {
-//            tempInventory.setStack(slot - size(), getInvStackList().get(slot));
-//        }
-//        return tempInventory;
         return new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT, craftingInventory.getInventory());
     }
 
     private Recipe<CraftingInventory> getRecipe() {
-        assert world != null;
+        if (world == null) throw new IllegalStateException("World is null. ");
         RecipeManager recipeManager = this.world.getRecipeManager();
 
         Supplier<Recipe<CraftingInventory>> recipeFetcher = () ->
-            recipeManager.getFirstMatch(RecipeType.CRAFTING, this.craftingInventory, this.world).orElse(null);
+            recipeManager.getFirstMatch(RecipeType.CRAFTING, this.getIsolatedInputInv(), this.world).orElse(null);
 
         if(recipeCache == null) {
             recipeCache = recipeFetcher.get();
@@ -144,7 +136,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
             currentKey = getValidationKey();
             recipeCache = recipeFetcher.get();
         }
-        else if(!recipeCache.matches(this.craftingInventory, world)) {
+        else if(!recipeCache.matches(this.getIsolatedInputInv(), world)) {
             recipeCache = recipeFetcher.get();
         }
 
@@ -165,11 +157,12 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
      */
     @Override
     public int[] getAvailableSlots(Direction side) {
-        int[] slotIndices = new int[this.size()];
+        int size = OUTPUT_SLOT - FIRST_INPUT_SLOT + 1;
+        int[] slotIndices = new int[size];
 
         // Create an array of indices of slots that can be interacted with using automation
-        for (int i = 0; i < slotIndices.length; i++) {
-            slotIndices[i] = i;
+        for (int i = 0; i < size; i++) {
+            slotIndices[i] = i + FIRST_INPUT_SLOT;
         }
 
         return slotIndices;

@@ -24,7 +24,7 @@ public class CraftingInventoryWithoutHandler extends CraftingInventory {
             DefaultedList<ItemStack> truncatedContents = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
 
             for (int i = 0; i < size; i++)
-                truncatedContents.add(i, contents.get(i));
+                truncatedContents.set(i, contents.get(i));
 
             ((CraftingInventoryAccessor) this).setStacks(truncatedContents);
         }

@@ -31,7 +31,7 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
 
     @Override
     public int size() {
-        return this.getWidth() * this.getHeight();
+        return this.getInventory().size();//this.getWidth() * this.getHeight();
     }
 
     @Override

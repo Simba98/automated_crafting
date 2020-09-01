@@ -25,7 +25,7 @@ public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity
 
     @Override
     protected boolean optionalOutputCheck() {
-        return !recipeCache.matches(getIsolatedInputInv(), world);
+        return !recipeCache.matches(this.getIsolatedInputInv(), world);
     }
 
     @Override
@@ -43,11 +43,11 @@ public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity
     }
 
     protected boolean isInputSlot(int slot) {
-        return slot < OUTPUT_SLOT && slot >= FIRST_INPUT_SLOT;
+        return slot >= FIRST_INPUT_SLOT && slot < OUTPUT_SLOT;
     }
 
     protected boolean inputSlotMatchesTemplate(int slot, ItemStack stack) {
-        ItemStack templateStack = this.getInventory().get(slot + FIRST_TEMPLATE_SLOT);
+        ItemStack templateStack = this.getInventory().get(slot - FIRST_INPUT_SLOT);
         return templateStack.isItemEqual(stack) && ItemStack.areTagsEqual(templateStack, stack);
     }
 }
