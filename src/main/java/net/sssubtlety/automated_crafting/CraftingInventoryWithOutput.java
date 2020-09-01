@@ -13,7 +13,7 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
 
     public CraftingInventoryWithOutput(int width, int height, int outputs, int invMaxStackAmount, int apparentInvCount) {
         super(width, height);
-        ((CraftingInventoryAccessor)this).setInventory(DefaultedList.ofSize(width * height * apparentInvCount + outputs, ItemStack.EMPTY));
+        this.setInventory(DefaultedList.ofSize(width * height * apparentInvCount + outputs, ItemStack.EMPTY));
         this.invMaxStackAmount = invMaxStackAmount;
     }
 
@@ -55,7 +55,11 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
         return invMaxStackAmount;
     }
 
-    public DefaultedList<ItemStack> getInventory() {
-        return ((CraftingInventoryAccessor)this).getStacks();
-    }
+//    public DefaultedList<ItemStack> getInventory() {
+//        return ((CraftingInventoryAccessor)this).getStacks();
+//    }
+
+//    public void setInventory(DefaultedList<ItemStack> newInventory) {
+//        ((CraftingInventoryAccessor)this).setStacks(newInventory);
+//    }
 }

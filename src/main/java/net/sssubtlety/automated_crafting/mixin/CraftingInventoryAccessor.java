@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(CraftingInventory.class)
 public interface CraftingInventoryAccessor {
-    @Accessor("stacks")
+    @Accessor
     DefaultedList<ItemStack> getStacks();
 
-    @Accessor("stacks")
-    void setInventory(DefaultedList<ItemStack> inventory);
+    @Accessor
+    void setStacks(DefaultedList<ItemStack> inventory);
 
-    @Accessor("handler")
-    ScreenHandler getHandler();
+//    @Accessor("handler")
+//    ScreenHandler getHandler();
 }

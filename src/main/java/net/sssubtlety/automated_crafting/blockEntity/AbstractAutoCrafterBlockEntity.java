@@ -224,7 +224,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
     @Override
     protected void setInvStackList(DefaultedList<ItemStack> list) {
-        ((CraftingInventoryAccessor)this.craftingInventory).setInventory(list);
+        this.craftingInventory.setInventory(list);
     }
 
     @Override
