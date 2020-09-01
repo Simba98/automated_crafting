@@ -25,7 +25,12 @@ public abstract class AutoCrafterSharedData {
 
     public static final int GRID_WIDTH = 3;
     public static final int GRID_HEIGHT = 3;
-    public static final int OUTPUT_SLOT = GRID_WIDTH * GRID_HEIGHT * (SIMPLE_MODE ? 2 : 1);
+    public static final int OUTPUT_SLOT = GRID_WIDTH * GRID_HEIGHT;
+
+    public static final int FIRST_INPUT_SLOT = 0;
+
+    public static final int FIRST_TEMPLATE_SLOT = SIMPLE_MODE ? OUTPUT_SLOT + 1 : FIRST_INPUT_SLOT;
+
 
     private static int validationKey = Integer.MIN_VALUE;
 

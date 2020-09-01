@@ -36,7 +36,7 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
 
     @Override
     public void provideRecipeInputs(RecipeFinder recipeFinder) {
-        Iterator<?> invItr = ((CraftingInventoryAccessor)this).getInventory().iterator();
+        Iterator<?> invItr = this.getInventory().iterator();
 
         if(!invItr.hasNext()) { return; }
 
@@ -53,5 +53,9 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
     @Override
     public int getMaxCountPerStack() {
         return invMaxStackAmount;
+    }
+
+    public DefaultedList<ItemStack> getInventory() {
+        return ((CraftingInventoryAccessor)this).getStacks();
     }
 }

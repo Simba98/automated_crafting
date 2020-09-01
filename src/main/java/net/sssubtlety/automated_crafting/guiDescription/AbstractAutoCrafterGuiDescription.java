@@ -23,8 +23,8 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
         /* Let root auto-fit contents */
 //        root.setSize(140, 80);
 
-        WItemSlot inputSlot = getInputSlot();
-        root.add(inputSlot, getInputX(), GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
+        WItemSlot templateSlot = WItemSlot.of(blockInventory, FIRST_TEMPLATE_SLOT, GRID_WIDTH , GRID_HEIGHT);
+        root.add(templateSlot, getTemplateX(), GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
 
         WItemSlot outputSlot = WItemSlot.outputOf(blockInventory, OUTPUT_SLOT).setInsertingAllowed(false);
         root.add(outputSlot, getOutputX(), 2 * GRID_PIXELS);
@@ -44,9 +44,10 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
 
 //        optionalAddition(root);
         if (SIMPLE_MODE) {
-            WItemSlot templateSlot;
-            templateSlot = WItemSlot.of(blockInventory, 0, GRID_WIDTH, GRID_HEIGHT);
-            root.add(templateSlot, 0, GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
+            WItemSlot inputSlot;
+            inputSlot = WItemSlot.of(blockInventory, FIRST_INPUT_SLOT, GRID_WIDTH, GRID_HEIGHT);
+            optionalInputSlotAdjustment(inputSlot);
+            root.add(inputSlot, getInputX(), GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
 
             WLabel templateLabel = new WLabel("Template");
             templateLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -62,11 +63,15 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
         root.validate(this);
     }
 
-    protected abstract WItemSlot getInputSlot();
+//    protected abstract WItemSlot getInputSlot();
+
+    protected void optionalInputSlotAdjustment(WItemSlot inputSlot) { }
+
+    protected abstract int getTemplateX();
 
     protected abstract int getInputX();
 
     protected abstract int getOutputX();
 
-    protected abstract void optionalAddition(WPlainPanel root);
+//    protected abstract void optionalAddition(WPlainPanel root);
 }

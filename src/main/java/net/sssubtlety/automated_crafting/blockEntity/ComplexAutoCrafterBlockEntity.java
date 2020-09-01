@@ -22,16 +22,6 @@ public class ComplexAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntit
     }
 
     @Override
-    public int getInputSlotInd() {
-        return 0;
-    }
-
-    @Override
-    protected boolean optionalOutputCheck() {
-        return false;
-    }
-
-    @Override
     protected boolean insertCheck(int slot, ItemStack stack) {
         return this.getInventory().get(slot).isEmpty();
     }

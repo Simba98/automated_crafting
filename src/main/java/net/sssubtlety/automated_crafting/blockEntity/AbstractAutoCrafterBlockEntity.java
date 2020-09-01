@@ -33,28 +33,31 @@ import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory {
     protected final CraftingInventoryWithOutput craftingInventory;
-    private int validationKey = Integer.MIN_VALUE;
+    private int currentKey;
     protected Recipe<CraftingInventory> recipeCache;
 
     protected abstract GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor();
     protected abstract int getInvMaxStackCount();
     protected abstract int getApparentInvCount();
-    public abstract int getInputSlotInd();
-    protected abstract boolean optionalOutputCheck();
+//    public abstract int getInputSlotInd();
+    protected boolean optionalOutputCheck() {
+        return false;
+    }
     protected abstract boolean insertCheck(int slot, ItemStack stack);
     protected abstract boolean extractCheck(int slot, ItemStack stack);
 
     public AbstractAutoCrafterBlockEntity() {
         super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY);
-        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, 1, getInvMaxStackCount(), getApparentInvCount());//SIMPLE_MODE ? 2 : 1
+        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, 1, getInvMaxStackCount(), getApparentInvCount());
         recipeCache = null;
+        currentKey = getValidationKey();
     }
 
     // Serialize the BlockEntity
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         // Save the current value of the number to the tag
-        Inventories.toTag(tag, ((CraftingInventoryAccessor)this.craftingInventory).getInventory());
+        Inventories.toTag(tag, this.craftingInventory.getInventory());
         return super.toTag(tag);
     }
 
@@ -62,11 +65,11 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        Inventories.fromTag(tag, ((CraftingInventoryAccessor)this.craftingInventory).getInventory());
+        Inventories.fromTag(tag, this.craftingInventory.getInventory());
     }
 
     public DefaultedList<ItemStack> getInventory() {
-        return ((CraftingInventoryAccessor)this.craftingInventory).getInventory();
+        return this.craftingInventory.getInventory();
     }
 
     public void tryCraft() {
@@ -76,8 +79,8 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
             if(outputAction != OutputAction.FAIL) {
                 DefaultedList<ItemStack> remainingStacks = recipe.getRemainingStacks(this.craftingInventory);
                 ItemStack slotRemainder;
-                for (int iSlot = getInputSlotInd(); iSlot < OUTPUT_SLOT; iSlot++) {
-                    slotRemainder = remainingStacks.get(iSlot - getInputSlotInd());
+                for (int iSlot = FIRST_INPUT_SLOT; iSlot < OUTPUT_SLOT; iSlot++) {
+                    slotRemainder = remainingStacks.get(iSlot);
                     if (slotRemainder.isEmpty())
                         //decrement stack
                         this.craftingInventory.removeStack(iSlot, 1);
@@ -117,12 +120,15 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     protected CraftingInventory getIsolatedInputInv() {
-        CraftingInventory tempInventory = new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT);//((CraftingScreenHandlerAccessor)(new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
-
-        for(int slot = size(); slot < OUTPUT_SLOT; slot++) {
-            tempInventory.setStack(slot - size(), getInvStackList().get(slot));
-        }
-        return tempInventory;
+//        CraftingInventory tempInventory = new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT);//((CraftingScreenHandlerAccessor)(new CraftingScreenHandler(0, new PlayerInventory(null)))).getInput();
+//
+//        ((CraftingInventoryAccessor) tempInventory).getInventory();
+//
+//        for(int slot = size(); slot < OUTPUT_SLOT; slot++) {
+//            tempInventory.setStack(slot - size(), getInvStackList().get(slot));
+//        }
+//        return tempInventory;
+        return new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT, craftingInventory.getInventory());
     }
 
     private Recipe<CraftingInventory> getRecipe() {
@@ -134,8 +140,8 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
         if(recipeCache == null) {
             recipeCache = recipeFetcher.get();
-        } else if (validationKey != getValidationKey()) {
-            validationKey = getValidationKey();
+        } else if (currentKey != getValidationKey()) {
+            currentKey = getValidationKey();
             recipeCache = recipeFetcher.get();
         }
         else if(!recipeCache.matches(this.craftingInventory, world)) {
@@ -144,10 +150,6 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
         return recipeCache;
     }
-
-//    protected ItemStack internalGetStack(int slot) {
-//        return slot >= OUTPUT_SLOT ? ItemStack.EMPTY : ((CraftingInventoryAccessor)this.craftingInventory).getInventory().get(slot);
-//    }
 
     protected void tryCraftContinuously() {
         if (CRAFTS_CONTINUOUSLY && world != null && world.getBlockState(pos).get(AutoCrafterBlock.POWERED))
@@ -163,15 +165,14 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
      */
     @Override
     public int[] getAvailableSlots(Direction side) {
-        int[] result = new int[this.size()];
+        int[] slotIndices = new int[this.size()];
 
-        int inputSlotInd = getInputSlotInd();
-        // Create an array of indices of slots that can be inserted into
-        for (int i = 0; i < result.length; i++) {
-            result[i] = i + inputSlotInd;
+        // Create an array of indices of slots that can be interacted with using automation
+        for (int i = 0; i < slotIndices.length; i++) {
+            slotIndices[i] = i;
         }
 
-        return result;
+        return slotIndices;
     }
 
     @Override
@@ -184,8 +185,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir)
-    {
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         return extractCheck(slot, stack);
     }
 
@@ -244,7 +244,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
      */
     @Override
     public int size() {
-        return craftingInventory.size();
+        return craftingInventory.size() + 1;
     }
 
 

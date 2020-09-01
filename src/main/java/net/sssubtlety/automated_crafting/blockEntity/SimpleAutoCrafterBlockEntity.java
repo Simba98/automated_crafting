@@ -5,7 +5,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDescription;
 
-import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.OUTPUT_SLOT;
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity {
     @Override
@@ -21,11 +21,6 @@ public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity
     @Override
     protected int getApparentInvCount() {
         return 2;
-    }
-
-    @Override
-    public int getInputSlotInd() {
-        return size();
     }
 
     @Override
@@ -48,11 +43,11 @@ public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity
     }
 
     protected boolean isInputSlot(int slot) {
-        return slot != OUTPUT_SLOT && slot >= size();
+        return slot < OUTPUT_SLOT && slot >= FIRST_INPUT_SLOT;
     }
 
     protected boolean inputSlotMatchesTemplate(int slot, ItemStack stack) {
-        ItemStack templateStack = this.getInventory().get(slot - size());
+        ItemStack templateStack = this.getInventory().get(slot + FIRST_TEMPLATE_SLOT);
         return templateStack.isItemEqual(stack) && ItemStack.areTagsEqual(templateStack, stack);
     }
 }
