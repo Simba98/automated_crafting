@@ -25,9 +25,9 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
         this(width, height, 1, 64, apparentInvCount);
     }
 
-    public CraftingInventoryWithOutput(int width, int height) {
-        this(width, height, 1);
-    }
+//    public CraftingInventoryWithOutput(int width, int height) {
+//        this(width, height, 1);
+//    }
 
     @Override
     public int size() {
@@ -36,13 +36,14 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
 
     @Override
     public void provideRecipeInputs(RecipeFinder recipeFinder) {
-        Iterator<?> invItr = this.getInventory().iterator();
 
-        if(!invItr.hasNext()) { return; }
+//        if(!invItr.hasNext()) { return; }
 
-        for (int remaining = this.size(); remaining >= 0; remaining--) {
-            recipeFinder.addNormalItem((ItemStack)invItr.next());
-        }
+        for (ItemStack stack : this.getInventory())
+            recipeFinder.addNormalItem(stack);
+//        for (int remaining = this.size(); remaining > 0; remaining--) {
+//            recipeFinder.addNormalItem((ItemStack)invItr.next());
+//        }
     }
 
     @Override

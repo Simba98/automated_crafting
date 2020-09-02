@@ -237,7 +237,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
      */
     @Override
     public int size() {
-        return craftingInventory.size() + 1;
+        return craftingInventory.size();
     }
 
 

@@ -34,6 +34,7 @@ import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.FIRST_TEMP
 public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> extends BlockWithEntity { //implements BlockEntityProvider {
     public static final Identifier ID = new Identifier("automated_crafting", "auto_crafter");
     public static final BooleanProperty POWERED = BooleanProperty.of("powered");
+    public static final BooleanProperty ACTIVATED = BooleanProperty.of("activated");
 
     protected final C connectivity;
     protected final M mode;
@@ -42,7 +43,7 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         super(settings);
         this.connectivity = connectivity.newInstance();
         this.mode = mode.newInstance();
-        this.setDefaultState((((this.stateManager.getDefaultState()).with(POWERED, false))));
+        this.setDefaultState((((this.stateManager.getDefaultState()).with(POWERED, false).with(ACTIVATED, false))));
     }
 
     protected boolean isPowered(World world, BlockPos pos) {
@@ -85,12 +86,13 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
             if(wasPowered) {
                 //isPowered && wasPowered
                 if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY)
-                    //crafts on pulse -> de-power
-                    world.setBlockState(pos, state.with(POWERED, false), 2);
+                    //crafts on pulse -> de-activate
+                    world.setBlockState(pos, state.with(ACTIVATED, false), 2);
             } else {
                 //isPowered && !wasPowered
                 //powering on
-                world.setBlockState(pos, state.with(POWERED, true), 2);
+                world.setBlockState(pos, state.with(POWERED, true).with(ACTIVATED, true), 2);
+                boolean poweredTest = state.get(POWERED);
                 tryCraft(world, pos);
                 if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY)
                     //crafts on pulse -> de-power after two ticks
@@ -100,10 +102,13 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         } else if(wasPowered) {
             //!isPowered && wasPowered
             //de-powering
-            world.setBlockState(pos, state.with(POWERED, false), 2);
+            world.setBlockState(pos, state.with(POWERED, false).with(ACTIVATED, false), 2);
+//            world.setBlockState(pos, state.with(ACTIVATED, false), 2);
         }
         //else !is && !was powered
         //staying un-powered
+        world.setBlockState(pos, state.with(POWERED, false).with(ACTIVATED, false), 2);
+
     }
 
     @Override
@@ -156,7 +161,7 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(POWERED);
+        stateManager.add(POWERED).add(ACTIVATED);
     }
 
     @Override
