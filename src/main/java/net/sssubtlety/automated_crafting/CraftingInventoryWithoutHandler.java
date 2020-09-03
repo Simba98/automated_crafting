@@ -20,21 +20,28 @@ public class CraftingInventoryWithoutHandler extends CraftingInventory {
         int size = this.size();
         if (contents.size() == size)
             ((CraftingInventoryAccessor)this).setStacks(contents);
-        else if (contents.size() > size) {
-            DefaultedList<ItemStack> truncatedContents = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-
-            for (int i = 0; i < size; i++)
-                truncatedContents.set(i, contents.get(i));
-
-            ((CraftingInventoryAccessor) this).setStacks(truncatedContents);
-        }
-        else
-            //  this.size() > contents.size()
-            throw new IllegalArgumentException("Trying to create CraftingInventoryWithoutHandler from list with size < width * height. ");
-//        int shorterLength = contents.size();
+//        else if (contents.size() > size) {
+//            DefaultedList<ItemStack> truncatedContents = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
 //
-//            for (int i = 0; i < shorterLength; i++)
-//                this.setStack(i, contents.get(i));
+//            for (int i = 0; i < size; i++)
+//                truncatedContents.set(i, contents.get(i));
+//
+//            ((CraftingInventoryAccessor) this).setStacks(truncatedContents);
+//        }
+        else
+            throw new IllegalArgumentException("Trying to create CraftingInventoryWithoutHandler from list with size != width * height. ");
+    }
+
+    public DefaultedList<ItemStack> getInventorySubList(int start, int length) {
+        if (start < 0) throw new IllegalArgumentException("Received negative start. ");
+        if (length < 0) throw new IllegalArgumentException("Received negative length. ");
+        if (start + length > this.size()) throw new IllegalArgumentException("start + length > inventory size. ");
+
+        DefaultedList<ItemStack> subInventory = DefaultedList.ofSize(length, ItemStack.EMPTY);
+        for (int i = 0; i < length; i++)
+            subInventory.set(i, this.getInventory().get(i + start));
+
+        return subInventory;
     }
 
     @Override

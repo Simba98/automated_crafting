@@ -1,7 +1,9 @@
 package net.sssubtlety.automated_crafting.blockEntity;
 
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerContext;
+import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDescription;
 

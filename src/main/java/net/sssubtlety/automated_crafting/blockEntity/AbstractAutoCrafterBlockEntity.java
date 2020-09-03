@@ -119,16 +119,12 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         return OutputAction.FAIL;
     }
 
-    protected CraftingInventory getIsolatedInputInv() {
-        return new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT, craftingInventory.getInventory());
-    }
-
     private Recipe<CraftingInventory> getRecipe() {
         if (world == null) throw new IllegalStateException("World is null. ");
         RecipeManager recipeManager = this.world.getRecipeManager();
 
         Supplier<Recipe<CraftingInventory>> recipeFetcher = () ->
-            recipeManager.getFirstMatch(RecipeType.CRAFTING, this.getIsolatedInputInv(), this.world).orElse(null);
+            recipeManager.getFirstMatch(RecipeType.CRAFTING, this.getIsolatedTemplateInv(), this.world).orElse(null);
 
         if(recipeCache == null) {
             recipeCache = recipeFetcher.get();
@@ -141,6 +137,14 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         }
 
         return recipeCache;
+    }
+
+    protected CraftingInventory getIsolatedInputInv() {
+        return new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT, this.craftingInventory.getInventorySubList(FIRST_INPUT_SLOT, GRID_SIZE));
+    }
+
+    protected CraftingInventory getIsolatedTemplateInv() {
+        return new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT, this.craftingInventory.getInventorySubList(FIRST_TEMPLATE_SLOT, GRID_SIZE));
     }
 
     protected void tryCraftContinuously() {
