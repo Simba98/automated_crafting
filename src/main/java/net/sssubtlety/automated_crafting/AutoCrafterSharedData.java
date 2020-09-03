@@ -25,7 +25,7 @@ public abstract class AutoCrafterSharedData {
 
     public static final int GRID_WIDTH = 3;
     public static final int GRID_HEIGHT = 3;
-    public static final int OUTPUT_SLOT = GRID_WIDTH * GRID_HEIGHT * 2;
+    public static final int OUTPUT_SLOT = GRID_WIDTH * GRID_HEIGHT * (SIMPLE_MODE ? 2 : 1);
 
     public static final int FIRST_INPUT_SLOT = SIMPLE_MODE ? GRID_WIDTH * GRID_HEIGHT : 0;
 

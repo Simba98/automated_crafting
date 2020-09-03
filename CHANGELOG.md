@@ -1,4 +1,5 @@
-- 1.3.9 (1 Sep. 2020): If 'Craft continuously while powered' is disabled and an auto crafter is powered continuously, the auto crafter will no longer try to craft wvery time it receives a block update. 
+- 1.3.9 (1 Sep. 2020): Fixed `indexOutOfBounds` exception that occurred when 'Simple Mode' was disabled. 
+  If 'Craft continuously while powered' is disabled and an auto crafter is powered continuously, the auto crafter will no longer try to craft every time it receives a block update. 
   If you have a resourcepack that changes the autocrafter's texture, it's likely it will need to be adjusted after this update. 
   I've created two alternate resourcepacks, see 'additional files' for this update if you're interested in these. 
 - 1.3.8 (1 Sep. 2020): Fixed startup crash. Made sure the mod works outside my dev environment (sorry about that). 
