@@ -1,43 +1,41 @@
 {
   "schemaVersion": 1,
-  "id": "automated_crafting",
-  "version": "${version}",
+  "id": "${mod_id}",
+  "version": "${mod_version}",
 
   "name": "Automated Crafting",
   "description": "Adds a simple autocrafter block. Has a simple mode and a... not simple mode. ",
   "authors": [
-    "supersaiyansubtlety"
+    "${author}"
   ],
   "contact": {
-    "homepage": "https://github.com/supersaiyansubtlety/automated_crafting",
-    "sources": "https://github.com/supersaiyansubtlety/automated_crafting"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/${archives_base_name}",
+    "sources": "https://gitlab.com/${author}/${mod_id}"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/automated_crafting/automated_crafting_icon.png",
+  "icon": "assets/${mod_id}/${mod_id}_icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.sssubtlety.automated_crafting.AutomatedCraftingInit"
+      "${maven_group}.${mod_id}.${init_class}"
     ],
     "client": [
-      "net.sssubtlety.automated_crafting.AutomatedCraftingClientInit"
+      "${maven_group}.${mod_id}.${client_init_class}"
     ],
     "modmenu": [
-      "net.sssubtlety.automated_crafting.AutomatedCraftingModMenuIntegration"
+      "${maven_group}.${mod_id}.AutomatedCraftingModMenuIntegration"
     ]
   },
   "mixins": [
-    "automated_crafting.mixins.json"
+    "${mod_id}.mixins.json"
   ],
 
   "depends": {
-    "fabricloader": ">=0.9.1",
-    "fabric": ">=0.19.0",
-    "minecraft": "1.16.2"
-  },
-  "suggests": {
-    "modmenu": ">=1.14.6"
+    "fabricloader": ">=${loader_version}",
+    "fabric": ">=${min_fabric_api_version}",
+    "minecraft": ">=${min_minecraft_version} <=${minecraft_version}"
   }
 }
+
