@@ -31,7 +31,7 @@ public class AutomatedCraftingInit implements ModInitializer {
 	// an instance of our new item
 	private static Block AUTO_CRAFTER;
 
-	public static BlockEntityType<AbstractAutoCrafterBlockEntity> AUTO_CRAFTER_BLOCK_ENTITY;
+	public static BlockEntityType<AbstractAutoCrafterBlockEntity> AUTO_CRAFTER_BLOCK_ENTITY_TYPE;
 	public static ScreenHandlerType<AbstractAutoCrafterGuiDescription> AUTO_CRAFTER_SCREEN_HANDLER_TYPE;
 
 	@Override
@@ -45,7 +45,7 @@ public class AutomatedCraftingInit implements ModInitializer {
 
 		AUTO_CRAFTER = Registry.register(Registry.BLOCK, AutoCrafterBlock.ID, getAutoCrafterBlock());
 		Registry.register(Registry.ITEM, new Identifier("automated_crafting", "auto_crafter"), new BlockItem(AUTO_CRAFTER, new Item.Settings().group(ItemGroup.MISC)));
-		AUTO_CRAFTER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", BlockEntityType.Builder.create((SIMPLE_MODE ? SimpleAutoCrafterBlockEntity::new : ComplexAutoCrafterBlockEntity::new), AUTO_CRAFTER).build(null));
+		AUTO_CRAFTER_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", BlockEntityType.Builder.create((SIMPLE_MODE ? SimpleAutoCrafterBlockEntity::new : ComplexAutoCrafterBlockEntity::new), AUTO_CRAFTER).build(null));
 
 		AUTO_CRAFTER_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerSimple(AutoCrafterBlock.ID, SIMPLE_MODE ?
 			(syncId, inventory) -> (new SimpleAutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY)) :

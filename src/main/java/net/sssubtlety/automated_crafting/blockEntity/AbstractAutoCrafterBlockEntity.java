@@ -25,7 +25,6 @@ import net.sssubtlety.automated_crafting.CraftingInventoryWithOutput;
 import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
 import net.sssubtlety.automated_crafting.block.AutoCrafterBlock;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
-import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 
 import java.util.function.Supplier;
 
@@ -47,7 +46,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     protected abstract boolean extractCheck(int slot, ItemStack stack);
 
     public AbstractAutoCrafterBlockEntity() {
-        super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY);
+        super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY_TYPE);
         craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, 1, getInvMaxStackCount(), getApparentInvCount());
         recipeCache = null;
         currentKey = getValidationKey();

@@ -28,8 +28,7 @@ import net.sssubtlety.automated_crafting.blockEntity.AbstractAutoCrafterBlockEnt
 
 import java.util.Random;
 
-import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.FIRST_INPUT_SLOT;
-import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.FIRST_TEMPLATE_SLOT;
+import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> extends BlockWithEntity { //implements BlockEntityProvider {
     public static final Identifier ID = new Identifier("automated_crafting", "auto_crafter");
@@ -138,12 +137,13 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         DefaultedList<ItemStack> inventory = ((AbstractAutoCrafterBlockEntity)blockEntity).getInventory();
         int inputsOccupied = 0;
 
-        for (int slot = FIRST_INPUT_SLOT; slot < FIRST_TEMPLATE_SLOT; slot++) {
+
+        for (int slot = FIRST_INPUT_SLOT; slot < OUTPUT_SLOT; slot++) {
             if(!inventory.get(slot).isEmpty()) { inputsOccupied++; }
         }
-        float inputFillRatio = ((float)inputsOccupied) / ((AbstractAutoCrafterBlockEntity)blockEntity).size();
+        float inputFillRatio = ((float)inputsOccupied) / (OUTPUT_SLOT - FIRST_INPUT_SLOT);
 
-        ItemStack outputStack = inventory.get(FIRST_TEMPLATE_SLOT);
+        ItemStack outputStack = inventory.get(OUTPUT_SLOT);
         float outputFillRatio = ((float)outputStack.getCount()) / outputStack.getMaxCount();
 
         int min = (inputFillRatio != 0 || outputFillRatio != 0 ? 1 : 0);
