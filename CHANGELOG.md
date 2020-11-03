@@ -1,3 +1,4 @@
+- 1.3.13 (3 Nov. 2020): Marked as compatible with 1.16.4, updated dependencies. 
 - 1.3.12-beta.1 (15 Oct. 2020): Fixed comparator output so that it gives equal weight to input and output in both simple and complex mode. 
   Known issue: Settings do not sync from server to client, leading to strange behavior when client settings don't match. For now just make sure they match; I'm working on a solution. 
 - 1.3.11 (18 Sep. 2020): Marked as compatible with 1.16.3. 
