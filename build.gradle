@@ -107,8 +107,8 @@ processResources {
 				"loader_version": project.loader_version,
 
 				"mod_id": project.mod_id,
-				"init_class": project.init_class,
-				"client_init_class": project.client_init_class,
+				"init_class": project.ModId + "Init",
+				"client_init_class": project.ModId + "ClientInit",
 				"mod_version": project.version,
 				"maven_group": project.maven_group,
 				"archives_base_name": project.archives_base_name,
