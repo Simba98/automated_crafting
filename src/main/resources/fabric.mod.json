@@ -36,6 +36,12 @@
     "fabricloader": ">=${loader_version}",
     "fabric": ">=${min_fabric_api_version}",
     "minecraft": ">=${min_minecraft_version} <=${minecraft_version}"
+  },
+  "custom": {
+    "modupdater": {
+      "strategy": "curseforge",
+      "projectID": 389435
+    }
   }
 }
 

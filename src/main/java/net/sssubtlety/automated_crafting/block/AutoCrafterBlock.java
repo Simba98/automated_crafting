@@ -141,16 +141,8 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         for (int slot = FIRST_INPUT_SLOT; slot < OUTPUT_SLOT; slot++) {
             if(!inventory.get(slot).isEmpty()) { inputsOccupied++; }
         }
-        float inputFillRatio = ((float)inputsOccupied) / (OUTPUT_SLOT - FIRST_INPUT_SLOT);
 
-        ItemStack outputStack = inventory.get(OUTPUT_SLOT);
-        float outputFillRatio = ((float)outputStack.getCount()) / outputStack.getMaxCount();
-
-        int min = (inputFillRatio != 0 || outputFillRatio != 0 ? 1 : 0);
-
-        float totalFillRatio = (inputFillRatio + outputFillRatio) / 2;
-
-        return Math.max(Math.round(totalFillRatio * 15), min);
+        return inputsOccupied;
     }
 
     @Override

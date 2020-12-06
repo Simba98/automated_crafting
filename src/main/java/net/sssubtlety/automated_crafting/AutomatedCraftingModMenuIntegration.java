@@ -10,11 +10,13 @@ import net.minecraft.client.gui.screen.Screen;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static net.sssubtlety.automated_crafting.AutomatedCraftingInit.MOD_ID;
+
 @Environment(EnvType.CLIENT)
 public class AutomatedCraftingModMenuIntegration implements ModMenuApi {
     @Override
     public String getModId() {
-        return "automated_crafting";
+        return MOD_ID;
     }
 
     @Override

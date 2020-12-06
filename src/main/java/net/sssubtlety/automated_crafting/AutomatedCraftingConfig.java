@@ -4,7 +4,9 @@ import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
 
-@Config(name = "automated_crafting")
+import static net.sssubtlety.automated_crafting.AutomatedCraftingInit.MOD_ID;
+
+@Config(name = MOD_ID)
 public class AutomatedCraftingConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     boolean simpleMode = true;

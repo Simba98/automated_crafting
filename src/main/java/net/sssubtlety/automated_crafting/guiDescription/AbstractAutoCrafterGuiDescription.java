@@ -2,9 +2,7 @@ package net.sssubtlety.automated_crafting.guiDescription;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
-import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
-import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
@@ -20,8 +18,6 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
 
         WPlainPanel root = new WPlainPanel();
         setRootPanel(root);
-        /* Let root auto-fit contents */
-//        root.setSize(140, 80);
 
         WItemSlot templateSlot = WItemSlot.of(blockInventory, FIRST_TEMPLATE_SLOT, GRID_WIDTH , GRID_HEIGHT);
         root.add(templateSlot, getTemplateX(), GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
@@ -29,33 +25,7 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
         WItemSlot outputSlot = WItemSlot.outputOf(blockInventory, OUTPUT_SLOT).setInsertingAllowed(false);
         root.add(outputSlot, getOutputX(), 2 * GRID_PIXELS);
 
-//        if(SIMPLE_MODE) {
-//            WItemSlot templateSlot;
-//            templateSlot = WItemSlot.of(blockInventory, 0, GRID_WIDTH, GRID_HEIGHT);
-//            root.add(templateSlot, 0, GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
-//
-//            WLabel templateLabel = new WLabel("Template");
-//            templateLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-//            root.add(templateLabel, GRID_PIXELS, 4 * GRID_PIXELS);
-//            WLabel inputLabel = new WLabel("Input");
-//            inputLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-//            root.add(inputLabel, 5 * GRID_PIXELS, 4 * GRID_PIXELS);
-//        }
-
-//        optionalAddition(root);
-        if (SIMPLE_MODE) {
-            WItemSlot inputSlot;
-            inputSlot = WItemSlot.of(blockInventory, FIRST_INPUT_SLOT, GRID_WIDTH, GRID_HEIGHT);
-            optionalInputSlotAdjustment(inputSlot);
-            root.add(inputSlot, getInputX(), GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
-
-            WLabel templateLabel = new WLabel("Template");
-            templateLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-            root.add(templateLabel, GRID_PIXELS, 4 * GRID_PIXELS);
-            WLabel inputLabel = new WLabel("Input");
-            inputLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
-            root.add(inputLabel, 5 * GRID_PIXELS, 4 * GRID_PIXELS);
-        }
+        optionalAddition(root);
 
         root.add(this.createPlayerInventoryPanel(), 0, 5 * GRID_PIXELS);
 
@@ -63,15 +33,11 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
         root.validate(this);
     }
 
-//    protected abstract WItemSlot getInputSlot();
-
-    protected void optionalInputSlotAdjustment(WItemSlot inputSlot) { }
+    protected void optionalAddition(WPlainPanel root) { }
 
     protected abstract int getTemplateX();
 
     protected abstract int getInputX();
 
     protected abstract int getOutputX();
-
-//    protected abstract void optionalAddition(WPlainPanel root);
 }

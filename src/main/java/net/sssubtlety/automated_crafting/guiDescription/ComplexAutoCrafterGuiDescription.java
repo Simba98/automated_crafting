@@ -13,10 +13,6 @@ public class ComplexAutoCrafterGuiDescription extends AbstractAutoCrafterGuiDesc
         super(syncId, playerInventory, context);
     }
 
-//    protected WItemSlot getInputSlot() {
-//        return WItemSlot.of(blockInventory, 0, GRID_WIDTH , GRID_HEIGHT);
-//    }
-
     @Override
     protected int getTemplateX() {
         return 2 * GRID_PIXELS;
@@ -27,9 +23,8 @@ public class ComplexAutoCrafterGuiDescription extends AbstractAutoCrafterGuiDesc
         return getTemplateX();
     }
 
+    @Override
     protected int getOutputX() {
         return (6 * GRID_PIXELS - 5);
     }
-
-//    protected void optionalAddition(WPlainPanel root) { }
 }

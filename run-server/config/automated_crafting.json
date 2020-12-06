@@ -1,0 +1,6 @@
+{
+  "simpleMode": true,
+  "quasiConnectivity": true,
+  "redirectsRedstone": true,
+  "craftContinuously": false
+}

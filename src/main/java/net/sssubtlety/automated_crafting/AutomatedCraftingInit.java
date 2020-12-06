@@ -28,9 +28,9 @@ import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDesc
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public class AutomatedCraftingInit implements ModInitializer {
-	// an instance of our new item
-	private static Block AUTO_CRAFTER;
+	public static final String MOD_ID = "automated_crafting";
 
+	private static Block AUTO_CRAFTER;
 	public static BlockEntityType<AbstractAutoCrafterBlockEntity> AUTO_CRAFTER_BLOCK_ENTITY_TYPE;
 	public static ScreenHandlerType<AbstractAutoCrafterGuiDescription> AUTO_CRAFTER_SCREEN_HANDLER_TYPE;
 

@@ -8,7 +8,12 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + "+" + project.compatible_minecraft_versions
+
+String compatible_minecraft_versions =
+		(project.min_minecraft_version != project.minecraft_version ? project.min_minecraft_version + "-" : "") +
+		project.minecraft_version
+
+version = project.mod_version + "+MC" + compatible_minecraft_versions
 group = project.maven_group
 
 repositories {
@@ -30,6 +35,11 @@ repositories {
 	maven {
 		name = "BuildCraft"
 		url = "https://mod-buildcraft.com/maven"
+	}
+
+	maven {
+		name = "guntram"
+		url = "https://minecraft.guntram.de/maven/"
 	}
 
 	// fallback/catch-all repos
@@ -57,24 +67,24 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:" + project.fabric_api_version
 	// GUI library
 	modImplementation ("io.github.cottonmc:LibGui:" + project.libgui_version) { exclude module: 'fabric-api' }
-	//Config library
-	modApi ("me.sargunvohra.mcmods:autoconfig1u:" + project.autoconfig1u_version) { exclude module: 'fabric-api' }
-	//Config GUI support
-	modApi ("me.shedaniel.cloth:config-2:" + project.cloth_config_2_version) { exclude module: 'fabric-api' }
-	//Config menu support
-	modImplementation ("io.github.prospector:modmenu:" + project.modmenu_version) { exclude module: 'fabric-api' }
-
 	include "io.github.cottonmc:LibGui:" + project.libgui_version
-	//Config library
+	// Config library
+	modApi ("me.sargunvohra.mcmods:autoconfig1u:" + project.autoconfig1u_version) { exclude module: 'fabric-api' }
 	include "me.sargunvohra.mcmods:autoconfig1u:" + project.autoconfig1u_version
-	//Config GUI support
+	// Config GUI support
+	modApi ("me.shedaniel.cloth:config-2:" + project.cloth_config_2_version) { exclude module: 'fabric-api' }
 	include "me.shedaniel.cloth:config-2:" + project.cloth_config_2_version
+	// Config menu support
+	modImplementation ("io.github.prospector:modmenu:" + project.modmenu_version) { exclude module: 'fabric-api' }
+	// translation fetching
+	modImplementation "de.guntram.mcmod:crowdin-translate:" + project.crowdin_translate_version
+	include "de.guntram.mcmod:crowdin-translate:" + project.crowdin_translate_version
 
 
 	//DEV TEST
 //	compile "curse.maven:slotlink:3029408"
 //	modRuntime 'com.github.badasintended:slotlink:slotlink-1.1.4'
-	modCompile "alexiil.mc.lib:libblockattributes-all:0.8.1"
+//	modCompile "alexiil.mc.lib:libblockattributes-all:0.8.1"
 //	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.5.0"
 //	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-chunk:2.5.0"
 //	modRuntime "curse.maven:flamin_hot:3041192"
@@ -93,6 +103,7 @@ processResources {
 		expand (
 				"minecraft_version": project.minecraft_version,
 				"min_minecraft_version": project.min_minecraft_version,
+				"compatible_minecraft_versions": compatible_minecraft_versions,
 				"loader_version": project.loader_version,
 
 				"mod_id": project.mod_id,

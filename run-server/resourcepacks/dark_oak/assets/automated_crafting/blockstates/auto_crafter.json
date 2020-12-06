@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "automated_crafting:block/auto_crafter" }
+  }
+}
