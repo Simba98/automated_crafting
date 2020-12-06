@@ -1,5 +1,6 @@
 - 1.3.14 (6 Dec. 2020): Changed comparator output (for the last time, promise), it's now equal to the number of filled input slots. 
   Translations are now handled with [CrowdinTranslate](https://github.com/gbl/CrowdinTranslate), go [here](https://crowdin.com/project/automated-crafting) if you'd like to contribute a translation. 
+  "Template" and "Input" (in simple mode) can now be translated. 
 - 1.3.13 (3 Nov. 2020): Marked as compatible with 1.16.4, updated dependencies. 
 - 1.3.12-beta.1 (15 Oct. 2020): Fixed comparator output so that it gives equal weight to input and output in both simple and complex mode. 
   Known issue: Settings do not sync from server to client, leading to strange behavior when client settings don't match. For now just make sure they match; I'm working on a solution. 
