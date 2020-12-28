@@ -17,13 +17,13 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
         this.invMaxStackAmount = invMaxStackAmount;
     }
 
-    public CraftingInventoryWithOutput(int width, int height, int outputs, int apparentInvCount) {
-        this(width, height, outputs, 64, apparentInvCount);
-    }
-
-    public CraftingInventoryWithOutput(int width, int height, int apparentInvCount) {
-        this(width, height, 1, 64, apparentInvCount);
-    }
+//    public CraftingInventoryWithOutput(int width, int height, int outputs, int apparentInvCount) {
+//        this(width, height, outputs, 64, apparentInvCount);
+//    }
+//
+//    public CraftingInventoryWithOutput(int width, int height, int apparentInvCount) {
+//        this(width, height, 1, 64, apparentInvCount);
+//    }
 
 //    public CraftingInventoryWithOutput(int width, int height) {
 //        this(width, height, 1);
@@ -36,19 +36,13 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
 
     @Override
     public void provideRecipeInputs(RecipeFinder recipeFinder) {
-
-//        if(!invItr.hasNext()) { return; }
-
         for (ItemStack stack : this.getInventory())
             recipeFinder.addNormalItem(stack);
-//        for (int remaining = this.size(); remaining > 0; remaining--) {
-//            recipeFinder.addNormalItem((ItemStack)invItr.next());
-//        }
     }
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return getStack(slot).isEmpty() && stack.getCount() <= getMaxCountPerStack();
+        return getStack(slot).isEmpty();
     }
 
     @Override

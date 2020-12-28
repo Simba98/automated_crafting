@@ -1,3 +1,7 @@
+- 1.3.15 (28 Dec. 2020): Removed erroneous check for limiting slots to one item per stack. 
+  This should improve compatibility with other mods that insert more than one item at a time, 
+  but it relies on those other mods respecting vanilla Minecraft's conventions. 
+  If a mod inserts more than one item into the input grid, please report the issue to the other mod's developer. 
 - 1.3.14 (6 Dec. 2020): Changed comparator output (for the last time, promise), it's now equal to the number of filled input slots. 
   Translations are now handled with [CrowdinTranslate](https://github.com/gbl/CrowdinTranslate), go [here](https://crowdin.com/project/automated-crafting) if you'd like to contribute a translation. 
   "Template" and "Input" (in simple mode) can now be translated. 
