@@ -1,3 +1,6 @@
+- 1.3.16 (29 Dec. 2020): Merged a fix by [kas](https://gitlab.com/exactly-one-kas) that makes it so other mods can 
+  actually know the autocrafter's max stack size. Sorry I missed that, and thanks to kas for this fix and helping me 
+  work out these mod compat issues in general. 
 - 1.3.15 (28 Dec. 2020): Removed erroneous check for limiting slots to one item per stack. 
   This should improve compatibility with other mods that insert more than one item at a time, 
   but it relies on those other mods respecting vanilla Minecraft's conventions. 
