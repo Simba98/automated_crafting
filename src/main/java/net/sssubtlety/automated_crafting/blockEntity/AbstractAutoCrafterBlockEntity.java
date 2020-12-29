@@ -2,6 +2,7 @@ package net.sssubtlety.automated_crafting.blockEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
@@ -44,6 +45,11 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
     protected abstract boolean insertCheck(int slot, ItemStack stack);
     protected abstract boolean extractCheck(int slot, ItemStack stack);
+
+    @Override
+    public int getMaxCountPerStack() {
+        return getInvMaxStackCount();
+    }
 
     public AbstractAutoCrafterBlockEntity() {
         super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY_TYPE);
@@ -201,12 +207,15 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        super.setStack(slot, stack);
+        setStackWithoutCrafting(slot, stack);
         tryCraftContinuously();
     }
 
     protected void setStackWithoutCrafting(int slot, ItemStack stack) {
-        super.setStack(slot, stack);
+        // Calling super.setStack() would result in the output slot's contents being truncated
+        // So we have to directly set the slot's contents
+        this.getInvStackList().set(slot, stack);
+        markDirty();
     }
 
     /**
