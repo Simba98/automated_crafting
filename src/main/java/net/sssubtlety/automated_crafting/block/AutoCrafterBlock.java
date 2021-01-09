@@ -73,40 +73,29 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moved) {
-        world.getBlockTickScheduler().schedule(pos, this, 2);
+        boolean isPowered = isPowered(world, pos);
+        boolean wasPowered = state.get(POWERED);
+
+        if(isPowered) {
+            if(!wasPowered){
+                //isPowered && !wasPowered
+                //powering on
+                world.setBlockState(pos, state.with(POWERED, true).with(ACTIVATED, true), 2);
+
+                if (world instanceof ServerWorld)
+                    world.getBlockTickScheduler().schedule(pos, this, 2);
+
+            }
+        } else
+            world.setBlockState(pos, state.with(POWERED, false).with(ACTIVATED, false), 2);
     }
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        boolean isPowered = isPowered(world, pos);
+        if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY && state.get(ACTIVATED))
+            world.setBlockState(pos, state.with(ACTIVATED, false), 2);
 
-        boolean wasPowered = state.get(POWERED);
-        if(isPowered) {
-            if(wasPowered) {
-                //isPowered && wasPowered
-                if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY)
-                    //crafts on pulse -> de-activate
-                    world.setBlockState(pos, state.with(ACTIVATED, false), 2);
-            } else {
-                //isPowered && !wasPowered
-                //powering on
-                world.setBlockState(pos, state.with(POWERED, true).with(ACTIVATED, true), 2);
-                tryCraft(world, pos);
-                if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY)
-                    //crafts on pulse -> de-power after two ticks
-                    world.getBlockTickScheduler().schedule(pos, this, 2);
-
-            }
-        } else if(wasPowered) {
-            //!isPowered && wasPowered
-            //de-powering
-            world.setBlockState(pos, state.with(POWERED, false).with(ACTIVATED, false), 2);
-//            world.setBlockState(pos, state.with(ACTIVATED, false), 2);
-        }
-        //else !is && !was powered
-        //staying un-powered
-//        world.setBlockState(pos, state.with(POWERED, false).with(ACTIVATED, false), 2);
-
+        tryCraft(world, pos);
     }
 
     @Override

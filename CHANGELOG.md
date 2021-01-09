@@ -1,3 +1,4 @@
+- 1.3.18 (9 Jan. 2021): Automated Crafting Table now responds to quick redstone pulses, even 0-ticks! (texture won't change for 0-ticks)
 - 1.3.17 (8 Jan. 2021): Added new option "Comparator reads 15 if output isn't empty" that defaults to false/No (this means existing crafting systems won't break with this update). 
 
   If you use Fabric API `0.28.4` or later, alternate resourcepacks will be automatically made available (disabled by default). 
