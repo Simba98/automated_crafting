@@ -135,8 +135,13 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
         }
 
         DefaultedList<ItemStack> inventory = ((AbstractAutoCrafterBlockEntity)blockEntity).getInventory();
-        int inputsOccupied = 0;
 
+        if (DOES_COMPARATOR_READ_OUTPUT &&
+                !inventory.get(OUTPUT_SLOT).isEmpty())
+            return 15;
+
+
+        int inputsOccupied = 0;
 
         for (int slot = FIRST_INPUT_SLOT; slot < OUTPUT_SLOT; slot++) {
             if(!inventory.get(slot).isEmpty()) { inputsOccupied++; }

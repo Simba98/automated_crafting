@@ -20,6 +20,9 @@ public class AutomatedCraftingConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     boolean craftContinuously = false;
 
+    @ConfigEntry.Gui.Tooltip()
+    boolean comparatorReadsOutput = false;
+
     public boolean isSimpleMode() {
         return simpleMode;
     }
@@ -36,5 +39,7 @@ public class AutomatedCraftingConfig implements ConfigData {
         return redirectsRedstone;
     }
 
-
+    public boolean doesComparatorReadOutput() {
+        return comparatorReadsOutput;
+    }
 }

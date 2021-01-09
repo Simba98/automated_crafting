@@ -1,3 +1,8 @@
+- 1.3.17 (8 Jan. 2021): Added new option "Comparator reads 15 if output isn't empty" that defaults to false/No (this means existing crafting systems won't break with this update). 
+
+  If you use Fabric API `0.28.4` or later, alternate resourcepacks will be automatically made available (disabled by default). 
+  
+  You can still use older versions of Fabric API, you just won't automatically get the resourcepacks. You can still download the resourcepacks from the repo. 
 - 1.3.16 (29 Dec. 2020): Merged a fix by [kas](https://gitlab.com/exactly-one-kas) that makes it so other mods can 
   actually know the autocrafter's max stack size. Sorry I missed that, and thanks to kas for this fix and helping me 
   work out these mod compat issues in general. 

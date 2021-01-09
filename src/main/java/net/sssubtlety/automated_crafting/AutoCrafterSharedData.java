@@ -18,10 +18,12 @@ public abstract class AutoCrafterSharedData {
     public static final boolean REDIRECTS_REDSTONE = CONFIG.doesRedirectRedstone();
 
     public static final boolean CRAFTS_CONTINUOUSLY = CONFIG.doesCraftContinuously();
+
+    public static boolean DOES_COMPARATOR_READ_OUTPUT = CONFIG.doesComparatorReadOutput();
     
     public static final Class<? extends ComplexityMode> COMPLEXITY_CLASS = SIMPLE_MODE ? SimpleMode.class : ComplexMode.class;
 
-    public static final Class<? extends Connectivity> CONNECTIVITY_CLASS = QUASI_CONNECTIVITY ? QuasiConnectivity .class : BasicConnectivity.class;
+    public static final Class<? extends Connectivity> CONNECTIVITY_CLASS = QUASI_CONNECTIVITY ? QuasiConnectivity.class : BasicConnectivity.class;
 
     public static final int GRID_WIDTH = 3;
     public static final int GRID_HEIGHT = 3;

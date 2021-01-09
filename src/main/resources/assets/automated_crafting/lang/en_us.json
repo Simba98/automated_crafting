@@ -12,6 +12,8 @@
   "text.autoconfig.automated_crafting.option.redirectsRedstone.@Tooltip": "All changes require a restart",
   "text.autoconfig.automated_crafting.option.craftContinuously": "Craft Continuously While Powered",
   "text.autoconfig.automated_crafting.option.craftContinuously.@Tooltip": "All changes require a restart",
+  "text.autoconfig.automated_crafting.option.comparatorReadsOutput": "Comparator reads 15 if output isn't empty",
+  "text.autoconfig.automated_crafting.option.comparatorReadsOutput.@Tooltip": "All changes require a restart",
 
   "label.automated_crafting.template": "Template",
   "label.automated_crafting.input": "Input"
