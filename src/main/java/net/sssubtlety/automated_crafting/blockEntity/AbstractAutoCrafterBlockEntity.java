@@ -2,7 +2,6 @@ package net.sssubtlety.automated_crafting.blockEntity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
@@ -78,9 +77,11 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     public void tryCraft() {
-        Recipe<CraftingInventory> recipe = getRecipe();
+        CraftingInventory templateInv = this.getIsolatedTemplateInv();
+        Recipe<CraftingInventory> recipe = getRecipe(templateInv);
         if(recipe != null) {
-            OutputAction outputAction = canOutput(recipe.getOutput());
+            ItemStack output = recipe.craft(templateInv);
+            OutputAction outputAction = canOutput(output);
             if(outputAction != OutputAction.FAIL) {
                 DefaultedList<ItemStack> remainingStacks = recipe.getRemainingStacks(this.craftingInventory);
                 ItemStack slotRemainder;
@@ -95,7 +96,6 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
                 }
 
 
-                ItemStack output = recipe.getOutput().copy();
                 if (outputAction == OutputAction.SET)
                     this.setStackWithoutCrafting(OUTPUT_SLOT, output);
                 else //outputAction == OutputAction.INCREMENT
@@ -124,12 +124,12 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         return OutputAction.FAIL;
     }
 
-    private Recipe<CraftingInventory> getRecipe() {
+    private Recipe<CraftingInventory> getRecipe(CraftingInventory inventory) {
         if (world == null) throw new IllegalStateException("World is null. ");
         RecipeManager recipeManager = this.world.getRecipeManager();
 
         Supplier<Recipe<CraftingInventory>> recipeFetcher = () ->
-            recipeManager.getFirstMatch(RecipeType.CRAFTING, this.getIsolatedTemplateInv(), this.world).orElse(null);
+            recipeManager.getFirstMatch(RecipeType.CRAFTING, inventory, this.world).orElse(null);
 
         if(recipeCache == null) {
             recipeCache = recipeFetcher.get();
