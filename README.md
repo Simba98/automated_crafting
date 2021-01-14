@@ -48,11 +48,13 @@ Here is the recipe. Any stripped wood or logs may be substituted for those shown
 
 ![recipe](https://lh3.googleusercontent.com/yMvEWd7sOwhxDpsvlEQBXdFwX-fpwG_T3tlITGYNfR6CM2s3s55X9sudybASEHdABbx5g2D1TiUaM0Iv2BbMgYoD2WrjN3pY5LPYOZooKUfJ8nHv6KZQYHvBTeJxoRR9OmNuEPp1PZ14cGbeFe8HWWVKOfThhd3spf_Xr2qmjnD8kX8I0ig_x83IyRwQd6kg7adwtqyPWw7TPkmqZS6Mt5WMQTjVvPJJI1MB5ay5vx4oer-hR_W69_qAiGgpNrL9vCsM841SzFLz6hmWKhwpJHb56vM8T_4QOH2j1TdJUpQBl_Z0mocSdKp2OZbK0mmgKc_h6EY5mnkDD8VE3a_QaYWo_-BemUGUeUdcrjK0FtBX_VTkckVTN4InuOGd4HhkiyUSgbDjspuhoJJRP3HbOB0CPwXmgIVpTcPJRwBTYYWED0EaxEB_f68SyfXquifo-Xd51CDdFMMvaRKYY7atVm0YJWkdA61hxKcaeQSoJ2ecjGyJ6chtMaAbOOaPYI-OwYRRvjQ7ZNeIQCCEY6XJFGqjAAF3RI0KoUJvNZJtYIYkJmL6ZZk88Dr2SeH3w8-kmHUiT-ElGtSIVVPmfWDdVijYZ-0IJOvS6aB2msOUa2qgTzTMgdscwpa4ez97gF9ryosw_bcqQML0ejzaJhRa2Ep-LC_e7gLnxk3KL4ztlUR9An7E8lq4-2yOlBu6gM4qTOB9=w800-h500-k-ft)
 
-Download the [Fabric API for Minecraft 1.16.1 here](https://www.curseforge.com/minecraft/mc-mods/fabric-api/files/all?filter-game-version=1738749986%3a70886)
+Download the [Fabric API for Minecraft 1.16 here](https://www.curseforge.com/minecraft/mc-mods/fabric-api/files/all?filter-game-version=1738749986%3a70886)
+
+If you'd like to translate Automated Crafting (there are only a few lines of text), follow [this link](https://crowdin.com/project/automated-crafting/invite/public?show_welcome&d=7cb1dffc5b0599098e3af7b97b3d23261277556). New translations will be added once approved without the mod needing an update thanks to [CrowdinTranslate](https://github.com/gbl/CrowdinTranslate).
+
+Current translations: see the [project on Crowdin](https://crowdin.com/project/automated-crafting). 
 
 ![Requires the Fabric API](https://i.imgur.com/Ol1Tcf8.png)
-
-If you'd like to translate Automated Crafting to another language (there are only a few lines of text), learn how on this wiki page. 
 
 This mod is only for Fabric and I won't be porting it to Forge. The license is [MIT](https://will-lucic.mit-license.org/), however, so anyone else is free to port it. 
 
