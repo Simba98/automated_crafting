@@ -53,3 +53,7 @@ Download the [Fabric API for Minecraft 1.16.1 here](https://www.curseforge.com/m
 ![Requires the Fabric API](https://i.imgur.com/Ol1Tcf8.png)
 
 If you'd like to translate Automated Crafting to another language (there are only a few lines of text), learn how on this wiki page. 
+
+This mod is only for Fabric and I won't be porting it to Forge. The license is [MIT](https://will-lucic.mit-license.org/), however, so anyone else is free to port it. 
+
+I'd appreciate links back to this page if you port or otherwise modify this project, but links aren't required. 
