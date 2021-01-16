@@ -1,4 +1,4 @@
-- 1.3.20 (15 Jan. 2021): Marked as compatible with 1.16.1. 
+- 1.3.20 (15 Jan. 2021): Marked as compatible with 1.16.5. 
 - 1.3.19 (10 Jan. 2021): Fixed incorrect output with special crafting recipes (e.g. firework rockets, dyed leather armor). 
 - 1.3.18 (9 Jan. 2021): Automated Crafting Table now responds to quick redstone pulses, even 0-ticks! (texture won't change for 0-ticks)
 - 1.3.17 (8 Jan. 2021): Added new option "Comparator reads 15 if output isn't empty" that defaults to false/No (this means existing crafting systems won't break with this update). 
