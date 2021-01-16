@@ -3,8 +3,8 @@
   "id": "${mod_id}",
   "version": "${mod_version}",
 
-  "name": "Automated Crafting",
-  "description": "Adds a simple autocrafter block. Has a simple mode and a... not simple mode. ",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
     "${author}"
   ],
@@ -13,19 +13,19 @@
     "sources": "https://gitlab.com/${author}/${mod_id}"
   },
 
-  "license": "CC0-1.0",
+  "license": "https://will-lucic.mit-license.org/",
   "icon": "assets/${mod_id}/${mod_id}_icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "${maven_group}.${mod_id}.${init_class}"
+      "${maven_group}.${mod_id}.${ModId}Init"
     ],
     "client": [
-      "${maven_group}.${mod_id}.${client_init_class}"
+      "${maven_group}.${mod_id}.${ModId}ClientInit"
     ],
     "modmenu": [
-      "${maven_group}.${mod_id}.AutomatedCraftingModMenuIntegration"
+      "${maven_group}.${mod_id}.${ModId}ModMenuIntegration"
     ]
   },
   "mixins": [
@@ -33,15 +33,9 @@
   ],
 
   "depends": {
-    "fabricloader": ">=${loader_version}",
+    "fabricloader": ">=${min_loader_version}",
     "fabric": ">=${min_fabric_api_version}",
     "minecraft": ">=${min_minecraft_version} <=${minecraft_version}"
-  },
-  "custom": {
-    "modupdater": {
-      "strategy": "curseforge",
-      "projectID": 389435
-    }
   }
 }
 
