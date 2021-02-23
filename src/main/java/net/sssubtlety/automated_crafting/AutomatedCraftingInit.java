@@ -44,7 +44,7 @@ public class AutomatedCraftingInit implements ModInitializer {
 		AutoConfig.register(AutomatedCraftingConfig.class, GsonConfigSerializer::new);
 
 		AUTO_CRAFTER = Registry.register(Registry.BLOCK, AutoCrafterBlock.ID, getAutoCrafterBlock());
-		Registry.register(Registry.ITEM, new Identifier("automated_crafting", "auto_crafter"), new BlockItem(AUTO_CRAFTER, new Item.Settings().group(ItemGroup.MISC)));
+		Registry.register(Registry.ITEM, new Identifier("automated_crafting", "auto_crafter"), new BlockItem(AUTO_CRAFTER, new Item.Settings().group(ItemGroup.REDSTONE)));
 		AUTO_CRAFTER_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", BlockEntityType.Builder.create((SIMPLE_MODE ? SimpleAutoCrafterBlockEntity::new : ComplexAutoCrafterBlockEntity::new), AUTO_CRAFTER).build(null));
 
 		AUTO_CRAFTER_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerSimple(AutoCrafterBlock.ID, SIMPLE_MODE ?

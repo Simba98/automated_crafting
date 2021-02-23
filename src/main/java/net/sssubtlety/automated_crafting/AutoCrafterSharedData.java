@@ -25,15 +25,15 @@ public abstract class AutoCrafterSharedData {
 
     public static final Class<? extends Connectivity> CONNECTIVITY_CLASS = QUASI_CONNECTIVITY ? QuasiConnectivity.class : BasicConnectivity.class;
 
+    public static final int FIRST_TEMPLATE_SLOT = 0;
     public static final int GRID_WIDTH = 3;
     public static final int GRID_HEIGHT = 3;
     public static final int GRID_SIZE = GRID_WIDTH * GRID_HEIGHT;
-    public static final int OUTPUT_SLOT = GRID_SIZE * (SIMPLE_MODE ? 2 : 1);
 
+    public static final int OUTPUT_SLOT = GRID_SIZE * (SIMPLE_MODE ? 2 : 1);
     public static final int FIRST_INPUT_SLOT = SIMPLE_MODE ? GRID_SIZE : 0;
 
-    public static final int FIRST_TEMPLATE_SLOT = 0;
-
+    public static final int SIZE = OUTPUT_SLOT - FIRST_INPUT_SLOT + 1;
 
     private static int validationKey = Integer.MIN_VALUE;
 

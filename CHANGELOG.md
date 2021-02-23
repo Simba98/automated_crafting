@@ -1,3 +1,6 @@
+- 1.3.21 (22 Feb. 2021): Hoppers now pull from the output slot before they pull from input slots in non-simple mode. 
+  Moved Automated Crafting Table to the redstone item group (creative tab). 
+  Cleaned up+optimized code a little. 
 - 1.3.20 (15 Jan. 2021): Marked as compatible with 1.16.5. 
 - 1.3.19 (10 Jan. 2021): Fixed incorrect output with special crafting recipes (e.g. firework rockets, dyed leather armor). 
 - 1.3.18 (9 Jan. 2021): Automated Crafting Table now responds to quick redstone pulses, even 0-ticks! (texture won't change for 0-ticks)

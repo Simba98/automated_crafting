@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory {
+    private static final int PRE_FIRST_INPUT_SLOT = FIRST_INPUT_SLOT - 1;
     protected final CraftingInventoryWithOutput craftingInventory;
     private int currentKey;
     protected Recipe<CraftingInventory> recipeCache;
@@ -166,12 +167,15 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
      */
     @Override
     public int[] getAvailableSlots(Direction side) {
-        int size = OUTPUT_SLOT - FIRST_INPUT_SLOT + 1;
-        int[] slotIndices = new int[size];
-
         // Create an array of indices of slots that can be interacted with using automation
-        for (int i = 0; i < size; i++) {
-            slotIndices[i] = i + FIRST_INPUT_SLOT;
+        int[] slotIndices = new int[SIZE];
+
+        // pull from output first
+        slotIndices[0] = OUTPUT_SLOT;
+        for (int i = 1; i < SIZE; i++) {
+            // -1 because we're starting at i = 1
+            // slotIndices[i] = i + FIRST_INPUT_SLOT - 1;
+            slotIndices[i] = i + PRE_FIRST_INPUT_SLOT;
         }
 
         return slotIndices;
