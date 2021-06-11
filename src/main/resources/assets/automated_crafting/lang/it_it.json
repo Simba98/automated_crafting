@@ -1,0 +1,17 @@
+{
+  "text.autoconfig.automated_crafting.title": "Configurazione fabbricazione automatica",
+  "item.automated_crafting.auto_crafter": "Banco da fabbricazione automatico",
+  "block.automated_crafting.auto_crafter": "Banco da fabbricazione automatico",
+  "text.autoconfig.automated_crafting.option.simpleMode": "Attiva modalità semplice",
+  "text.autoconfig.automated_crafting.option.simpleMode.@Tooltip": "Tutte le modifiche richiedono un riavvio",
+  "text.autoconfig.automated_crafting.option.quasiConnectivity": "Attiva Quasi-Connettività",
+  "text.autoconfig.automated_crafting.option.quasiConnectivity.@Tooltip": "Tutte le modifiche richiedono un riavvio",
+  "text.autoconfig.automated_crafting.option.redirectsRedstone": "Attiva il reindirizzamento della polvere di pietrarossa",
+  "text.autoconfig.automated_crafting.option.redirectsRedstone.@Tooltip": "Tutte le modifiche richiedono un riavvio",
+  "text.autoconfig.automated_crafting.option.craftContinuously": "Fabbrica continuamente mentre contiene energia",
+  "text.autoconfig.automated_crafting.option.craftContinuously.@Tooltip": "Tutte le modifiche richiedono un riavvio",
+  "text.autoconfig.automated_crafting.option.comparatorReadsOutput": "Il comparatore legge 15 se l'output non è vuoto",
+  "text.autoconfig.automated_crafting.option.comparatorReadsOutput.@Tooltip": "Tutte le modifiche richiedono un riavvio",
+  "label.automated_crafting.template": "Modello",
+  "label.automated_crafting.input": "Input"
+}

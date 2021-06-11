@@ -3,6 +3,7 @@ package net.sssubtlety.automated_crafting.guiDescription;
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WItemSlot;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
+import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
@@ -17,6 +18,7 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
         super(AutomatedCraftingInit.AUTO_CRAFTER_SCREEN_HANDLER_TYPE, syncId, playerInventory, getBlockInventory(context, SIMPLE_MODE ? 19 : 10), getBlockPropertyDelegate(context));
 
         WPlainPanel root = new WPlainPanel();
+        root.setInsets(Insets.ROOT_PANEL);
         setRootPanel(root);
 
         WItemSlot templateSlot = WItemSlot.of(blockInventory, FIRST_TEMPLATE_SLOT, GRID_WIDTH , GRID_HEIGHT);
