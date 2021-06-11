@@ -185,7 +185,8 @@ def readRecentChanges() {
 					lineMatcher.find()
 					if (!lineMatcher.group(1).startsWith(project.mod_version, 2))
 						throw new Exception("Version on first line of changelog doesn't match mod_version. ")
-					changes += lineMatcher.group(2) + "\n"
+					def trimmedLine = lineMatcher.group(2)
+					if (!trimmedLine.isEmpty())changes += trimmedLine + "\n"
 				} else throw new Exception("First line of changelog is not new version line. ")
 			} else if (!line.matches(newVersionLineRegex)) {
 				changes += line + "\n"
