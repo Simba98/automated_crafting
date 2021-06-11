@@ -7,7 +7,7 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
@@ -51,8 +51,8 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         return getInvMaxStackCount();
     }
 
-    public AbstractAutoCrafterBlockEntity() {
-        super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY_TYPE);
+    public AbstractAutoCrafterBlockEntity(BlockPos pos, BlockState state) {
+        super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY_TYPE, pos, state);
         craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, 1, getInvMaxStackCount(), getApparentInvCount());
         recipeCache = null;
         currentKey = getValidationKey();
@@ -60,17 +60,16 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
     // Serialize the BlockEntity
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        // Save the current value of the number to the tag
-        Inventories.toTag(tag, this.craftingInventory.getInventory());
-        return super.toTag(tag);
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        Inventories.writeNbt(nbt, this.craftingInventory.getInventory());
+        return super.writeNbt(nbt);
     }
 
     // Deserialize the BlockEntity
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        Inventories.fromTag(tag, this.craftingInventory.getInventory());
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        Inventories.readNbt(nbt, this.craftingInventory.getInventory());
     }
 
     public DefaultedList<ItemStack> getInventory() {
@@ -84,7 +83,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
             ItemStack output = recipe.craft(templateInv);
             OutputAction outputAction = canOutput(output);
             if(outputAction != OutputAction.FAIL) {
-                DefaultedList<ItemStack> remainingStacks = recipe.getRemainingStacks(this.craftingInventory);
+                DefaultedList<ItemStack> remainingStacks = recipe.getRemainder(this.craftingInventory);
                 ItemStack slotRemainder;
                 for (int iSlot = FIRST_INPUT_SLOT; iSlot < OUTPUT_SLOT; iSlot++) {
                     slotRemainder = remainingStacks.get(iSlot);
@@ -243,7 +242,6 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-//        return new AutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(world, pos));
         return getGuiConstructor().construct(syncId, playerInventory, world, pos);
     }
 

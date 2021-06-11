@@ -4,10 +4,11 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
-import net.minecraft.block.MaterialColor;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.BlockItem;
@@ -24,11 +25,15 @@ import net.sssubtlety.automated_crafting.blockEntity.SimpleAutoCrafterBlockEntit
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.guiDescription.ComplexAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDescription;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public class AutomatedCraftingInit implements ModInitializer {
 	public static final String MOD_ID = "automated_crafting";
+
+	public static final Logger LOGGER = LogManager.getLogger();
 
 	private static Block AUTO_CRAFTER;
 	public static BlockEntityType<AbstractAutoCrafterBlockEntity> AUTO_CRAFTER_BLOCK_ENTITY_TYPE;
@@ -45,7 +50,7 @@ public class AutomatedCraftingInit implements ModInitializer {
 
 		AUTO_CRAFTER = Registry.register(Registry.BLOCK, AutoCrafterBlock.ID, getAutoCrafterBlock());
 		Registry.register(Registry.ITEM, new Identifier("automated_crafting", "auto_crafter"), new BlockItem(AUTO_CRAFTER, new Item.Settings().group(ItemGroup.REDSTONE)));
-		AUTO_CRAFTER_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", BlockEntityType.Builder.create((SIMPLE_MODE ? SimpleAutoCrafterBlockEntity::new : ComplexAutoCrafterBlockEntity::new), AUTO_CRAFTER).build(null));
+		AUTO_CRAFTER_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, "automated_crafting:auto_crafter_entity", FabricBlockEntityTypeBuilder.create((SIMPLE_MODE ? SimpleAutoCrafterBlockEntity::new : ComplexAutoCrafterBlockEntity::new), AUTO_CRAFTER).build(null));
 
 		AUTO_CRAFTER_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerSimple(AutoCrafterBlock.ID, SIMPLE_MODE ?
 			(syncId, inventory) -> (new SimpleAutoCrafterGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY)) :
@@ -55,7 +60,7 @@ public class AutomatedCraftingInit implements ModInitializer {
 
 	private static Block getAutoCrafterBlock() throws RuntimeException {
 		try {
-			return new AutoCrafterBlock<> (FabricBlockSettings.of(new Material(MaterialColor.WOOD, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(),
+			return new AutoCrafterBlock<> (FabricBlockSettings.of(new Material(MapColor.OAK_TAN, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build(),
 					CONNECTIVITY_CLASS,
 					COMPLEXITY_CLASS
 			);

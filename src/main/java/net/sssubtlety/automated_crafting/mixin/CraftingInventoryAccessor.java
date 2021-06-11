@@ -15,8 +15,8 @@ public interface CraftingInventoryAccessor {
     @Accessor
     DefaultedList<ItemStack> getStacks();
 
-    @Accessor
-    void setStacks(DefaultedList<ItemStack> inventory);
+//    @Accessor
+//    void setStacks(DefaultedList<ItemStack> inventory);
 
 //    @Accessor("handler")
 //    ScreenHandler getHandler();

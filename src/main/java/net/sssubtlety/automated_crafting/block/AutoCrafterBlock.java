@@ -56,8 +56,8 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView blockView) {
-        return mode.getNewBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return mode.getNewBlockEntity(pos, state);
     }
 
 

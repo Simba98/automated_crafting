@@ -2,7 +2,7 @@ package net.sssubtlety.automated_crafting;
 
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeFinder;
+import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.util.collection.DefaultedList;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 
@@ -12,8 +12,8 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
     private final int invMaxStackAmount;
 
     public CraftingInventoryWithOutput(int width, int height, int outputs, int invMaxStackAmount, int apparentInvCount) {
-        super(width, height);
-        this.setInventory(DefaultedList.ofSize(width * height * apparentInvCount + outputs, ItemStack.EMPTY));
+        super(width, height * apparentInvCount + outputs);
+//        this.setInventory(DefaultedList.ofSize(width * height * apparentInvCount + outputs, ItemStack.EMPTY));
         this.invMaxStackAmount = invMaxStackAmount;
     }
 
@@ -35,9 +35,9 @@ public class CraftingInventoryWithOutput extends CraftingInventoryWithoutHandler
     }
 
     @Override
-    public void provideRecipeInputs(RecipeFinder recipeFinder) {
+    public void provideRecipeInputs(RecipeMatcher matcher) {
         for (ItemStack stack : this.getInventory())
-            recipeFinder.addNormalItem(stack);
+            matcher.addInput(stack);
     }
 
     @Override

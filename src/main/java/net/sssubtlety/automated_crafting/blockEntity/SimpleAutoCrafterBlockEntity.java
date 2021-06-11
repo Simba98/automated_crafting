@@ -1,8 +1,10 @@
 package net.sssubtlety.automated_crafting.blockEntity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.util.math.BlockPos;
 import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDescription;
@@ -10,6 +12,10 @@ import net.sssubtlety.automated_crafting.guiDescription.SimpleAutoCrafterGuiDesc
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
 public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity {
+    public SimpleAutoCrafterBlockEntity(BlockPos pos, BlockState state) {
+        super(pos, state);
+    }
+
     @Override
     protected GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor() {
         return (syncId, playerInventory, _world, _pos) -> (new SimpleAutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos)));

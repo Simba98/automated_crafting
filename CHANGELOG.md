@@ -1,3 +1,4 @@
+- 1.3.22 (11 Jun. 2021): Updated mod for 1.17. Cloth Config and Autocofig are no longer bundled, instead you must download them separately. 
 - 1.3.21 (22 Feb. 2021): Hoppers now pull from the output slot before they pull from input slots in non-simple mode. 
   Moved Automated Crafting Table to the redstone item group (creative tab). 
   Cleaned up+optimized code a little. 
