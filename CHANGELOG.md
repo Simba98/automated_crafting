@@ -1,3 +1,4 @@
+- 1.3.23 (13 Jun. 2021): Now includes CrowdinTranslate again for translation fetching. 
 - 1.3.22 (11 Jun. 2021): 
 
   Updated mod for 1.17. Cloth Config and Autocofig are no longer bundled, instead you must download them separately.

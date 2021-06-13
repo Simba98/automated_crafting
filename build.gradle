@@ -95,8 +95,8 @@ dependencies {
 	// Config menu support
 	modImplementation ("com.terraformersmc:modmenu:" + project.modmenu_version) { exclude module: 'fabric-api' }
 	// translation fetching
-//	modImplementation "de.guntram.mcmod:crowdin-translate:" + project.crowdin_translate_version
-//	include "de.guntram.mcmod:crowdin-translate:" + project.crowdin_translate_version
+	modImplementation "de.guntram.mcmod:crowdin-translate:" + project.crowdin_translate_version
+	include "de.guntram.mcmod:crowdin-translate:" + project.crowdin_translate_version
 }
 
 processResources {
