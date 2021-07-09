@@ -206,6 +206,8 @@ def readRecentChanges() {
 		}
 	}
 
+	changes += "\n\nA cumulative changelog can be found [here](https://gitlab.com/supersaiyansubtlety/${project.ext.mod_id}/-/blob/master/CHANGELOG.md)"
+
 	return changes
 }
 
@@ -219,7 +221,7 @@ curseforge {
 			project.ext.minecraft_version_list.each { String game_version -> addGameVersion game_version }
 			addGameVersion "Fabric"
 
-			changelogType = "html"
+			changelogType = "markdown"
 			changelog = readRecentChanges()
 			relations {
 				requiredDependency "fabric-api"
