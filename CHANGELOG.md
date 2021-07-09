@@ -1,3 +1,6 @@
+- 1.3.24 (9 Jul. 2021): 
+  - Updated bundled libgui version
+  - Marked as compatible with 1.17.1
 - 1.3.23 (13 Jun. 2021): Now includes CrowdinTranslate again for translation fetching. 
 - 1.3.22 (11 Jun. 2021): 
 
