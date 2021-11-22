@@ -13,7 +13,7 @@ public class ComplexAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntit
     }
 
     @Override
-    protected AbstractAutoCrafterBlockEntity.GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor() {
+    protected GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor() {
         return (syncId, playerInventory, _world, _pos) -> (new ComplexAutoCrafterGuiDescription(syncId, playerInventory, ScreenHandlerContext.create(_world, _pos)));
     }
 

@@ -21,6 +21,8 @@ import net.minecraft.util.math.BlockPointerImpl;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
+import net.minecraft.world.tick.OrderedTick;
 import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
 import net.sssubtlety.automated_crafting.block.complexity.ComplexityMode;
 import net.sssubtlety.automated_crafting.block.connectivity.Connectivity;
@@ -83,7 +85,8 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
                 world.setBlockState(pos, state.with(POWERED, true).with(ACTIVATED, true), 2);
 
                 if (world instanceof ServerWorld)
-                    world.getBlockTickScheduler().schedule(pos, this, 2);
+                    //pos, this, 2
+                    world.createAndScheduleBlockTick(pos, this, 2);
 
             }
         } else

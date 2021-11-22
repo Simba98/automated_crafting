@@ -60,9 +60,9 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
     // Serialize the BlockEntity
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         Inventories.writeNbt(nbt, this.craftingInventory.getInventory());
-        return super.writeNbt(nbt);
+        super.writeNbt(nbt);
     }
 
     // Deserialize the BlockEntity

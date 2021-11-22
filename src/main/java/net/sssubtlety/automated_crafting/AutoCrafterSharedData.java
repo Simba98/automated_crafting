@@ -1,6 +1,6 @@
 package net.sssubtlety.automated_crafting;
 
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.sssubtlety.automated_crafting.block.complexity.ComplexMode;
 import net.sssubtlety.automated_crafting.block.complexity.ComplexityMode;
 import net.sssubtlety.automated_crafting.block.complexity.SimpleMode;

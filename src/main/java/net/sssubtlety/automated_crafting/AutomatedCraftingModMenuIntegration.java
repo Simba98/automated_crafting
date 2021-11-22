@@ -2,15 +2,13 @@ package net.sssubtlety.automated_crafting;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import static net.sssubtlety.automated_crafting.AutomatedCraftingInit.MOD_ID;
 
 @Environment(EnvType.CLIENT)
 public class AutomatedCraftingModMenuIntegration implements ModMenuApi {

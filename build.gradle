@@ -69,8 +69,7 @@ repositories {
 
 	maven {
 		name = "Terraformers"
-//		url = "https://maven.terraformersmc.com/releases/"
-		url = "https://maven.kotlindiscord.com/repository/terraformers/"
+		url = "https://maven.terraformersmc.com/releases/"
 	}
 
 
@@ -104,7 +103,7 @@ dependencies {
 	//Config library
 	modApi ("me.shedaniel.cloth:cloth-config-fabric:" + project.cloth_config_version) { exclude(group: "net.fabricmc.fabric-api") }
 	//Config GUI helper
-	modApi ("me.sargunvohra.mcmods:autoconfig1u:" + project.autoconfig_version) { exclude module: 'fabric-api' }
+//	modApi ("me.sargunvohra.mcmods:autoconfig1u:" + project.autoconfig_version) { exclude module: 'fabric-api' }
 	// Config menu support
 	modImplementation ("com.terraformersmc:modmenu:" + project.modmenu_version) { exclude module: 'fabric-api' }
 	// translation fetching
@@ -137,7 +136,6 @@ processResources {
 				"fabric_api_version": project.fabric_api_version,
 				"min_fabric_api_version": project.min_fabric_api_version,
 
-				"autoconfig_version": project.autoconfig_version,
 				"cloth_config_version": project.cloth_config_version,
 				"modmenu_version": project.modmenu_version,
 		])

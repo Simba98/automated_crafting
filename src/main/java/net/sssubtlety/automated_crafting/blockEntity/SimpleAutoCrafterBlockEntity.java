@@ -56,6 +56,6 @@ public class SimpleAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntity
 
     protected boolean inputSlotMatchesTemplate(int slot, ItemStack stack) {
         ItemStack templateStack = this.getInventory().get(slot - FIRST_INPUT_SLOT);
-        return templateStack.isItemEqual(stack) && ItemStack.areTagsEqual(templateStack, stack);
+        return templateStack.isItemEqual(stack) && ItemStack.areNbtEqual(templateStack, stack);
     }
 }
