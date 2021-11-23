@@ -27,8 +27,9 @@ project.ext {
 
 	minecraft_version_list = project.minecraft_versions.split(",")
 	min_minecraft_version = project.ext.minecraft_version_list[0]
+	min_minecraft_semver = toSemver(project.ext.min_minecraft_version, 1.18)
 	minecraft_version = project.ext.minecraft_version_list[project.ext.minecraft_version_list.size() - 1]
-	semver_minecraft_version = toSemver(project.ext.minecraft_version, 1.18)
+	minecraft_semver = toSemver(project.ext.minecraft_version, 1.18)
 }
 
 String mc_ver_suffix = "+MC" + ((project.ext.minecraft_version_list.size() > 1 ?
@@ -91,7 +92,7 @@ repositories {
 
 dependencies {
 	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:" + project.ext.semver_minecraft_version
+	minecraft "com.mojang:minecraft:" + project.ext.minecraft_version
 	mappings "net.fabricmc:yarn:" + project.yarn_mappings
 	modImplementation "net.fabricmc:fabric-loader:" + project.loader_version
 
@@ -100,6 +101,9 @@ dependencies {
 	// GUI library
 	modImplementation ("io.github.cottonmc:LibGui:" + project.libgui_version) { exclude module: 'fabric-api' }
 	include "io.github.cottonmc:LibGui:" + project.libgui_version
+	modImplementation("io.github.juuxel:libninepatch:1.1.0")
+	include "io.github.juuxel:libninepatch:1.1.0"
+
 
 	//Config library
 	modApi ("me.shedaniel.cloth:cloth-config-fabric:" + project.cloth_config_version) { exclude(group: "net.fabricmc.fabric-api") }
@@ -121,8 +125,8 @@ processResources {
 		expand ([
 				"version": project.version,
 
-				"minecraft_version": project.ext.minecraft_version,
-				"min_minecraft_version": project.min_minecraft_version,
+				"minecraft_version": project.ext.minecraft_semver,
+				"min_minecraft_version": project.ext.min_minecraft_semver,
 				"min_loader_version": project.min_loader_version,
 
 				"mod_id": project.mod_id,
@@ -231,7 +235,7 @@ def readFileFirstLine(String fileName) {
 }
 
 def readRecentChanges() {
-	def newVersionLineRegex = "^(- \\d+\\.\\d+(?:\\.\\d+(?:-[\\da-z]+)?)?" + " \\(\\d{1,2} [A-Z][a-z]{2}\\.? 2021\\): )" + "(.*)"
+	def newVersionLineRegex = "^(- \\d+\\.\\d+(?:\\.\\d+)?(?:-[\\d+a-z]+)?" + " \\(\\d{1,2} [A-Z][a-z]{2}\\.? 2021\\):)" + "(.*)"
 	Pattern newVersionLinePattern = Pattern.compile(newVersionLineRegex)
 
 	def changelogFile = file("CHANGELOG.md")
