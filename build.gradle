@@ -28,6 +28,7 @@ project.ext {
 	minecraft_version_list = project.minecraft_versions.split(",")
 	min_minecraft_version = project.ext.minecraft_version_list[0]
 	minecraft_version = project.ext.minecraft_version_list[project.ext.minecraft_version_list.size() - 1]
+	semver_minecraft_version = toSemver(project.ext.minecraft_version, 1.18)
 }
 
 String mc_ver_suffix = "+MC" + ((project.ext.minecraft_version_list.size() > 1 ?
@@ -90,7 +91,7 @@ repositories {
 
 dependencies {
 	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:" + project.ext.minecraft_version
+	minecraft "com.mojang:minecraft:" + project.ext.semver_minecraft_version
 	mappings "net.fabricmc:yarn:" + project.yarn_mappings
 	modImplementation "net.fabricmc:fabric-loader:" + project.loader_version
 
@@ -165,6 +166,58 @@ import com.modrinth.minotaur.TaskModrinthUpload
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+
+static def toSemver(String baseVersion, float prefix) {
+	def length = baseVersion.length()
+	for (int i = 0; i < length; i++) {
+		char c = baseVersion.charAt(i);
+		switch (i) {
+			case 0: if (c != (char)'1') return snapshotToSemver(baseVersion, i, prefix); break
+			case 1: if (c != (char)'.') return snapshotToSemver(baseVersion, i, prefix); break
+			case 2||3: if (!(""+c).matches("\\d")) throw illegalVersionFormatException(); break
+			default: if (c == (char)'-') return betaOrRcToSemver(baseVersion, i); break
+		}
+	}
+	return baseVersion
+}
+
+static def snapshotToSemver(baseVersion, i, prefix) {
+	def length = baseVersion.length()
+	if (length != 6) throw illegalVersionFormatException()
+	StringBuilder snapShotSemver = new StringBuilder((String)(String.valueOf(prefix) + "-alpha."))
+	for (int j = 0; j < length; j++) {
+		char c = baseVersion.charAt(i)
+		switch (j) {
+			case 2:
+				if (c != (char)'w') throw illegalVersionFormatException()
+				else snapShotSemver.append("."); break
+			case 5:
+				if (c != (char)'a') throw illegalVersionFormatException()
+				else snapShotSemver.append(".a"); break
+			default:
+				if (!(""+c).matches("\\d")) throw illegalVersionFormatException()
+				snapShotSemver.append(c); break
+		}
+	}
+	return snapShotSemver.toString()
+}
+
+static def betaOrRcToSemver(baseVersion, i) {
+	++i
+	def endPre = i + 3
+	def endRc = i + 2
+	if (baseVersion.substring(i, endPre) == "pre") return blindReplace(baseVersion, i, endPre, "beta.")
+	else if (baseVersion.substring(i, endRc) == "rc") return blindReplace(baseVersion, i, endRc, "rc.")
+	else throw illegalVersionFormatException()
+}
+
+static def blindReplace(string, start, end, replacement) {
+	return string.substring(0, start) + replacement + string.substring(end)
+}
+
+static def illegalVersionFormatException() {
+	return new IllegalStateException("Illegal version format!")
+}
 
 def readFileFirstLine(String fileName) {
 	def firstLine = null
