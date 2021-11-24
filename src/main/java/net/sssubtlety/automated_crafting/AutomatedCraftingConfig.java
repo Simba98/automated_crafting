@@ -4,9 +4,9 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-import static net.sssubtlety.automated_crafting.AutomatedCraftingInit.MOD_ID;
+import static net.sssubtlety.automated_crafting.AutomatedCrafting.NAMESPACE;
 
-@Config(name = MOD_ID)
+@Config(name = NAMESPACE)
 public class AutomatedCraftingConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     boolean simpleMode = true;

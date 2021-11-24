@@ -8,8 +8,6 @@ import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.util.collection.DefaultedList;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 
-import static net.sssubtlety.automated_crafting.AutomatedCraftingInit.LOGGER;
-
 public class CraftingInventoryWithoutHandler extends CraftingInventory {
     private static final CraftingScreenHandler dummyHandler = new CraftingScreenHandler(0, new PlayerInventory(null));
 

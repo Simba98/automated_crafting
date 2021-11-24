@@ -86,7 +86,8 @@ public class AutoCrafterBlock<C extends Connectivity, M extends ComplexityMode> 
 
                 if (world instanceof ServerWorld)
                     //pos, this, 2
-                    world.createAndScheduleBlockTick(pos, this, 2);
+                    // method_39279 -> createAndScheduleBlockTick
+                    world.method_39279(pos, this, 2);
 
             }
         } else

@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
-import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
+import net.sssubtlety.automated_crafting.AutomatedCrafting;
 import net.sssubtlety.automated_crafting.CraftingInventoryWithOutput;
 import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
 import net.sssubtlety.automated_crafting.block.AutoCrafterBlock;
@@ -52,7 +52,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     public AbstractAutoCrafterBlockEntity(BlockPos pos, BlockState state) {
-        super(AutomatedCraftingInit.AUTO_CRAFTER_BLOCK_ENTITY_TYPE, pos, state);
+        super(AutomatedCrafting.AUTO_CRAFTER_BLOCK_ENTITY_TYPE, pos, state);
         craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, 1, getInvMaxStackCount(), getApparentInvCount());
         recipeCache = null;
         currentKey = getValidationKey();

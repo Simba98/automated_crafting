@@ -6,7 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.sssubtlety.automated_crafting.AutomatedCraftingInit;
+import net.sssubtlety.automated_crafting.AutomatedCrafting;
 
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 
@@ -15,7 +15,7 @@ public abstract class AbstractAutoCrafterGuiDescription extends SyncedGuiDescrip
     protected final static int CRAFT_GRID_Y_OFFSET = -4;
 
     public AbstractAutoCrafterGuiDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-        super(AutomatedCraftingInit.AUTO_CRAFTER_SCREEN_HANDLER_TYPE, syncId, playerInventory, getBlockInventory(context, SIMPLE_MODE ? 19 : 10), getBlockPropertyDelegate(context));
+        super(AutomatedCrafting.AUTO_CRAFTER_SCREEN_HANDLER_TYPE, syncId, playerInventory, getBlockInventory(context, SIMPLE_MODE ? 19 : 10), getBlockPropertyDelegate(context));
 
         WPlainPanel root = new WPlainPanel();
         root.setInsets(Insets.ROOT_PANEL);

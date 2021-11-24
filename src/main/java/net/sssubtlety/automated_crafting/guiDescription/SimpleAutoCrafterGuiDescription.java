@@ -9,7 +9,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.TranslatableText;
 
 import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
-import static net.sssubtlety.automated_crafting.AutomatedCraftingInit.MOD_ID;
+import static net.sssubtlety.automated_crafting.AutomatedCrafting.NAMESPACE;
 
 public class SimpleAutoCrafterGuiDescription extends AbstractAutoCrafterGuiDescription {
 
@@ -39,10 +39,10 @@ public class SimpleAutoCrafterGuiDescription extends AbstractAutoCrafterGuiDescr
         inputSlot.setInsertingAllowed(false);
         root.add(inputSlot, getInputX(), GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
 
-        WLabel templateLabel = new WLabel(new TranslatableText("label." + MOD_ID + ".template"));
+        WLabel templateLabel = new WLabel(new TranslatableText("label." + NAMESPACE + ".template"));
         templateLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
         root.add(templateLabel, GRID_PIXELS, 4 * GRID_PIXELS);
-        WLabel inputLabel = new WLabel(new TranslatableText("label." + MOD_ID + ".input"));
+        WLabel inputLabel = new WLabel(new TranslatableText("label." + NAMESPACE + ".input"));
         inputLabel.setHorizontalAlignment(HorizontalAlignment.CENTER);
         root.add(inputLabel, 5 * GRID_PIXELS, 4 * GRID_PIXELS);
     }
