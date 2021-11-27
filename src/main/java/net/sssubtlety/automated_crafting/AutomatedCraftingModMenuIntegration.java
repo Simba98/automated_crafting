@@ -26,6 +26,6 @@ public class AutomatedCraftingModMenuIntegration implements ModMenuApi {
 
 //    @Override
     public Optional<Supplier<Screen>> getConfigScreen(Screen screen) {
-        return Optional.of(AutoConfig.getConfigScreen(AutomatedCraftingConfig.class, screen));
+        return Optional.of(AutoConfig.getConfigScreen(Config.class, screen));
     }
 }

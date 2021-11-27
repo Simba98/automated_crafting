@@ -21,9 +21,9 @@ public class CraftingInventoryWithoutHandler extends CraftingInventory {
     }
 
     public DefaultedList<ItemStack> getInventorySubList(int start, int length) {
-        if (start < 0) throw new IllegalArgumentException("Received negative start. ");
-        if (length < 0) throw new IllegalArgumentException("Received negative length. ");
-        if (start + length > this.size()) throw new IllegalArgumentException("start + length > inventory size. ");
+        if (start < 0) throw new IllegalArgumentException("Received negative start.");
+        if (length < 0) throw new IllegalArgumentException("Received negative length.");
+        if (start + length > this.size()) throw new IllegalArgumentException("start + length > inventory size.");
 
         DefaultedList<ItemStack> subInventory = DefaultedList.ofSize(length, ItemStack.EMPTY);
         for (int i = 0; i < length; i++)
@@ -54,7 +54,7 @@ public class CraftingInventoryWithoutHandler extends CraftingInventory {
                 this.setStack(i, newInventory.get(i));
 
         } else {
-            throw new IllegalArgumentException("Trying to set CraftingInventoryWithoutHandler inventory from list that's too long. ");
+            throw new IllegalArgumentException("Trying to set CraftingInventoryWithoutHandler inventory from list that's too long.");
         }
     }
 }

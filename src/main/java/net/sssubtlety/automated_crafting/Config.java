@@ -1,13 +1,22 @@
 package net.sssubtlety.automated_crafting;
 
+import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 
 import static net.sssubtlety.automated_crafting.AutomatedCrafting.NAMESPACE;
 
-@Config(name = NAMESPACE)
-public class AutomatedCraftingConfig implements ConfigData {
+@me.shedaniel.autoconfig.annotation.Config(name = NAMESPACE)
+public class Config implements ConfigData {
+    private static Config INSTANCE;
+
+    public static void init() {
+        //Register config class
+        AutoConfig.register(Config.class, GsonConfigSerializer::new);
+        INSTANCE = AutoConfig.getConfigHolder(Config.class).getConfig();
+    }
+
     @ConfigEntry.Gui.Tooltip()
     boolean simpleMode = true;
 
@@ -23,23 +32,23 @@ public class AutomatedCraftingConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     boolean comparatorReadsOutput = false;
 
-    public boolean isSimpleMode() {
-        return simpleMode;
+    public static boolean isSimpleMode() {
+        return INSTANCE.simpleMode;
     }
 
-    public boolean isQuasiConnected() {
-        return quasiConnectivity;
+    public static boolean isQuasiConnected() {
+        return INSTANCE.quasiConnectivity;
     }
 
-    public boolean doesCraftContinuously() {
-        return craftContinuously;
+    public static boolean doesCraftContinuously() {
+        return INSTANCE.craftContinuously;
     }
 
-    public boolean doesRedirectRedstone() {
-        return redirectsRedstone;
+    public static boolean doesRedirectRedstone() {
+        return INSTANCE.redirectsRedstone;
     }
 
-    public boolean doesComparatorReadOutput() {
-        return comparatorReadsOutput;
+    public static boolean doesComparatorReadOutput() {
+        return INSTANCE.comparatorReadsOutput;
     }
 }

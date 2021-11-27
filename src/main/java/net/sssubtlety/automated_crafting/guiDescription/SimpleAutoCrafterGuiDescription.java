@@ -7,8 +7,9 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.TranslatableText;
+import net.sssubtlety.automated_crafting.blockEntity.AutoCrafterBlockEntity;
+import net.sssubtlety.automated_crafting.inventory.RecipeInventory;
 
-import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
 import static net.sssubtlety.automated_crafting.AutomatedCrafting.NAMESPACE;
 
 public class SimpleAutoCrafterGuiDescription extends AbstractAutoCrafterGuiDescription {
@@ -35,7 +36,7 @@ public class SimpleAutoCrafterGuiDescription extends AbstractAutoCrafterGuiDescr
     @Override
     protected void optionalAddition(WPlainPanel root) {
         WItemSlot inputSlot;
-        inputSlot = WItemSlot.of(blockInventory, FIRST_INPUT_SLOT, GRID_WIDTH, GRID_HEIGHT);
+        inputSlot = WItemSlot.of(blockInventory, AutoCrafterBlockEntity.Slots.INPUT_START, RecipeInventory.Grid.WIDTH, RecipeInventory.Grid.HEIGHT);
         inputSlot.setInsertingAllowed(false);
         root.add(inputSlot, getInputX(), GRID_PIXELS + CRAFT_GRID_Y_OFFSET);
 

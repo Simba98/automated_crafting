@@ -9,7 +9,6 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
@@ -19,27 +18,23 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.sssubtlety.automated_crafting.AutoCrafterSharedData;
-import net.sssubtlety.automated_crafting.AutomatedCrafting;
-import net.sssubtlety.automated_crafting.CraftingInventoryWithOutput;
-import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
-import net.sssubtlety.automated_crafting.block.AutoCrafterBlock;
+import net.sssubtlety.automated_crafting.*;
+import net.sssubtlety.automated_crafting.inventory.AutoCrafterInventory_;
+import net.sssubtlety.automated_crafting.AutoCrafterBlock;
 import net.sssubtlety.automated_crafting.guiDescription.AbstractAutoCrafterGuiDescription;
+import net.sssubtlety.automated_crafting.inventory.RecipeInventory;
 
-import java.util.function.Supplier;
-
-import static net.sssubtlety.automated_crafting.AutoCrafterSharedData.*;
+import static net.sssubtlety.automated_crafting.AutomatedCrafting.LOGGER;
 
 public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, NamedScreenHandlerFactory {
-    private static final int PRE_FIRST_INPUT_SLOT = FIRST_INPUT_SLOT - 1;
-    protected final CraftingInventoryWithOutput craftingInventory;
-    private int currentKey;
+    private static final int PRE_FIRST_INPUT_SLOT = AutoCrafterBlockEntity.Slots.INPUT_START - 1;
+    protected final AutoCrafterInventory_ craftingInventory;
+    private final Validator validator;
     protected Recipe<CraftingInventory> recipeCache;
 
     protected abstract GuiConstructor<AbstractAutoCrafterGuiDescription> getGuiConstructor();
-    protected abstract int getInvMaxStackCount();
+    protected int getInvMaxStackCount() { return 1; }
     protected abstract int getApparentInvCount();
-//    public abstract int getInputSlotInd();
     protected boolean optionalOutputCheck() {
         return false;
     }
@@ -52,10 +47,10 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     public AbstractAutoCrafterBlockEntity(BlockPos pos, BlockState state) {
-        super(AutomatedCrafting.AUTO_CRAFTER_BLOCK_ENTITY_TYPE, pos, state);
-        craftingInventory = new CraftingInventoryWithOutput(GRID_WIDTH, GRID_HEIGHT, 1, getInvMaxStackCount(), getApparentInvCount());
+        super(Registrar.BLOCK_ENTITY_TYPE, pos, state);
+        craftingInventory = new AutoCrafterInventory_(RecipeInventory.Grid.WIDTH, RecipeInventory.Grid.HEIGHT);
         recipeCache = null;
-        currentKey = getValidationKey();
+        validator = new Validator();
     }
 
     // Serialize the BlockEntity
@@ -79,13 +74,14 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     public void tryCraft() {
         CraftingInventory templateInv = this.getIsolatedTemplateInv();
         Recipe<CraftingInventory> recipe = getRecipe(templateInv);
+        boolean notContinuous = !Config.doesCraftContinuously();
         if(recipe != null) {
             ItemStack output = recipe.craft(templateInv);
             OutputAction outputAction = canOutput(output);
             if(outputAction != OutputAction.FAIL) {
                 DefaultedList<ItemStack> remainingStacks = recipe.getRemainder(this.craftingInventory);
                 ItemStack slotRemainder;
-                for (int iSlot = FIRST_INPUT_SLOT; iSlot < OUTPUT_SLOT; iSlot++) {
+                for (int iSlot = AutoCrafterBlockEntity.Slots.INPUT_START; iSlot < AutoCrafterBlockEntity.Slots.OUTPUT_SLOT; iSlot++) {
                     slotRemainder = remainingStacks.get(iSlot);
                     if (slotRemainder.isEmpty())
                         //decrement stack
@@ -97,15 +93,15 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
 
                 if (outputAction == OutputAction.SET)
-                    this.setStackWithoutCrafting(OUTPUT_SLOT, output);
+                    this.setStackWithoutCrafting(AutoCrafterBlockEntity.Slots.OUTPUT_SLOT, output);
                 else //outputAction == OutputAction.INCREMENT
-                    this.getInventory().get(OUTPUT_SLOT).increment(output.getCount());
+                    this.getInventory().get(AutoCrafterBlockEntity.Slots.OUTPUT_SLOT).increment(output.getCount());
             }
-            else if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY && world != null) {
+            else if (notContinuous && world != null) {
                 world.syncWorldEvent(1001, pos, 0);
             }
         }
-        else if (!AutoCrafterSharedData.CRAFTS_CONTINUOUSLY && world != null) {
+        else if (notContinuous && world != null) {
             world.syncWorldEvent(1001, pos, 0);
         }
     }
@@ -114,7 +110,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
         if (optionalOutputCheck()) {
             return OutputAction.FAIL;
         }
-        ItemStack oldOutput = this.getInventory().get(OUTPUT_SLOT);
+        ItemStack oldOutput = this.getInventory().get(AutoCrafterBlockEntity.Slots.OUTPUT_SLOT);
         if (oldOutput.isEmpty()) {
             return OutputAction.SET;
         } else if (output.isItemEqual(oldOutput) && oldOutput.getMaxCount() >= oldOutput.getCount() + output.getCount()) {
@@ -125,35 +121,33 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     }
 
     private Recipe<CraftingInventory> getRecipe(CraftingInventory inventory) {
-        if (world == null) throw new IllegalStateException("World is null. ");
-        RecipeManager recipeManager = this.world.getRecipeManager();
-
-        Supplier<Recipe<CraftingInventory>> recipeFetcher = () ->
-            recipeManager.getFirstMatch(RecipeType.CRAFTING, inventory, this.world).orElse(null);
-
-        if(recipeCache == null) {
-            recipeCache = recipeFetcher.get();
-        } else if (currentKey != getValidationKey()) {
-            currentKey = getValidationKey();
-            recipeCache = recipeFetcher.get();
+        if (world == null) {
+            LOGGER.error("Trying to get recipe before world is initialized!");
+            return null;
         }
-        else if(!recipeCache.matches(this.getIsolatedInputInv(), world)) {
-            recipeCache = recipeFetcher.get();
+
+        if(
+            recipeCache == null ||
+            validator.invalid() ||
+            !recipeCache.matches(this.getIsolatedInputInv(), world)
+        ) {
+            recipeCache = this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, inventory, this.world)
+                    .orElse(null);
         }
 
         return recipeCache;
     }
 
     protected CraftingInventory getIsolatedInputInv() {
-        return new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT, this.craftingInventory.getInventorySubList(FIRST_INPUT_SLOT, GRID_SIZE));
+        return new CraftingInventoryWithoutHandler(RecipeInventory.Grid.WIDTH, RecipeInventory.Grid.HEIGHT, this.craftingInventory.getInventorySubList(AutoCrafterBlockEntity.Slots.INPUT_START, RecipeInventory.Grid.SIZE));
     }
 
     protected CraftingInventory getIsolatedTemplateInv() {
-        return new CraftingInventoryWithoutHandler(GRID_WIDTH, GRID_HEIGHT, this.craftingInventory.getInventorySubList(FIRST_TEMPLATE_SLOT, GRID_SIZE));
+        return new CraftingInventoryWithoutHandler(RecipeInventory.Grid.WIDTH, RecipeInventory.Grid.HEIGHT, this.craftingInventory.getInventorySubList(AutoCrafterBlockEntity.Slots.TEMPLATE_START, RecipeInventory.Grid.SIZE));
     }
 
     protected void tryCraftContinuously() {
-        if (CRAFTS_CONTINUOUSLY && world != null && world.getBlockState(pos).get(AutoCrafterBlock.POWERED))
+        if (Config.doesCraftContinuously() && world != null && world.getBlockState(pos).get(AutoCrafterBlock.POWERED))
             tryCraft();
     }
 
@@ -167,11 +161,11 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
     @Override
     public int[] getAvailableSlots(Direction side) {
         // Create an array of indices of slots that can be interacted with using automation
-        int[] slotIndices = new int[SIZE];
+        int[] slotIndices = new int[AutoCrafterBlockEntity.Slots.INVENTORY_SIZE];
 
         // pull from output first
-        slotIndices[0] = OUTPUT_SLOT;
-        for (int i = 1; i < SIZE; i++) {
+        slotIndices[0] = AutoCrafterBlockEntity.Slots.OUTPUT_SLOT;
+        for (int i = 1; i < AutoCrafterBlockEntity.Slots.INVENTORY_SIZE; i++) {
             // -1 because we're starting at i = 1
             // slotIndices[i] = i + FIRST_INPUT_SLOT - 1;
             slotIndices[i] = i + PRE_FIRST_INPUT_SLOT;
@@ -182,7 +176,7 @@ public abstract class AbstractAutoCrafterBlockEntity extends LootableContainerBl
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, Direction dir) {
-        if (slot == OUTPUT_SLOT) {
+        if (slot == AutoCrafterBlockEntity.Slots.OUTPUT_SLOT) {
             return false;
         }
 

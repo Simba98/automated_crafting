@@ -1,14 +1,15 @@
-package net.sssubtlety.automated_crafting;
+package net.sssubtlety.automated_crafting.inventory;
 
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.util.collection.DefaultedList;
+import net.sssubtlety.automated_crafting.CraftingInventoryWithoutHandler;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 
 /*
-    A crafting without a screen handler.
+    ArrayInventory crafting without a screen handler.
     This means it's not bound to a single player.
     It also means that a screen handler must be constructed whenever a player views the inventory.
 */

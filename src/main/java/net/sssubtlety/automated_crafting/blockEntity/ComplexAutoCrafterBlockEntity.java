@@ -18,11 +18,6 @@ public class ComplexAutoCrafterBlockEntity extends AbstractAutoCrafterBlockEntit
     }
 
     @Override
-    protected int getInvMaxStackCount() {
-        return 1;
-    }
-
-    @Override
     protected int getApparentInvCount() {
         return 1;
     }
