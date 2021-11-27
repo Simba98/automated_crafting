@@ -8,14 +8,11 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.sssubtlety.automated_crafting.inventory.ArrayInventory;
 import net.sssubtlety.automated_crafting.inventory.RecipeInventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,22 +42,22 @@ public class AutoCrafterGuiDescription extends SyncedGuiDescription {
         final AutoCrafterGuiDescription instance = new AutoCrafterGuiDescription(syncId, playerInventory, inventory);
         WPlainPanel root = createRoot(instance);
 
-        if (Config.isSimpleMode()) populateSimple(inventory, instance, root);
-        else populateComplex(inventory, instance, root);
+        if (Config.isSimpleMode()) populateSimple(inventory, root);
+        else populateComplex(inventory, root);
 
         finishSetup(instance, root);
 
         return instance;
     }
 
-    protected static void populateSimple(Inventory inventory, AutoCrafterGuiDescription instance, WPlainPanel root) {
+    protected static void populateSimple(Inventory inventory, WPlainPanel root) {
         addLabeledTemplateGrid(root, inventory);
         addInputGrid(root, SIMPLE_INPUT_X, inventory, RecipeInventory.Grid.SIZE);
         addOutputSlot(root, SIMPLE_OUTPUT_X, inventory);
         addLabel(root, ".input", INPUT_LABEL_X);
     }
 
-    protected static void populateComplex(Inventory inventory, AutoCrafterGuiDescription instance, WPlainPanel root) {
+    protected static void populateComplex(Inventory inventory, WPlainPanel root) {
         addInputGrid(root, COMPLEX_INPUT_X, inventory, 0);
         addOutputSlot(root, COMPLEX_OUTPUT_X, inventory);
     }
