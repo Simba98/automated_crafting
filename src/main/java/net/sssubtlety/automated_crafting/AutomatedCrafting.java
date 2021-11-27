@@ -12,11 +12,13 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.resource.ServerResourceManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
-import net.sssubtlety.automated_crafting.guiDescription.AutoCrafterGuiDescription;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.END_DATA_PACK_RELOAD;
 import static net.fabricmc.fabric.api.resource.ResourceManagerHelper.registerBuiltinResourcePack;
 
 public class AutomatedCrafting {
@@ -33,8 +35,9 @@ public class AutomatedCrafting {
 		public void onInitialize () {
 			Config.init();
 			Registrar.init();
-
 			AutoCrafterGuiDescription.init();
+
+			END_DATA_PACK_RELOAD.register((u1, u2, u3) -> AutoCrafterBlockEntity.validator.update());
 		}
 	}
 

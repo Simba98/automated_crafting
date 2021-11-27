@@ -1,23 +1,29 @@
 package net.sssubtlety.automated_crafting;
 
 public class Validator {
-    private static int validationKey = Integer.MIN_VALUE;
+    private int validationKey = Integer.MIN_VALUE;
 
-    private int key;
-
-    public Validator() {
-        this.key = validationKey;
-    }
-
-    public static void update() {
+    public void update() {
         validationKey++;
     }
 
-    public boolean invalid() {
-        if (key == validationKey) return false;
-        else {
-            key = validationKey;
-            return true;
+    public Validation getValidation() {
+        return new Validation();
+    }
+
+    public class Validation {
+        private int key;
+
+        public Validation() {
+            this.key = validationKey;
+        }
+
+        public boolean invalid() {
+            if (key == validationKey) return false;
+            else {
+                key = validationKey;
+                return true;
+            }
         }
     }
 }

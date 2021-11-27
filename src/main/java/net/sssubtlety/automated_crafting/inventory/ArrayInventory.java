@@ -1,4 +1,4 @@
-package net.sssubtlety.automated_crafting.blockEntity;
+package net.sssubtlety.automated_crafting.inventory;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;

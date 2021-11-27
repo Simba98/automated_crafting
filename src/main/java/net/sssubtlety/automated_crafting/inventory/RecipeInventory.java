@@ -7,13 +7,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.collection.DefaultedList;
-import net.sssubtlety.automated_crafting.blockEntity.ArrayInventory;
-import net.sssubtlety.automated_crafting.blockEntity.TrimmableInventory;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import static net.sssubtlety.automated_crafting.AutoCrafterBlockEntity.MAX_STACK_SIZE;
 
 public abstract class RecipeInventory extends CraftingInventory implements TrimmableInventory {
     private static final DummyHandler dummyHandler = new DummyHandler();
@@ -96,9 +96,15 @@ public abstract class RecipeInventory extends CraftingInventory implements Trimm
         return occupiedSlots.stream().map(this::getStack);
     }
 
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        return getStack(slot).isEmpty();
+    }
 
     @Override
-    public abstract boolean isValid(int slot, ItemStack stack);
+    public int getMaxCountPerStack() {
+        return MAX_STACK_SIZE;
+    }
 
     public interface Grid {
         int HEIGHT = 3;

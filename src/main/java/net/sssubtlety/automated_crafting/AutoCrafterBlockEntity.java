@@ -1,4 +1,4 @@
-package net.sssubtlety.automated_crafting.blockEntity;
+package net.sssubtlety.automated_crafting;
 
 import com.google.common.collect.Streams;
 import net.minecraft.block.BlockState;
@@ -19,12 +19,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.sssubtlety.automated_crafting.*;
-import net.sssubtlety.automated_crafting.AutoCrafterBlock;
-import net.sssubtlety.automated_crafting.guiDescription.AutoCrafterGuiDescription;
-import net.sssubtlety.automated_crafting.inventory.InputInventory;
-import net.sssubtlety.automated_crafting.inventory.RecipeInventory;
-import net.sssubtlety.automated_crafting.inventory.TemplateInventory;
+import net.sssubtlety.automated_crafting.inventory.*;
 
 import java.util.Optional;
 import java.util.Set;
@@ -40,12 +35,27 @@ import static net.sssubtlety.automated_crafting.AutomatedCrafting.LOGGER;
 public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, TrimmableInventory, NamedScreenHandlerFactory {
     public static final int MAX_STACK_SIZE = 1;
 
+    public static final Validator validator = new Validator();
+
     public final TemplateInventory templateInventory;
     public final InputInventory inputInventory;
     public ItemStack output;
 
+    protected final Validator.Validation validation;
     protected Recipe<CraftingInventory> recipeCache;
-    private final Validator validator;
+    public static final int[] AvAILABLE_SLOT_INDICES;
+
+    static {
+        // An array of indices of slots that can be interacted with using automation
+        AvAILABLE_SLOT_INDICES = new int[Slots.INPUT_PLUS_OUTPUT_SIZE];
+        // pull from output first
+        AvAILABLE_SLOT_INDICES[0] = Slots.OUTPUT_SLOT;
+        for (int i = 1; i < Slots.INPUT_PLUS_OUTPUT_SIZE; i++) {
+            // PRE_FIRST_INPUT_SLOT because we're starting at i = 1
+            // slotIndices[i] = i + FIRST_INPUT_SLOT - 1;
+            AvAILABLE_SLOT_INDICES[i] = i + Slots.PRE_FIRST_INPUT_SLOT;
+        }
+    }
 
     public AutoCrafterBlockEntity(BlockPos pos, BlockState state) {
         super(Registrar.BLOCK_ENTITY_TYPE, pos, state);
@@ -53,7 +63,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         this.inputInventory = new InputInventory();
         this.recipeCache = null;
         this.output = ItemStack.EMPTY;
-        this.validator = new Validator();
+        this.validation = validator.getValidation();
     }
 
     protected boolean matchesTemplate(int slot, ItemStack inputStack) {
@@ -124,14 +134,14 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
             if(outputAction != OutputAction.FAIL) {
                 DefaultedList<ItemStack> remainingStacks = recipe.getRemainder(this.inputInventory);
                 ItemStack slotRemainder;
-                for (int iSlot = Slots.INPUT_START; iSlot < Slots.OUTPUT_SLOT; iSlot++) {
-                    slotRemainder = remainingStacks.get(iSlot);
+                for (int i = 0; i < RecipeInventory.Grid.SIZE; i++) {
+                    slotRemainder = remainingStacks.get(i);
                     if (slotRemainder.isEmpty())
                         //decrement stack
-                        this.inputInventory.removeStack(iSlot, 1);
+                        this.inputInventory.removeStack(i, 1);
                     else
                         //set remainder
-                        this.inputInventory.setStack(iSlot, slotRemainder);
+                        this.inputInventory.setStack(i, slotRemainder);
                 }
 
                 if (outputAction == OutputAction.SET)
@@ -166,7 +176,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
         if(
             recipeCache == null ||
-            validator.invalid() ||
+            validation.invalid() ||
             !recipeCache.matches(inputInventory, world)
         ) {
             recipeCache = this.world.getRecipeManager().getFirstMatch(RecipeType.CRAFTING, inputInventory, this.world)
@@ -178,9 +188,9 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     private boolean inputMisMatchesTemplate() {
         for (int slot = 0; slot < RecipeInventory.Grid.SIZE; slot++)
-            if (!matchesTemplate(slot, inputInventory.getStack(slot))) return false;
+            if (!matchesTemplate(slot, inputInventory.getStack(slot))) return true;
 
-        return true;
+        return false;
     }
 
     protected void tryCraftContinuously() {
@@ -193,18 +203,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        // Create an array of indices of slots that can be interacted with using automation
-        int[] slotIndices = new int[Slots.INVENTORY_SIZE];
-
-        // pull from output first
-        slotIndices[0] = Slots.OUTPUT_SLOT;
-        for (int i = 1; i < Slots.INVENTORY_SIZE; i++) {
-            // PRE_FIRST_INPUT_SLOT because we're starting at i = 1
-            // slotIndices[i] = i + FIRST_INPUT_SLOT - 1;
-            slotIndices[i] = i + Slots.PRE_FIRST_INPUT_SLOT;
-        }
-
-        return slotIndices;
+        return AvAILABLE_SLOT_INDICES;
     }
 
     @Override
@@ -213,7 +212,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         return RecipeInventory.Grid.contains(inputSlot) &&
                 this.inputInventory.getStack(slot).isEmpty() &&
                 this.inputInventory.isValid(slot, stack) &&
-                matchesTemplate(slot, stack);
+                matchesTemplate(inputSlot, stack);
     }
 
     @Override
@@ -355,10 +354,10 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     public interface Slots {
-        int TEMPLATE_START = 0;
-
         int INPUT_START = RecipeInventory.Grid.SIZE;
         int PRE_FIRST_INPUT_SLOT = INPUT_START - 1;
+
+        int INPUT_PLUS_OUTPUT_SIZE = RecipeInventory.Grid.SIZE + 1;
 
         int OUTPUT_SLOT = RecipeInventory.Grid.SIZE * 2;
         int INVENTORY_SIZE = OUTPUT_SLOT + 1;
