@@ -228,10 +228,9 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         final ItemStack removedStack;
         if (slot == Slots.OUTPUT_SLOT) removedStack = output.split(amount);
         else {
-            if (slot >= Slots.INPUT_START)
-                removedStack = inputInventory.removeStack(Slots.toInputSlot(slot), amount);
-            else
-                removedStack = templateInventory.removeStack(slot, amount);
+            removedStack = slot >= Slots.INPUT_START ?
+                inputInventory.removeStack(Slots.toInputSlot(slot), amount) :
+                templateInventory.removeStack(slot, amount);
         }
 
         tryCraftContinuously();

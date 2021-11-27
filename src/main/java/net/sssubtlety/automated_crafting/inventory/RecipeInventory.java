@@ -49,7 +49,6 @@ public abstract class RecipeInventory extends CraftingInventory implements Trimm
             ItemStack stack = getStack(slot);
             if (stack.getItem() == item) count += stack.getCount();
         }
-
         return count;
     }
 
@@ -61,29 +60,35 @@ public abstract class RecipeInventory extends CraftingInventory implements Trimm
         return removedStack;
     }
 
-    protected void setEmpty(int slot) {
-        occupiedSlots.remove(slot);
-        this.getInvStackList().set(slot, ItemStack.EMPTY);
-    }
-
     @Override
     public ItemStack removeStack(int slot) {
         ItemStack stack = getStack(slot);
         setEmpty(slot);
-
         return stack;
     }
 
+    @Override
     public void setStack(int slot, ItemStack stack) {
-        if (stack.isEmpty()) return;
-        super.setStack(slot, stack);
-        occupiedSlots.add(slot);
+        if (occupiedSlots.contains(slot)) {
+            if (stack.isEmpty()) setEmpty(slot);
+            else super.setStack(slot, stack);
+        } else {
+            if (!stack.isEmpty()) {
+                occupiedSlots.add(slot);
+                super.setStack(slot, stack);
+            }// else empty->empty: do nothing
+        }
     }
 
     @Override
     public void clear() {
         occupiedSlots.forEach(this::setEmpty);
         occupiedSlots.clear();
+    }
+
+    protected void setEmpty(int slot) {
+        occupiedSlots.remove(slot);
+        super.setStack(slot, ItemStack.EMPTY);
     }
 
     @Override

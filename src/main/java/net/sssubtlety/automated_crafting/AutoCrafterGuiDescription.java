@@ -30,10 +30,6 @@ public class AutoCrafterGuiDescription extends SyncedGuiDescription {
         super(Registrar.SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory, EMPTY_DELEGATE);
     }
 
-    protected AutoCrafterGuiDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-        super(Registrar.SCREEN_HANDLER_TYPE, syncId, playerInventory, getBlockInventory(context, AutoCrafterBlockEntity.Slots.INVENTORY_SIZE), getBlockPropertyDelegate(context));
-    }
-
     public static AutoCrafterGuiDescription create(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
         return create(syncId, playerInventory, getBlockInventory(context, AutoCrafterBlockEntity.Slots.INVENTORY_SIZE));
     }
