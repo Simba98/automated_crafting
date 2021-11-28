@@ -12,9 +12,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.resource.ServerResourceManager;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.sssubtlety.automated_crafting.gui.AutoCrafterGuiDescription;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

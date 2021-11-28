@@ -15,6 +15,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.sssubtlety.automated_crafting.gui.AutoCrafterGuiDescription;
 
 import static net.sssubtlety.automated_crafting.AutomatedCrafting.NAMESPACE;
 

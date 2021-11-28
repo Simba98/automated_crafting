@@ -19,6 +19,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.sssubtlety.automated_crafting.gui.AutoCrafterGuiDescription;
 import net.sssubtlety.automated_crafting.inventory.*;
 
 import java.util.Optional;
@@ -33,17 +34,13 @@ import static net.sssubtlety.automated_crafting.AutomatedCrafting.LOGGER;
 */
 public class AutoCrafterBlockEntity extends LootableContainerBlockEntity implements SidedInventory, TrimmableInventory, NamedScreenHandlerFactory {
     public static final int MAX_STACK_SIZE = 1;
-
-    public static final Validator validator = new Validator();
-
-    public final DefaultedStackView combinedStacks;
-    public final TemplateInventory templateInventory;
-    public final InputInventory inputInventory;
-    public DefaultedStackView.Singleton output;
-
-    protected final Validator.Validation validation;
-    protected Recipe<CraftingInventory> recipeCache;
     public static final int[] AVAILABLE_INDICES;
+    public static final Validator validator = new Validator();
+    public static final TranslatableText NAME = new TranslatableText("block.automated_crafting.auto_crafter");
+
+    public static boolean templatePredicate(ItemStack inputStack, ItemStack templateStack) {
+        return templateStack.isItemEqual(inputStack) && ItemStack.areNbtEqual(templateStack, inputStack);
+    }
 
     static {
         // An array of indices of slots that can be interacted with using automation
@@ -57,12 +54,20 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         }
     }
 
+    public final DefaultedStackView combinedStacks;
+    public final TemplateInventory templateInventory;
+    public final InputInventory inputInventory;
+    public DefaultedStackView.Singleton output;
+
+    protected final Validator.Validation validation;
+    protected Recipe<CraftingInventory> recipeCache;
+
     public AutoCrafterBlockEntity(BlockPos pos, BlockState state) {
         super(Registrar.BLOCK_ENTITY_TYPE, pos, state);
 
         this.combinedStacks = new DefaultedStackView(Slots.INVENTORY_SIZE);
         this.templateInventory = new TemplateInventory(this.combinedStacks.subList(0, Slots.INPUT_START));
-        this.inputInventory = new InputInventory(this.combinedStacks.subList(Slots.INPUT_START, Slots.OUTPUT_SLOT));
+        this.inputInventory = new InputInventory(this.combinedStacks.subList(Slots.INPUT_START, Slots.OUTPUT_SLOT), this.templateInventory);
         this.output = this.combinedStacks.subStack(Slots.OUTPUT_SLOT);
 
         this.recipeCache = null;
@@ -71,7 +76,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     protected boolean matchesTemplate(int slot, ItemStack inputStack) {
         ItemStack templateStack = this.templateInventory.getStack(slot);
-        return templateStack.isItemEqual(inputStack) && ItemStack.areNbtEqual(templateStack, inputStack);
+        return templatePredicate(inputStack, templateStack);
     }
 
     @Override
@@ -212,11 +217,12 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, Direction dir) {
+        // this is meant ot be called after isValid, so slot should be empty and match template (if simple)
         int inputSlot = Slots.toInputSlot(slot);
-        return CraftingView.Grid.contains(inputSlot) &&
-                this.inputInventory.getStack(slot).isEmpty() &&
-                this.inputInventory.isValid(slot, stack) &&
-                matchesTemplate(inputSlot, stack);
+        return CraftingView.Grid.contains(inputSlot);
+//        && this.inputInventory.getStack(inputSlot).isEmpty();
+//                && this.inputInventory.isValid(inputSlot, stack);
+                // && matchesTemplate(inputSlot, stack);
     }
 
     @Override
@@ -298,7 +304,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     protected Text getContainerName() {
-        return new TranslatableText("block.automated_crafting.auto_crafter", new Object[0]);
+        return NAME;
     }
 
     @Override

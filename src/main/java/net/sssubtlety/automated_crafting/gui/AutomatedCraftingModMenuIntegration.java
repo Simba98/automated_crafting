@@ -1,4 +1,4 @@
-package net.sssubtlety.automated_crafting;
+package net.sssubtlety.automated_crafting.gui;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
@@ -6,6 +6,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
+import net.sssubtlety.automated_crafting.Config;
 
 import java.util.Optional;
 import java.util.function.Supplier;
