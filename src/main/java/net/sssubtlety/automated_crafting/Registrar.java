@@ -1,6 +1,6 @@
 package net.sssubtlety.automated_crafting;
 
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.Block;
@@ -40,7 +40,7 @@ public interface Registrar {
 
     private static Block createAutoCrafterBlock() throws RuntimeException {
         try {
-            return new AutoCrafterBlock(FabricBlockSettings.of(new Material(MapColor.GRAY, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true).build()
+            return new AutoCrafterBlock(FabricBlockSettings.of(new Material(MapColor.GRAY, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true)
             );
         } catch (IllegalAccessException | InstantiationException e) {
             throw new RuntimeException("Unable to construct auto crafter block!", e);

@@ -54,10 +54,12 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         }
     }
 
-    public final DefaultedStackView combinedStacks;
-    public final TemplateInventory templateInventory;
-    public final InputInventory inputInventory;
-    public DefaultedStackView.Singleton output;
+    private final DefaultedStackView combinedStacks;
+    private final TemplateInventory templateInventory;
+    private final InputInventory inputInventory;
+    private final DefaultedStackView.Singleton output;
+
+
 
     protected final Validator.Validation validation;
     protected Recipe<CraftingInventory> recipeCache;
