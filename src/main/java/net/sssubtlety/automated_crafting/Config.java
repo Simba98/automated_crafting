@@ -12,7 +12,6 @@ public class Config implements ConfigData {
     private static Config INSTANCE;
 
     public static void init() {
-        //Register config class
         AutoConfig.register(Config.class, GsonConfigSerializer::new);
         INSTANCE = AutoConfig.getConfigHolder(Config.class).getConfig();
     }

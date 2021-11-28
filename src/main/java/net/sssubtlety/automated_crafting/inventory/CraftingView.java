@@ -10,23 +10,21 @@ import net.minecraft.util.collection.DefaultedList;
 import net.sssubtlety.automated_crafting.mixin.CraftingInventoryAccessor;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static net.sssubtlety.automated_crafting.AutoCrafterBlockEntity.MAX_STACK_SIZE;
 
-public abstract class RecipeInventory extends CraftingInventory implements TrimmableInventory {
+public abstract class CraftingView extends CraftingInventory implements TrimmableInventory {
     private static final DummyHandler dummyHandler = new DummyHandler();
 
     protected final Set<Integer> occupiedSlots;
 
-    public RecipeInventory() {
+    public CraftingView(DefaultedList<ItemStack> stacks) {
         super(dummyHandler, Grid.WIDTH, Grid.HEIGHT);
+        ((CraftingInventoryAccessor)this).setStacks(stacks);
         occupiedSlots = new LinkedHashSet<>(Grid.SIZE, 1);
-    }
-
-    public DefaultedList<ItemStack> getInvStackList() {
-        return ((CraftingInventoryAccessor) this).getStacks();
     }
 
     @Override
@@ -121,7 +119,7 @@ public abstract class RecipeInventory extends CraftingInventory implements Trimm
         }
     }
 
-    private static final class DummyHandler extends ScreenHandler {
+    static final class DummyHandler extends ScreenHandler {
         protected DummyHandler() {
             super(null, 0);
         }

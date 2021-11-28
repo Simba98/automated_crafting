@@ -19,6 +19,8 @@ import net.minecraft.util.registry.Registry;
 import static net.sssubtlety.automated_crafting.AutomatedCrafting.NAMESPACE;
 
 public interface Registrar {
+    static void init() { }
+
     Block BLOCK = Registry.register(Registry.BLOCK, AutoCrafterBlock.ID, createAutoCrafterBlock());
 
     BlockItem ITEM = Registry.register(Registry.ITEM, new Identifier(NAMESPACE, "auto_crafter"),
@@ -34,7 +36,6 @@ public interface Registrar {
     ScreenHandlerType<AutoCrafterGuiDescription> SCREEN_HANDLER_TYPE =
             ScreenHandlerRegistry.registerSimple(AutoCrafterBlock.ID, (world, playerInventory) -> AutoCrafterGuiDescription.create(world, playerInventory, ScreenHandlerContext.EMPTY));
 
-    static void init() { }
 
     private static Block createAutoCrafterBlock() throws RuntimeException {
         try {

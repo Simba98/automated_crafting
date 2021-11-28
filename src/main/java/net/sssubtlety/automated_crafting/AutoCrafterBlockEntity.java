@@ -23,7 +23,6 @@ import net.sssubtlety.automated_crafting.inventory.*;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static net.sssubtlety.automated_crafting.AutomatedCrafting.LOGGER;
@@ -37,32 +36,36 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     public static final Validator validator = new Validator();
 
+    public final DefaultedStackView combinedStacks;
     public final TemplateInventory templateInventory;
     public final InputInventory inputInventory;
-    public ItemStack output;
+    public DefaultedStackView.Singleton output;
 
     protected final Validator.Validation validation;
     protected Recipe<CraftingInventory> recipeCache;
-    public static final int[] AvAILABLE_SLOT_INDICES;
+    public static final int[] AVAILABLE_INDICES;
 
     static {
         // An array of indices of slots that can be interacted with using automation
-        AvAILABLE_SLOT_INDICES = new int[Slots.INPUT_PLUS_OUTPUT_SIZE];
+        AVAILABLE_INDICES = new int[Slots.INPUT_PLUS_OUTPUT_SIZE];
         // pull from output first
-        AvAILABLE_SLOT_INDICES[0] = Slots.OUTPUT_SLOT;
+        AVAILABLE_INDICES[0] = Slots.OUTPUT_SLOT;
         for (int i = 1; i < Slots.INPUT_PLUS_OUTPUT_SIZE; i++) {
             // PRE_FIRST_INPUT_SLOT because we're starting at i = 1
             // slotIndices[i] = i + FIRST_INPUT_SLOT - 1;
-            AvAILABLE_SLOT_INDICES[i] = i + Slots.PRE_FIRST_INPUT_SLOT;
+            AVAILABLE_INDICES[i] = i + Slots.PRE_FIRST_INPUT_SLOT;
         }
     }
 
     public AutoCrafterBlockEntity(BlockPos pos, BlockState state) {
         super(Registrar.BLOCK_ENTITY_TYPE, pos, state);
-        this.templateInventory = new TemplateInventory();
-        this.inputInventory = new InputInventory();
+
+        this.combinedStacks = new DefaultedStackView(Slots.INVENTORY_SIZE);
+        this.templateInventory = new TemplateInventory(this.combinedStacks.subList(0, Slots.INPUT_START));
+        this.inputInventory = new InputInventory(this.combinedStacks.subList(Slots.INPUT_START, Slots.OUTPUT_SLOT));
+        this.output = this.combinedStacks.subStack(Slots.OUTPUT_SLOT);
+
         this.recipeCache = null;
-        this.output = ItemStack.EMPTY;
         this.validation = validator.getValidation();
     }
 
@@ -113,14 +116,15 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, getInvStackList());
+        DefaultedList<ItemStack> invStackList = getInvStackList();
+        Inventories.writeNbt(nbt, invStackList);
     }
 
     // Deserialize the BlockEntity
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        DefaultedList<ItemStack> invStackList = DefaultedList.ofSize(Slots.INVENTORY_SIZE);
+        DefaultedList<ItemStack> invStackList = DefaultedList.ofSize(Slots.INVENTORY_SIZE, ItemStack.EMPTY);
         Inventories.readNbt(nbt, invStackList);
         setInvStackList(invStackList);
     }
@@ -134,7 +138,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
             if(outputAction != OutputAction.FAIL) {
                 DefaultedList<ItemStack> remainingStacks = recipe.getRemainder(this.inputInventory);
                 ItemStack slotRemainder;
-                for (int i = 0; i < RecipeInventory.Grid.SIZE; i++) {
+                for (int i = 0; i < CraftingView.Grid.SIZE; i++) {
                     slotRemainder = remainingStacks.get(i);
                     if (slotRemainder.isEmpty())
                         //decrement stack
@@ -145,9 +149,9 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
                 }
 
                 if (outputAction == OutputAction.SET)
-                    this.output = output;
+                    this.output.set(output);
                 else //outputAction == OutputAction.INCREMENT
-                    this.output.increment(output.getCount());
+                    this.output.get().increment(output.getCount());
             } else tryPlayFailSound();
         } else tryPlayFailSound();
     }
@@ -158,8 +162,8 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     protected OutputAction checkOutput(ItemStack output) {
-        if (this.output.isEmpty()) return OutputAction.SET;
-        else if (output.isItemEqual(this.output) && this.output.getMaxCount() >= this.output.getCount() + output.getCount())
+        if (this.output.isStackEmpty()) return OutputAction.SET;
+        else if (output.isItemEqual(this.output.get()) && this.output.getMaxCount() >= this.output.getCount() + output.getCount())
             //outputs are same item and output can fit in stack
             return OutputAction.INCREMENT;
 
@@ -187,7 +191,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     private boolean inputMisMatchesTemplate() {
-        for (int slot = 0; slot < RecipeInventory.Grid.SIZE; slot++)
+        for (int slot = 0; slot < CraftingView.Grid.SIZE; slot++)
             if (!matchesTemplate(slot, inputInventory.getStack(slot))) return true;
 
         return false;
@@ -203,13 +207,13 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        return AvAILABLE_SLOT_INDICES;
+        return AVAILABLE_INDICES;
     }
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, Direction dir) {
         int inputSlot = Slots.toInputSlot(slot);
-        return RecipeInventory.Grid.contains(inputSlot) &&
+        return CraftingView.Grid.contains(inputSlot) &&
                 this.inputInventory.getStack(slot).isEmpty() &&
                 this.inputInventory.isValid(slot, stack) &&
                 matchesTemplate(inputSlot, stack);
@@ -220,7 +224,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         if (slot == Slots.OUTPUT_SLOT || !Config.isSimpleMode()) return true;
 
         int inputSlot = Slots.toInputSlot(slot);
-        return RecipeInventory.Grid.contains(inputSlot) && !matchesTemplate(inputSlot, stack);
+        return CraftingView.Grid.contains(inputSlot) && !matchesTemplate(inputSlot, stack);
     }
 
     @Override
@@ -241,8 +245,8 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     public ItemStack removeStack(int slot) {
         final ItemStack removedStack;
         if (slot == Slots.OUTPUT_SLOT) {
-            removedStack = output;
-            output = ItemStack.EMPTY;
+            removedStack = output.get();
+            output.set(ItemStack.EMPTY);
         } else {
             if (slot >= Slots.INPUT_START)
                 removedStack = inputInventory.removeStack(Slots.toInputSlot(slot));
@@ -263,7 +267,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     protected void setStackWithoutCrafting(int slot, ItemStack stack) {
         // Calling super.setStack() would result in the output slot's contents being truncated
         // So we have to directly set the slot's contents
-        if (slot == Slots.OUTPUT_SLOT) output = stack;
+        if (slot == Slots.OUTPUT_SLOT) output.set(stack);
         else {
             if (slot >= Slots.INPUT_START)
                 inputInventory.setStack(Slots.toInputSlot(slot), stack);
@@ -276,26 +280,20 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     protected DefaultedList<ItemStack> getInvStackList() {
-        return Streams.concat(
-                templateInventory.getInvStackList().stream(),
-                inputInventory.getInvStackList().stream(),
-                Stream.of(output)
-        ).collect(Collectors.toCollection(DefaultedList::of));
+        return combinedStacks;
     }
 
     @Override
     protected void setInvStackList(DefaultedList<ItemStack> list) {
         final int size = list.size();
         int i;
-        for (i = 0; i < Slots.INPUT_START; i++) {
+        for (i = 0; i < Slots.INPUT_START; i++)
             templateInventory.setStack(i,i < size ? list.get(i) : ItemStack.EMPTY);
-        }
 
-        for (int iInput = 0; i < Slots.OUTPUT_SLOT; iInput++, i++) {
+        for (int iInput = 0; i < Slots.OUTPUT_SLOT; iInput++, i++)
             inputInventory.setStack(iInput, i < size ? list.get(i) : ItemStack.EMPTY);
-        }
 
-        output = i < size ? list.get(i) : ItemStack.EMPTY;
+        output.set(i < size ? list.get(i) : ItemStack.EMPTY);
     }
 
     @Override
@@ -305,7 +303,6 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     public ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-//        return AutoCrafterGuiDescription.create(syncId, playerInventory, this);
         return AutoCrafterGuiDescription.create(syncId, playerInventory, ScreenHandlerContext.create(world, pos));
     }
 
@@ -321,7 +318,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     public ItemStack getStack(int slot) {
-        if (slot == Slots.OUTPUT_SLOT) return output;
+        if (slot == Slots.OUTPUT_SLOT) return output.get();
         else if (slot >= Slots.INPUT_START) return inputInventory.getStack(Slots.toInputSlot(slot));
         else return templateInventory.getStack(slot);
     }
@@ -330,7 +327,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     public void clear() {
         templateInventory.clear();
         inputInventory.clear();
-        output = ItemStack.EMPTY;
+        output.set(ItemStack.EMPTY);
     }
 
     public int getComparatorOutput() {
@@ -345,7 +342,10 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     @Override
     public Stream<ItemStack> getTrimmedStream() {
-        return Streams.concat(templateInventory.getTrimmedStream(), inputInventory.getTrimmedStream(), Stream.of(output));
+        // don't include template because it's a 'ghost' inventory
+        Stream<ItemStack> trimmedInput = inputInventory.getTrimmedStream();
+        if (output.isStackEmpty()) return trimmedInput;
+        else return Streams.concat(trimmedInput, output.stream());
     }
 
     public enum OutputAction {
@@ -353,16 +353,16 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     public interface Slots {
-        int INPUT_START = RecipeInventory.Grid.SIZE;
+        int INPUT_START = CraftingView.Grid.SIZE;
         int PRE_FIRST_INPUT_SLOT = INPUT_START - 1;
 
-        int INPUT_PLUS_OUTPUT_SIZE = RecipeInventory.Grid.SIZE + 1;
+        int INPUT_PLUS_OUTPUT_SIZE = CraftingView.Grid.SIZE + 1;
 
-        int OUTPUT_SLOT = RecipeInventory.Grid.SIZE * 2;
+        int OUTPUT_SLOT = CraftingView.Grid.SIZE * 2;
         int INVENTORY_SIZE = OUTPUT_SLOT + 1;
 
         static int toInputSlot(int slot) {
-            return slot - RecipeInventory.Grid.SIZE;
+            return slot - CraftingView.Grid.SIZE;
         }
     }
 }

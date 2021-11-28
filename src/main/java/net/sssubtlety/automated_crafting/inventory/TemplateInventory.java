@@ -1,9 +1,13 @@
 package net.sssubtlety.automated_crafting.inventory;
 
 import net.minecraft.item.ItemStack;
-import net.sssubtlety.automated_crafting.Config;
+import net.minecraft.util.collection.DefaultedList;
 
-public class TemplateInventory extends RecipeInventory {
+public class TemplateInventory extends CraftingView {
+    public TemplateInventory(DefaultedList<ItemStack> stacks) {
+        super(stacks);
+    }
+
     @Override
     public boolean isValid(int slot, ItemStack stack) {
 //        return super.isValid(slot, stack) && Config.isSimpleMode();

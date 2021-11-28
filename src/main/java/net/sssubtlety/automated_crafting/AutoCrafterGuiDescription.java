@@ -13,7 +13,7 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.sssubtlety.automated_crafting.inventory.RecipeInventory;
+import net.sssubtlety.automated_crafting.inventory.CraftingView;
 import org.jetbrains.annotations.NotNull;
 
 import static net.sssubtlety.automated_crafting.AutomatedCrafting.NAMESPACE;
@@ -36,45 +36,44 @@ public class AutoCrafterGuiDescription extends SyncedGuiDescription {
 
     public static AutoCrafterGuiDescription create(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         final AutoCrafterGuiDescription instance = new AutoCrafterGuiDescription(syncId, playerInventory, inventory);
-        WPlainPanel root = createRoot(instance);
+        WPlainPanel root = new WPlainPanel();
+        root.setInsets(Insets.ROOT_PANEL);
+        instance.setRootPanel(root);
 
         if (Config.isSimpleMode()) populateSimple(inventory, root);
         else populateComplex(inventory, root);
 
-        finishSetup(instance, root);
+        root.add(instance.createPlayerInventoryPanel(), 0, PLAYER_INVENTORY_Y);
+        // this validation must be last!
+        root.validate(instance);
 
         return instance;
     }
 
     protected static void populateSimple(Inventory inventory, WPlainPanel root) {
         addLabeledTemplateGrid(root, inventory);
-        addInputGrid(root, SIMPLE_INPUT_X, inventory, RecipeInventory.Grid.SIZE);
+        addInputGrid(root, SIMPLE_INPUT_X, inventory);
         addOutputSlot(root, SIMPLE_OUTPUT_X, inventory);
         addLabel(root, ".input", INPUT_LABEL_X);
     }
 
     protected static void populateComplex(Inventory inventory, WPlainPanel root) {
-        addInputGrid(root, COMPLEX_INPUT_X, inventory, 0);
+        addInputGrid(root, COMPLEX_INPUT_X, inventory);
         addOutputSlot(root, COMPLEX_OUTPUT_X, inventory);
     }
 
-    @NotNull
-    protected static WPlainPanel createRoot(AutoCrafterGuiDescription instance) {
-        WPlainPanel root = new WPlainPanel();
-        root.setInsets(Insets.ROOT_PANEL);
-        instance.setRootPanel(root);
-        return root;
-    }
-    
     protected static void addLabeledTemplateGrid(WPlainPanel root, Inventory inventory) {
         root.add(createGrid(inventory, 0), TEMPLATE_X, GRID_Y);
         addLabel(root, ".template", TEMPLATE_LABEL_X);
     }
 
-    protected static void addInputGrid(WPlainPanel root, int x, Inventory inventory, int startIndex) {
+    protected static void addInputGrid(WPlainPanel root, int x, Inventory inventory) {
+        WItemSlot grid = createGrid(inventory, CraftingView.Grid.SIZE);
+//        if (Config.isSimpleMode()) grid.setFilter((stack) -> {
+//            return true;
+//        });
         root.add(
-                createGrid(inventory, startIndex)
-                        .setInsertingAllowed(!Config.isSimpleMode()),
+                grid.setInsertingAllowed(!Config.isSimpleMode()),
                 x,
                 GRID_Y
         );
@@ -85,8 +84,8 @@ public class AutoCrafterGuiDescription extends SyncedGuiDescription {
         return WItemSlot.of(
                 inventory,
                 startIndex,
-                RecipeInventory.Grid.WIDTH,
-                RecipeInventory.Grid.HEIGHT
+                CraftingView.Grid.WIDTH,
+                CraftingView.Grid.HEIGHT
         );
     }
 
@@ -97,12 +96,6 @@ public class AutoCrafterGuiDescription extends SyncedGuiDescription {
                 outputX,
                 OUTPUT_Y
         );
-    }
-
-    protected static void finishSetup(AutoCrafterGuiDescription instance, WPlainPanel root) {
-        root.add(instance.createPlayerInventoryPanel(), 0, PLAYER_INVENTORY_Y);
-        // this validation must be last!
-        root.validate(instance);
     }
 
     protected static void addLabel(WPlainPanel root, String s, int inputLabelX) {
