@@ -43,23 +43,21 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     static {
-        // An array of indices of slots that can be interacted with using automation
+        // An array of indices of slots that can be interacted with using automation,
+        //   in the order they should be interacted with
         AVAILABLE_INDICES = new int[Slots.INPUT_PLUS_OUTPUT_SIZE];
         // pull from output first
         AVAILABLE_INDICES[0] = Slots.OUTPUT_SLOT;
         for (int i = 1; i < Slots.INPUT_PLUS_OUTPUT_SIZE; i++) {
             // PRE_FIRST_INPUT_SLOT because we're starting at i = 1
-            // slotIndices[i] = i + FIRST_INPUT_SLOT - 1;
             AVAILABLE_INDICES[i] = i + Slots.PRE_FIRST_INPUT_SLOT;
         }
     }
 
-    private final DefaultedStackView combinedStacks;
-    private final TemplateInventory templateInventory;
-    private final InputInventory inputInventory;
-    private final DefaultedStackView.Singleton output;
-
-
+    protected final DefaultedStackView combinedStacks;
+    protected final TemplateInventory templateInventory;
+    protected final InputInventory inputInventory;
+    protected final DefaultedStackView.Singleton output;
 
     protected final Validator.Validation validation;
     protected Recipe<CraftingInventory> recipeCache;
@@ -76,9 +74,9 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         this.validation = validator.getValidation();
     }
 
-    protected boolean matchesTemplate(int slot, ItemStack inputStack) {
+    protected boolean misMatchesTemplate(int slot, ItemStack inputStack) {
         ItemStack templateStack = this.templateInventory.getStack(slot);
-        return templatePredicate(inputStack, templateStack);
+        return !templatePredicate(inputStack, templateStack);
     }
 
     @Override
@@ -199,7 +197,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
 
     private boolean inputMisMatchesTemplate() {
         for (int slot = 0; slot < CraftingView.Grid.SIZE; slot++)
-            if (!matchesTemplate(slot, inputInventory.getStack(slot))) return true;
+            if (misMatchesTemplate(slot, inputInventory.getStack(slot))) return true;
 
         return false;
     }
@@ -232,7 +230,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         if (slot == Slots.OUTPUT_SLOT || !Config.isSimpleMode()) return true;
 
         int inputSlot = Slots.toInputSlot(slot);
-        return CraftingView.Grid.contains(inputSlot) && !matchesTemplate(inputSlot, stack);
+        return CraftingView.Grid.contains(inputSlot) && misMatchesTemplate(inputSlot, stack);
     }
 
     @Override
