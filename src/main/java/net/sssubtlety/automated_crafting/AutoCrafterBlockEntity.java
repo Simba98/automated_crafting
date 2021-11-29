@@ -39,7 +39,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     public static final TranslatableText NAME = new TranslatableText("block.automated_crafting.auto_crafter");
 
     public static boolean templatePredicate(ItemStack inputStack, ItemStack templateStack) {
-        return templateStack.isItemEqual(inputStack) && ItemStack.areNbtEqual(templateStack, inputStack);
+        return templateStack.isOf(inputStack.getItem()) && ItemStack.areNbtEqual(templateStack, inputStack);
     }
 
     static {

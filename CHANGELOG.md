@@ -1,3 +1,4 @@
+- 1.4-b2 (28 Nov. 2021): Fixed critical bug that prevented recipes from crafting in simple mode if they contained any empty spaces.
 - 1.4-b1 (28 Nov. 2021): Updated for 1.18 snapshot (pre6). 
   - this is a **beta** version; there have been significant internal changes and so there's a higher-than-normal chance that bugs have been introduced
   - configs now take effect without the need for a restart!
