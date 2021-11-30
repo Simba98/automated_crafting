@@ -19,6 +19,8 @@ plugins {
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
+apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/depHelper.gradle'
+
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
@@ -142,60 +144,60 @@ dependencies {
 	devRuntime "net.dblsaiko:winwonders:${project.winwonders_version}"
 }
 
-def requiredMod_(String dep) {
-	dependencies.modImplementation(dep) {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude module: "nbt-crafting"
-	}
-}
-
-def requiredApi(String dep) {
-	dependencies.modApi(dep) {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude module: "nbt-crafting"
-	}
-}
-
-def bundle(String dep) {
-	dependencies.include(dep) {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude module: "nbt-crafting"
-	}
-}
-
-def devRuntime(String dep) {
-	dependencies.modRuntime (dep) {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude module: "nbt-crafting"
-	}
-}
-
-def optionalMod(boolean enabled, String dep) {
-	if (enabled) devRuntime(dep)
-
-	dependencies.modCompileOnly (dep) {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude module: "nbt-crafting"
-	}
-}
-
-def optionalApi(boolean enabled, String dep) {
-	if (enabled) devRuntime(dep)
-	dependencies.compileOnlyApi (dep) {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude module: "nbt-crafting"
-	}
-}
-
-def bundledMod(String dep) {
-	requiredMod_(dep)
-	bundle(dep)
-}
-
-def bundledApi(String dep) {
-	requiredApi(dep)
-	bundle(dep)
-}
+//def requiredMod_(String dep) {
+//	dependencies.modImplementation(dep) {
+//		exclude group: "net.fabricmc.fabric-api"
+//		exclude module: "nbt-crafting"
+//	}
+//}
+//
+//def requiredApi(String dep) {
+//	dependencies.modApi(dep) {
+//		exclude group: "net.fabricmc.fabric-api"
+//		exclude module: "nbt-crafting"
+//	}
+//}
+//
+//def bundle(String dep) {
+//	dependencies.include(dep) {
+//		exclude group: "net.fabricmc.fabric-api"
+//		exclude module: "nbt-crafting"
+//	}
+//}
+//
+//def devRuntime(String dep) {
+//	dependencies.modRuntime (dep) {
+//		exclude group: "net.fabricmc.fabric-api"
+//		exclude module: "nbt-crafting"
+//	}
+//}
+//
+//def optionalMod(boolean enabled, String dep) {
+//	if (enabled) devRuntime(dep)
+//
+//	dependencies.modCompileOnly (dep) {
+//		exclude group: "net.fabricmc.fabric-api"
+//		exclude module: "nbt-crafting"
+//	}
+//}
+//
+//def optionalApi(boolean enabled, String dep) {
+//	if (enabled) devRuntime(dep)
+//	dependencies.compileOnlyApi (dep) {
+//		exclude group: "net.fabricmc.fabric-api"
+//		exclude module: "nbt-crafting"
+//	}
+//}
+//
+//def bundledMod(String dep) {
+//	requiredMod_(dep)
+//	bundle(dep)
+//}
+//
+//def bundledApi(String dep) {
+//	requiredApi(dep)
+//	bundle(dep)
+//}
 
 processResources {
 	inputs.property "version", project.version
