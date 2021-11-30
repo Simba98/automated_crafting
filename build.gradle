@@ -19,7 +19,7 @@ plugins {
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
-apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/depHelper.gradle'
+apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/experimentation/depHelper.gradle'
 
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
