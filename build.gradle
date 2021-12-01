@@ -64,16 +64,6 @@ repositories {
 	}
 
 	maven {
-		name = "Ladysnake Libs"
-		url = "https://dl.bintray.com/ladysnake/libs"
-	}
-
-	maven {
-		name = "Spinnery"
-		url  "https://dl.bintray.com/spinnery/Spinnery"
-	}
-
-	maven {
 		name = "BuildCraft"
 		url = "https://mod-buildcraft.com/maven"
 	}
@@ -96,6 +86,16 @@ repositories {
 		url "https://oskarstrom.net/maven"
 		content { includeGroup "net.oskarstrom" }
 	}
+
+//	maven {
+//		name = "Ladysnake Libs"
+//		url = "https://dl.bintray.com/ladysnake/libs"
+//	}
+//
+//	maven {
+//		name = "Spinnery"
+//		url  "https://dl.bintray.com/spinnery/Spinnery"
+//	}
 
 	// catch-all mavens
 	maven {
@@ -130,9 +130,9 @@ dependencies {
 	bundledMod ("io.github.juuxel:libninepatch:${project.libninepatch_version}")
 
 	//Config library
-	requiredApi ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
+	requiredApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
 	// Config menu support
-	optionalMod (true, "com.terraformersmc:modmenu:${project.modmenu_version}")
+	optionalMod(true, "com.terraformersmc:modmenu:${project.modmenu_version}")
 	// translation fetching
 	bundledMod("de.guntram.mcmod:crowdin-translate:${project.crowdin_translate_version}")
 
@@ -143,61 +143,6 @@ dependencies {
 	// remember window size+pos in dev
 	devRuntime "net.dblsaiko:winwonders:${project.winwonders_version}"
 }
-
-//def requiredMod_(String dep) {
-//	dependencies.modImplementation(dep) {
-//		exclude group: "net.fabricmc.fabric-api"
-//		exclude module: "nbt-crafting"
-//	}
-//}
-//
-//def requiredApi(String dep) {
-//	dependencies.modApi(dep) {
-//		exclude group: "net.fabricmc.fabric-api"
-//		exclude module: "nbt-crafting"
-//	}
-//}
-//
-//def bundle(String dep) {
-//	dependencies.include(dep) {
-//		exclude group: "net.fabricmc.fabric-api"
-//		exclude module: "nbt-crafting"
-//	}
-//}
-//
-//def devRuntime(String dep) {
-//	dependencies.modRuntime (dep) {
-//		exclude group: "net.fabricmc.fabric-api"
-//		exclude module: "nbt-crafting"
-//	}
-//}
-//
-//def optionalMod(boolean enabled, String dep) {
-//	if (enabled) devRuntime(dep)
-//
-//	dependencies.modCompileOnly (dep) {
-//		exclude group: "net.fabricmc.fabric-api"
-//		exclude module: "nbt-crafting"
-//	}
-//}
-//
-//def optionalApi(boolean enabled, String dep) {
-//	if (enabled) devRuntime(dep)
-//	dependencies.compileOnlyApi (dep) {
-//		exclude group: "net.fabricmc.fabric-api"
-//		exclude module: "nbt-crafting"
-//	}
-//}
-//
-//def bundledMod(String dep) {
-//	requiredMod_(dep)
-//	bundle(dep)
-//}
-//
-//def bundledApi(String dep) {
-//	requiredApi(dep)
-//	bundle(dep)
-//}
 
 processResources {
 	inputs.property "version", project.version
@@ -317,8 +262,8 @@ def readFileFirstLine(String fileName) {
 	return firstLine
 }
 
-def readRecentChanges() {
-	def newVersionLineRegex = "^(- \\d+\\.\\d+(?:\\.\\d+)?(?:-[\\d+a-z]+)?" + " \\(\\d{1,2} [A-Z][a-z]{2}\\.? 2021\\):)" + "(.*)"
+def getRecentChanges(int versionsToRead) {
+	def newVersionLineRegex = "^(- \\d+\\.\\d+(?:\\.\\d+)?(?:-[\\d+a-z]+)?" + ")( \\(\\d{1,2} [A-Z][a-z]{2}\\.? 2021\\):)" + "(.*)"
 	Pattern newVersionLinePattern = Pattern.compile(newVersionLineRegex)
 
 	def changelogFile = file("CHANGELOG.md")
@@ -335,58 +280,80 @@ def readRecentChanges() {
 					lineMatcher.find()
 					if (!lineMatcher.group(1).startsWith(project.mod_version, 2))
 						throw new Exception("Version on first line of changelog doesn't match mod_version. ")
-					def trimmedLine = lineMatcher.group(2)
-					if (!trimmedLine.isEmpty())changes += trimmedLine + "\n"
+					def trimmedLine = lineMatcher.group(3)
+					if (!trimmedLine.isEmpty()) changes += trimmedLine + "\n"
 				} else throw new Exception("First line of changelog is not new version line. ")
-			} else if (!line.matches(newVersionLineRegex)) {
-				changes += line + "\n"
-			} else break
+			} else {
+				if (line.matches(newVersionLineRegex)) {
+					if (versionsToRead > 1) {
+						versionsToRead--
+
+						Matcher lineMatcher = newVersionLinePattern.matcher(line)
+						lineMatcher.find()
+						def trimmedLine = lineMatcher.group(2)
+						changes += "\nFrom " + trimmedLine + "\n"
+					} else break
+				} else changes += line + "\n"
+			}
 		}
 	}
 
-	changes += "\n\nA cumulative changelog can be found [here](https://gitlab.com/supersaiyansubtlety/${project.ext.mod_id}/-/blob/master/CHANGELOG.md)"
+	changes += "\nA cumulative changelog can be found [here](https://gitlab.com/supersaiyansubtlety/${project.ext.mod_id}/-/blob/master/CHANGELOG.md)"
 
 	return changes
 }
 
-//curseforge {
-//	def curseApiKey = readFileFirstLine("..\\CURSE_API_KEY.secret")
-//	if (curseApiKey != null) {
-//		apiKey = curseApiKey
-//		project {
-//			id = project.curseforge_id
-//			releaseType = mod_version.endsWith("a") ? "alpha" : mod_version.endsWith("b") ? "beta" : "release"
-//			project.ext.minecraft_version_list.each { String game_version -> addGameVersion game_version }
-//			addGameVersion "Fabric"
-//
-//			changelogType = "markdown"
-//			changelog = readRecentChanges()
-//			relations {
-//				requiredMod "fabric-api"
-//			}
-//			mainArtifact(remapJar.archivePath) { }
-//
-//			afterEvaluate {
-//				uploadTask.dependsOn("build")
-//			}
-//		}
-//	}
-//	options {
-//		forgeGradleIntegration = false
-//		javaVersionAutoDetect = false
-//	}
-//}
-//
-//task modrinth(type: TaskModrinthUpload) {
-//	token = readFileFirstLine("..\\MODRINTH_TOKEN.secret") // Use an environment property!
-//	projectId = project.modrinth_id
-//	versionNumber = project.version
-//	uploadFile = remapJar.archivePath // This is the java jar task
-//	changelog = readRecentChanges()
-//	project.ext.minecraft_version_list.each { String game_version -> addGameVersion(game_version) }
-//	addLoader('fabric')
-//}
-//
-//task publishMod {
-//	dependsOn = ["modrinth", "curseforge"]
-//}
+curseforge {
+	def curseApiKey = readFileFirstLine("..\\CURSE_API_KEY.secret")
+	if (curseApiKey != null) {
+		apiKey = curseApiKey
+		project {
+			id = project.curseforge_id
+			releaseType = mod_version.endsWith("a") ? "alpha" : mod_version.endsWith("b") ? "beta" : "release"
+			project.ext.minecraft_version_list.each { String game_version -> addGameVersion game_version }
+			addGameVersion "Fabric"
+
+			changelogType = "markdown"
+
+			def versionsToRead
+			if (project.hasProperty('numVersions')) versionsToRead = Integer.parseInt(project.numVersions)
+			else versionsToRead = 1
+
+			changelog = getRecentChanges(versionsToRead)
+			relations {
+				requiredDependency "fabric-api"
+				requiredDependency "cloth-config"
+			}
+			mainArtifact(remapJar.archivePath) { }
+
+			afterEvaluate {
+				uploadTask.dependsOn("build")
+			}
+		}
+	}
+	options {
+		debug = false
+		forgeGradleIntegration = false
+		javaVersionAutoDetect = false
+	}
+}
+
+task modrinth(type: TaskModrinthUpload) {
+	token = readFileFirstLine("..\\MODRINTH_TOKEN.secret")
+	projectId = project.modrinth_id
+	versionNumber = project.version
+	uploadFile = remapJar.archivePath // This is the java jar task
+	if (project.hasProperty('numVersions')) changelog = getRecentChanges(Integer.parseInt(project.numVersions))
+	else changelog = getRecentChanges(1)
+	project.ext.minecraft_version_list.each { String game_version -> addGameVersion(game_version) }
+	addLoader('fabric')
+}
+
+task publishMod {
+	dependsOn = ["modrinth", "curseforge"]
+}
+
+task printRecentChanges {
+	if (project.hasProperty('versionsToRead')) println getRecentChanges(Integer.parseInt(versionsToRead))
+	else println getRecentChanges(1)
+}
