@@ -1,3 +1,4 @@
+- 1.4.1 (13 Dec. 2021): Updated for 1.18.1
 - 1.4 (30 Nov. 2021): 
   - Updated for 1.18!
   - Configs can be adjusted through Mod Menu once again
