@@ -6,11 +6,14 @@ import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.TranslatableText;
 import net.sssubtlety.automated_crafting.AutoCrafterBlockEntity;
 import net.sssubtlety.automated_crafting.Config;
@@ -24,10 +27,28 @@ import static net.sssubtlety.automated_crafting.gui.AutoCrafterGuiDescription.Me
 public class AutoCrafterGuiDescription extends SyncedGuiDescription {
     public static final ArrayPropertyDelegate EMPTY_DELEGATE = new ArrayPropertyDelegate(0);
 
-    public static void init() { }
-    
+    public static void init() {
+    }
+
     protected AutoCrafterGuiDescription(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(Registrar.SCREEN_HANDLER_TYPE, syncId, playerInventory, inventory, EMPTY_DELEGATE);
+    }
+
+    @Override
+    public void onSlotClick(int slotNumber, int button, SlotActionType action, PlayerEntity player) {
+        if (
+            action == SlotActionType.QUICK_MOVE &&
+            Config.isSimpleMode()
+        ) {
+            if (slotNumber < AutoCrafterBlockEntity.Slots.INPUT_START) {
+                // prevent duping items when shift-clicking out of template
+                if (slotNumber >= 0) this.slots.get(slotNumber).setStack(ItemStack.EMPTY);
+                return;
+            } else
+                // prevent shift-clicking into auto crafter
+                if (slotNumber >= AutoCrafterBlockEntity.Slots.INVENTORY_SIZE) return;
+        }
+        super.onSlotClick(slotNumber, button, action, player);
     }
 
     public static AutoCrafterGuiDescription create(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {

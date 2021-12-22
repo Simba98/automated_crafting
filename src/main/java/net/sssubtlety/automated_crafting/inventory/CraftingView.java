@@ -119,7 +119,7 @@ public abstract class CraftingView extends CraftingInventory implements Trimmabl
         }
     }
 
-    static final class DummyHandler extends ScreenHandler {
+    private static final class DummyHandler extends ScreenHandler {
         protected DummyHandler() {
             super(null, 0);
         }

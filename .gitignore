@@ -26,6 +26,6 @@ bin/
 
 # fabric
 
-run/
+run-client/
 run-client/
 run-server/
