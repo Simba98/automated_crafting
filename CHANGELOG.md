@@ -1,3 +1,10 @@
+- 1.4.2 (21 Dec. 2021):
+
+  - Fixed nasty item duping when shift-clicking items out of the template in simple mode (thanks [Sirkilium](https://www.curseforge.com/members/sirkilium/) for reporting!)
+  - Fixed strange behavior where trying to shift-click items into the auto crafter in simple mode would fill any empty 
+    slots in the template with the shift-clicked item and put the item in the first empty slot of the input. 
+    Now items simply can't be shift-clicked into the auto crafter in simple mode. 
+
 - 1.4.1 (13 Dec. 2021): Updated for 1.18.1
 - 1.4 (30 Nov. 2021): 
   - Updated for 1.18!
