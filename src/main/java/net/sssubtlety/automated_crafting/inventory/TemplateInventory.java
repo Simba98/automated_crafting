@@ -29,7 +29,7 @@ public class TemplateInventory extends CraftingView {
 
     @Override
     public ItemStack removeStack(int slot) {
-        super.removeStack(slot);
+        setEmpty(slot);
         return ItemStack.EMPTY;
     }
 

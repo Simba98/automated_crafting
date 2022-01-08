@@ -1,3 +1,11 @@
+- 1.4.2 (21 Dec. 2021):
+
+  - Fixed nasty item duping when shift-clicking items out of the template in simple mode (thanks [Sirkilium](https://www.curseforge.com/members/sirkilium/) for reporting!)
+  - Fixed strange behavior where trying to shift-click items into the auto crafter in simple mode would fill any empty 
+    slots in the template with the shift-clicked item and put the item in the first empty slot of the input. 
+    Now items simply can't be shift-clicked into the auto crafter in simple mode. 
+
+- 1.4.1 (13 Dec. 2021): Updated for 1.18.1
 - 1.4 (30 Nov. 2021): 
   - Updated for 1.18!
   - Configs can be adjusted through Mod Menu once again
@@ -9,7 +17,7 @@
   - configs now take effect without the need for a restart!
   - in simple mode, the template inventory is now virtual: it doesn't actually contain items. It remembers and displays the items you click on it with, but you don't lose those items.
   - because of the change listed above **you will lose any items** placed in the template area *in previous versions*. If you want to keep your template items, you'll need to manually remove them **before updating**. 
-  - in simple mode, players can now place items into the input area if they match the template
+  - in simple mode, players can now place items into the input area if they match the template+
 
 - 1.3.24 (9 Jul. 2021): 
   

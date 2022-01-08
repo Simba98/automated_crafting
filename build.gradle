@@ -3,9 +3,6 @@ buildscript {
 		jcenter()
 		mavenCentral()
 	}
-	dependencies {
-		classpath "com.github.yuchi:npm-semver:1.0.0"
-	}
 }
 
 plugins {
@@ -97,7 +94,7 @@ repositories {
 //		url  "https://dl.bintray.com/spinnery/Spinnery"
 //	}
 
-	// catch-all mavens
+	// Broad mavens
 	maven {
 		name = "CurseMaven"
 		url = "https://www.cursemaven.com"
@@ -122,12 +119,12 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:" + project.loader_version
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:" + project.fabric_api_version
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
 
 	// GUI library
-	bundledMod ("io.github.cottonmc:LibGui:${project.libgui_version}")
+	bundledMod("io.github.cottonmc:LibGui:${project.libgui_version}")
 	// LibGui dependency
-	bundledMod ("io.github.juuxel:libninepatch:${project.libninepatch_version}")
+//	bundledMod("io.github.juuxel:libninepatch:${project.libninepatch_version}")
 
 	//Config library
 	requiredApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
@@ -137,11 +134,11 @@ dependencies {
 	bundledMod("de.guntram.mcmod:crowdin-translate:${project.crowdin_translate_version}")
 
 	// speed up launching in dev
-	devRuntime "com.github.astei:lazydfu:${project.lazy_dfu_version}"
-	devRuntime "net.oskarstrom:DashLoader:${project.dashloader_version}"
+	devRuntime("com.github.astei:lazydfu:${project.lazy_dfu_version}")
+	devRuntime("net.oskarstrom:DashLoader:${project.dashloader_version}")
 
 	// remember window size+pos in dev
-	devRuntime "net.dblsaiko:winwonders:${project.winwonders_version}"
+	devRuntime("net.dblsaiko:winwonders:${project.winwonders_version}")
 }
 
 processResources {
@@ -157,19 +154,18 @@ processResources {
 				"min_minecraft_version": project.ext.min_minecraft_semver,
 				"min_loader_version": project.min_loader_version,
 
-				"mod_id": project.mod_id,
-				"ModId": project.ModId,
+				"mod_id": project.ext.mod_id,
+				"ModId": project.ext.ModId,
 				"mod_name": project.mod_name,
 				"mod_description": project.mod_description,
 				"mod_version": project.version,
 				"maven_group": project.maven_group,
-				"archives_base_name": project.archives_base_name,
+				"archives_base_name": project.ext.archives_base_name,
 				"author": project.author,
 
-				"fabric_api_version": project.fabric_api_version,
 				"min_fabric_api_version": project.min_fabric_api_version,
 
-				"cloth_config_version": project.cloth_config_version,
+				"min_cloth_config_version": project.min_cloth_config_version,
 				"modmenu_version": project.modmenu_version,
 		])
 	}
@@ -237,10 +233,12 @@ static def snapshotToSemver(baseVersion, i, prefix) {
 static def betaOrRcToSemver(baseVersion, i) {
 	++i
 	def endPre = i + 3
-	def endRc = i + 2
 	if (baseVersion.substring(i, endPre) == "pre") return blindReplace(baseVersion, i, endPre, "beta.")
-	else if (baseVersion.substring(i, endRc) == "rc") return blindReplace(baseVersion, i, endRc, "rc.")
-	else throw illegalVersionFormatException()
+	else {
+		def endRc = i + 2
+		if (baseVersion.substring(i, endRc) == "rc") return blindReplace(baseVersion, i, endRc, "rc.")
+		else throw illegalVersionFormatException()
+	}
 }
 
 static def blindReplace(string, start, end, replacement) {
@@ -263,7 +261,7 @@ def readFileFirstLine(String fileName) {
 }
 
 def getRecentChanges(int versionsToRead) {
-	def newVersionLineRegex = "^(- \\d+\\.\\d+(?:\\.\\d+)?(?:-[\\d+a-z]+)?" + ")( \\(\\d{1,2} [A-Z][a-z]{2}\\.? 2021\\):)" + "(.*)"
+	def newVersionLineRegex = "^- (\\d+\\.\\d+(?:\\.\\d+)?(?:-[\\d+a-z]+)?)" + "( \\(\\d{1,2} [A-Z][a-z]{2}\\.? 2021\\):)" + "(.*)"
 	Pattern newVersionLinePattern = Pattern.compile(newVersionLineRegex)
 
 	def changelogFile = file("CHANGELOG.md")
@@ -278,7 +276,7 @@ def getRecentChanges(int versionsToRead) {
 				if (line.matches(newVersionLineRegex)) {
 					Matcher lineMatcher = newVersionLinePattern.matcher(line)
 					lineMatcher.find()
-					if (!lineMatcher.group(1).startsWith(project.mod_version, 2))
+					if (!lineMatcher.group(1).startsWith(project.mod_version))
 						throw new Exception("Version on first line of changelog doesn't match mod_version. ")
 					def trimmedLine = lineMatcher.group(3)
 					if (!trimmedLine.isEmpty()) changes += trimmedLine + "\n"
@@ -290,8 +288,7 @@ def getRecentChanges(int versionsToRead) {
 
 						Matcher lineMatcher = newVersionLinePattern.matcher(line)
 						lineMatcher.find()
-						def trimmedLine = lineMatcher.group(2)
-						changes += "\nFrom " + trimmedLine + "\n"
+						changes += "\nFrom " + (lineMatcher.group(1) + ":" + lineMatcher.group(3)) + "\n"
 					} else break
 				} else changes += line + "\n"
 			}
@@ -354,6 +351,6 @@ task publishMod {
 }
 
 task printRecentChanges {
-	if (project.hasProperty('versionsToRead')) println getRecentChanges(Integer.parseInt(versionsToRead))
+	if (project.hasProperty('numVersions')) println getRecentChanges(Integer.parseInt(numVersions))
 	else println getRecentChanges(1)
 }

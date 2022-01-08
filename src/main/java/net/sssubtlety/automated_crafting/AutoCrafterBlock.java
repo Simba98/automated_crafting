@@ -81,8 +81,7 @@ public class AutoCrafterBlock extends BlockWithEntity { //implements BlockEntity
                 world.setBlockState(pos, state.with(POWERED, true).with(ACTIVATED, true), 2);
 
                 if (world instanceof ServerWorld)
-                    // method_39279 -> createAndScheduleBlockTick
-                    world.method_39279(pos, this, 2);
+                    world.scheduleBlockTick(pos, this, 2);
 
             }
         } else

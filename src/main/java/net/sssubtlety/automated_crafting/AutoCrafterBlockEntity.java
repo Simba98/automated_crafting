@@ -50,7 +50,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         AVAILABLE_INDICES[0] = Slots.OUTPUT_SLOT;
         for (int i = 1; i < Slots.INPUT_PLUS_OUTPUT_SIZE; i++) {
             // PRE_FIRST_INPUT_SLOT because we're starting at i = 1
-            AVAILABLE_INDICES[i] = i + Slots.PRE_FIRST_INPUT_SLOT;
+            AVAILABLE_INDICES[i] = i + Slots.LAST_TEMPLATE_SLOT;
         }
     }
 
@@ -66,7 +66,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         super(Registrar.BLOCK_ENTITY_TYPE, pos, state);
 
         this.combinedStacks = new DefaultedStackView(Slots.INVENTORY_SIZE);
-        this.templateInventory = new TemplateInventory(this.combinedStacks.subList(0, Slots.INPUT_START));
+        this.templateInventory = new TemplateInventory(this.combinedStacks.subList(Slots.TEMPLATE_START, Slots.INPUT_START));
         this.inputInventory = new InputInventory(this.combinedStacks.subList(Slots.INPUT_START, Slots.OUTPUT_SLOT), this.templateInventory);
         this.output = this.combinedStacks.subStack(Slots.OUTPUT_SLOT);
 
@@ -92,14 +92,9 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     @Override
     public boolean isValid(int slot, ItemStack stack) {
         if (slot > Slots.OUTPUT_SLOT) return false;
-        else if (slot == Slots.OUTPUT_SLOT) {
-            return true;
-        } else {
-            if (slot >= Slots.INPUT_START)
-                return inputInventory.isValid(Slots.toInputSlot(slot), stack);
-            else
-                return templateInventory.isValid(slot, stack);
-        }
+        else if (slot == Slots.OUTPUT_SLOT) return true;
+        else if (slot >= Slots.INPUT_START) return inputInventory.isValid(Slots.toInputSlot(slot), stack);
+        else return templateInventory.isValid(slot, stack);
     }
 
     @Override
@@ -294,7 +289,7 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         final int size = list.size();
         int i;
         for (i = 0; i < Slots.INPUT_START; i++)
-            templateInventory.setStack(i,i < size ? list.get(i) : ItemStack.EMPTY);
+            templateInventory.setStack(i, i < size ? list.get(i) : ItemStack.EMPTY);
 
         for (int iInput = 0; i < Slots.OUTPUT_SLOT; iInput++, i++)
             inputInventory.setStack(iInput, i < size ? list.get(i) : ItemStack.EMPTY);
@@ -359,8 +354,9 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     }
 
     public interface Slots {
+        int TEMPLATE_START = 0;
         int INPUT_START = CraftingView.Grid.SIZE;
-        int PRE_FIRST_INPUT_SLOT = INPUT_START - 1;
+        int LAST_TEMPLATE_SLOT = INPUT_START - 1;
 
         int INPUT_PLUS_OUTPUT_SIZE = CraftingView.Grid.SIZE + 1;
 
