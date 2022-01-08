@@ -3,9 +3,6 @@ buildscript {
 		jcenter()
 		mavenCentral()
 	}
-	dependencies {
-		classpath "com.github.yuchi:npm-semver:1.0.0"
-	}
 }
 
 plugins {
@@ -210,16 +207,15 @@ processResources {
 				"min_minecraft_version": project.ext.min_minecraft_semver,
 				"min_loader_version": project.min_loader_version,
 
-				"mod_id": project.mod_id,
-				"ModId": project.ModId,
+				"mod_id": project.ext.mod_id,
+				"ModId": project.ext.ModId,
 				"mod_name": project.mod_name,
 				"mod_description": project.mod_description,
 				"mod_version": project.version,
 				"maven_group": project.maven_group,
-				"archives_base_name": project.archives_base_name,
+				"archives_base_name": project.ext.archives_base_name,
 				"author": project.author,
 
-				"fabric_api_version": project.fabric_api_version,
 				"min_fabric_api_version": project.min_fabric_api_version,
 
 				"min_cloth_config_version": project.min_cloth_config_version,
