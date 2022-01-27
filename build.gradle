@@ -314,7 +314,7 @@ def readFileFirstLine(String fileName) {
 }
 
 def getRecentChanges(int versionsToRead) {
-	def newVersionLineRegex = "^- (\\d+\\.\\d+(?:\\.\\d+)?(?:-[\\d+a-z]+)?)" + "( \\(\\d{1,2} [A-Z][a-z]{2}\\.? 2021\\):)" + "(.*)"
+	def newVersionLineRegex = "^- (\\d+\\.\\d+(?:\\.\\d+)?(?:-[\\d+a-z]+\\d*)?)" + "( \\(\\d{1,2} [A-Z][a-z]{2}\\.? 20\\d\\d\\):)" + "(.*)"
 	Pattern newVersionLinePattern = Pattern.compile(newVersionLineRegex)
 
 	def changelogFile = file("CHANGELOG.md")

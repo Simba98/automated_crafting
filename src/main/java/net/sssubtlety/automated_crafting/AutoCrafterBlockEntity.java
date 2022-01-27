@@ -1,6 +1,7 @@
 package net.sssubtlety.automated_crafting;
 
 import com.google.common.collect.Streams;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -129,12 +130,21 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
         setInvStackList(invStackList);
     }
 
+    @SuppressWarnings({"deprecation", "UnstableApiUsage"})
     public void tryCraft() {
+        try {
+            if (Transaction.getCurrentUnsafe() != null) return;
+            // if null, vanilla transfer and you can just update the stacks directly
+            // if not null, transfer api transfer. Do nothing
+        } catch (IllegalStateException ex) {
+            // means that this is the final markDirty, OK to update contents
+        }
+
         Optional<Recipe<CraftingInventory>> optRecipe = getRecipe();
         if(optRecipe.isPresent()) {
             Recipe<CraftingInventory> recipe = optRecipe.get();
-            ItemStack output = recipe.craft(templateInventory);
-            OutputAction outputAction = checkOutput(output);
+            ItemStack output1 = recipe.craft(templateInventory);
+            OutputAction outputAction = checkOutput(output1);
             if(outputAction != OutputAction.FAIL) {
                 DefaultedList<ItemStack> remainingStacks = recipe.getRemainder(this.inputInventory);
                 ItemStack slotRemainder;
@@ -149,11 +159,13 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
                 }
 
                 if (outputAction == OutputAction.SET)
-                    this.output.set(output);
+                    this.output.set(output1);
                 else //outputAction == OutputAction.INCREMENT
-                    this.output.get().increment(output.getCount());
+                    this.output.get().increment(output1.getCount());
             } else tryPlayFailSound();
         } else tryPlayFailSound();
+
+
     }
 
     protected void tryPlayFailSound() {
