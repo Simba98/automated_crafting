@@ -1,6 +1,5 @@
 buildscript {
 	repositories {
-		jcenter()
 		mavenCentral()
 	}
 }
@@ -84,17 +83,6 @@ repositories {
 		content { includeGroup "net.oskarstrom" }
 	}
 
-//	maven {
-//		name = "Ladysnake Libs"
-//		url = "https://dl.bintray.com/ladysnake/libs"
-//	}
-//
-//	maven {
-//		name = "Spinnery"
-//		url  "https://dl.bintray.com/spinnery/Spinnery"
-//	}
-
-	// Broad mavens
 	maven {
 		name = "CurseMaven"
 		url = "https://www.cursemaven.com"
@@ -105,40 +93,36 @@ repositories {
 		name = "JitPack"
 		url 'https://jitpack.io'
 	}
-
-	jcenter()
 }
 
 dependencies {
 	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:" + project.ext.minecraft_version
+	minecraft "com.mojang:minecraft:$project.ext.minecraft_version"
 //	mappings "net.fabricmc:yarn:" + project.yarn_mappings
 	mappings(loom.layered {
-		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${project.quilt_build_number}:v2"))
+		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:$project.ext.minecraft_version+build.$project.quilt_build_number:v2"))
 	})
-	modImplementation "net.fabricmc:fabric-loader:" + project.loader_version
+	modImplementation "net.fabricmc:fabric-loader:$project.loader_version"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}")
+	// Fabric API
+	modImplementation "net.fabricmc.fabric-api:fabric-api:$project.fabric_api_version"
 
 	// GUI library
-	bundledMod("io.github.cottonmc:LibGui:${project.libgui_version}")
-	// LibGui dependency
-//	bundledMod("io.github.juuxel:libninepatch:${project.libninepatch_version}")
+	bundledMod "io.github.cottonmc:LibGui:$project.libgui_version"
 
 	//Config library
-	requiredApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
+	requiredApi "me.shedaniel.cloth:cloth-config-fabric:$project.cloth_config_version"
 	// Config menu support
-	optionalMod(true, "com.terraformersmc:modmenu:${project.modmenu_version}")
+	optionalMod true, "com.terraformersmc:modmenu:$project.modmenu_version"
 	// translation fetching
-	bundledMod("de.guntram.mcmod:crowdin-translate:${project.crowdin_translate_version}")
+	bundledMod "de.guntram.mcmod:crowdin-translate:$project.crowdin_translate_version"
 
 	// speed up launching in dev
-	devRuntime("com.github.astei:lazydfu:${project.lazy_dfu_version}")
-	devRuntime("net.oskarstrom:DashLoader:${project.dashloader_version}")
+	devRuntime "com.github.astei:lazydfu:$project.lazy_dfu_version"
+	devRuntime "net.oskarstrom:DashLoader:$project.dashloader_version"
 
 	// remember window size+pos in dev
-	devRuntime("net.dblsaiko:winwonders:${project.winwonders_version}")
+	devRuntime "net.dblsaiko:winwonders:$project.winwonders_version"
 }
 
 processResources {
