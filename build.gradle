@@ -8,13 +8,7 @@ plugins {
 	id 'io.github.juuxel.loom-quiltflower-mini' version '1.2.1'
 }
 
-//apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/plugins.gradle'
-apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/depHelper.gradle'
-apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/extProps.gradle'
-apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/repositories.gradle'
-apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/publishing.gradle'
-apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/processResources.gradle'
-apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/fabricMod.gradle'
+apply from: "https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/master/applyAll.gradle"
 
 dependencies {
 	// Fabric API
