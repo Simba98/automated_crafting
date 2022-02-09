@@ -1,9 +1,14 @@
 buildscript {
 	repositories {
-		jcenter()
 		mavenCentral()
 	}
 }
+
+// FORMAT: maven.modrinth:<project-slug>:<file-version>
+// FORMAT: curse.maven:<descriptor>-<projectid>:<fileid>
+// FORMAT: com.github.<User>:<Repo>:<Tag/commit_hash>
+// see https://jitpack.io/
+
 
 plugins {
 	id 'fabric-loom' version '0.10-SNAPSHOT'
@@ -46,11 +51,13 @@ repositories {
 	maven {
 		name = 'Quilt'
 		url = 'https://maven.quiltmc.org/repository/release'
+		content { includeGroup "org.quiltmc" }
 	}
 
 	maven {
 		name = 'Quilt Snapshots'
 		url = 'https://maven.quiltmc.org/repository/snapshot'
+		content { includeGroup "org.quiltmc" }
 	}
 
 	maven {
@@ -66,19 +73,26 @@ repositories {
 	maven {
 		name = "guntram"
 		url = "https://minecraft.guntram.de/maven/"
+		content { includeGroup "de.guntram.mcmod" }
 	}
 
-	maven { url "https://maven.shedaniel.me/" }
+	maven {
+		url "https://maven.shedaniel.me/"
+		content { includeGroupByRegex "^me\\.shedaniel\\..+" }
+	}
 
 	maven {
 		name = "Terraformers"
 		url = "https://maven.terraformersmc.com/releases/"
 	}
 
-	maven { url = 'https://maven.dblsaiko.net' }
+	maven {
+		url = "https://maven.dblsaiko.net"
+		content {includeGroup "net.dblsaiko"}
+	}
 
 	maven {
-		url "https://oskarstrom.net/maven"
+		url = "https://oskarstrom.net/maven"
 		content { includeGroup "net.oskarstrom" }
 	}
 
@@ -94,21 +108,33 @@ repositories {
 
 	// Broad mavens
 	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content { includeGroup "maven.modrinth" }
+	}
+
+	maven {
 		name = "CurseMaven"
 		url = "https://www.cursemaven.com"
-		//FORMAT: curse.maven:<descriptor>-<projectid>:<fileid>
+		content { includeGroup "curse.maven" }
 	}
 
 	// JITPACK MUST BE LAST
 	maven {
 		name = "JitPack"
-		url 'https://jitpack.io'
+		url "https://jitpack.io"
+		content { includeGroupByRegex "^com\\.github\\..+" }
 	}
-
-	jcenter()
 }
 
 dependencies {
+	/**
+	 ** Broad Maven dependency formats:
+	 Modrinth: maven.modrinth:<project-slug>:<file-version>
+	 CurseMaven: curse.maven:<descriptor>-<projectid>:<fileid>
+	 JitPack: com.github.<User>:<Repo>:<Tag/commit_hash> , see https://jitpack.io/
+	 **/
+
 	//to change the versions see the gradle.properties file
 	minecraft ("com.mojang:minecraft:$project.ext.minecraft_version")
 //	mappings "net.fabricmc:yarn:" + project.yarn_mappings
@@ -137,10 +163,18 @@ dependencies {
 //	devRuntime("net.oskarstrom:DashLoader:$project.dashloader_version")
 
 	// remember window size+pos in dev
-	devRuntime("net.dblsaiko:winwonders:$project.winwonders_version")
+//	devRuntime("net.dblsaiko:winwonders:$project.winwonders_version")
 
 	//compat testing
-	optionalMod(true, "curse.maven:toms_storage_fabric-396826:3550445")
+	optionalMod true, "curse.maven:toms_storage_fabric-396826:3550445"
+	optionalMod true, "maven.modrinth:modern-industrialization:1.0.4"
+	optionalMod true, "curse.maven:industrial-revolution-391708:3599880"
+	optionalMod true, "maven.modrinth:fabric-language-kotlin:1.7.1+kotlin.1.6.10"
+	optionalMod true, "curse.maven:roughly-enough-items-310111:3638571"
+//	optionalMod true, "curse.maven:reborncore-3635133:237903"
+	include modApi("teamreborn:energy:2.2.0") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 }
 
 def requiredMod_(String dep) {
