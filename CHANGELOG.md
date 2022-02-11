@@ -1,3 +1,4 @@
+- 1.4.3 (10 Feb. 2022): Improved compatibility with modded item transferring.
 - 1.4.3-a1 (27 Jan. 2022): Check Transaction API context in hopes of fixing mod incompatibility show in #30
 - 1.4.2 (21 Dec. 2021):
 
