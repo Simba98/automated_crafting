@@ -19,6 +19,7 @@ plugins {
 	id 'io.github.juuxel.loom-quiltflower-mini' version '1.1.0'
 	id "com.modrinth.minotaur" version "1.1.0"
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
+	id "org.jetbrains.kotlin.jvm"
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -78,7 +79,7 @@ repositories {
 
 	maven {
 		url "https://maven.shedaniel.me/"
-		content { includeGroupByRegex "^me\\.shedaniel\\..+" }
+//		content { includeGroupByRegex "^me\\.shedaniel\\..+" }
 	}
 
 	maven {
@@ -95,6 +96,35 @@ repositories {
 		url = "https://oskarstrom.net/maven"
 		content { includeGroup "net.oskarstrom" }
 	}
+
+	maven {
+		url = 'https://maven.cafeteria.dev'
+		content {
+			includeGroup 'dev.cafeteria'
+		}
+	}
+
+	maven {
+		url = uri("https://storage.googleapis.com/devan-maven/")
+	}
+
+	maven {
+		url = "https://maven.jamieswhiteshirt.com/libs-release/"
+		content {
+			includeGroup "com.jamieswhiteshirt"
+		}
+	}
+
+	maven {
+		name = 'Ladysnake Mods'
+		url = 'https://ladysnake.jfrog.io/artifactory/mods'
+		content {
+			includeGroup 'io.github.ladysnake'
+			includeGroupByRegex 'io\\.github\\.onyxstudios.*'
+		}
+	}
+
+	maven { url 'https://maven.blamejared.com' }
 
 //	maven {
 //		name = "Ladysnake Libs"
@@ -166,15 +196,26 @@ dependencies {
 //	devRuntime("net.dblsaiko:winwonders:$project.winwonders_version")
 
 	//compat testing
-	optionalMod true, "curse.maven:toms_storage_fabric-396826:3550445"
-	optionalMod true, "maven.modrinth:modern-industrialization:1.0.4"
-	optionalMod true, "curse.maven:industrial-revolution-391708:3599880"
-	optionalMod true, "maven.modrinth:fabric-language-kotlin:1.7.1+kotlin.1.6.10"
-	optionalMod true, "curse.maven:roughly-enough-items-310111:3638571"
-//	optionalMod true, "curse.maven:reborncore-3635133:237903"
-	include modApi("teamreborn:energy:2.2.0") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
+//	optionalMod true, "curse.maven:toms_storage_fabric-396826:3550445"
+//	optionalMod true, "maven.modrinth:modern-industrialization:1.0.4"
+////	optionalMod true, "curse.maven:industrial-revolution-391708:3599880"
+//	optionalMod true, "maven.modrinth:fabric-language-kotlin:1.7.1+kotlin.1.6.10"
+//	optionalMod true, "curse.maven:roughly-enough-items-310111:3638571"
+//	optionalMod true, "dev.architectury:architectury-fabric:3.6.15"
+//	optionalMod true, "dev.cafeteria:fake-player-api:0.3.0"
+//	optionalMod true, "net.devtech:arrp:0.5.4"
+//	optionalApi true, "teamreborn:energy:2.2.0"
+//	optionalApi true, "me.shedaniel.cloth.api:cloth-api:3.1.61"
+//	optionalApi true, "me.shedaniel.cloth.api:cloth-armor-api-v1:1.6.59"
+//	optionalApi true, "io.github.ladysnake:PlayerAbilityLib:1.5.0"
+//	optionalApi true, "vazkii.patchouli:Patchouli:1.18.1-65-FABRIC"
+//	modImplementation("com.github.Draylar:magna:1.7.0-1.18") {
+//		exclude(group: "io.github.prospector")
+//		exclude(group: "me.shedaniel.cloth")
+//		exclude(group: "net.fabricmc.fabric-api")
+//	}
+//	optionalApi true, "com.github.Draylar:magna:${project.magna_version}", ["io.github.prospector", "me.shedaniel.cloth", "net.fabricmc.fabric-api"]
+
 }
 
 def requiredMod_(String dep) {
