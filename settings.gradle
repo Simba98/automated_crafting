@@ -1,3 +1,5 @@
+//apply from: 'https://gitlab.com/supersaiyansubtlety/mod_gradle_scripts/-/raw/parameterize/settings.gradle'
+//
 pluginManagement {
     repositories {
         maven {

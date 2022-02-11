@@ -39,7 +39,7 @@
     "cloth-config2": ">=${min_cloth_config_version}"
   },
   "recommends": {
-    "modmenu": ">=${modmenu_version}"
+    "modmenu": ">=${min_modmenu_version}"
   }
 
 }
