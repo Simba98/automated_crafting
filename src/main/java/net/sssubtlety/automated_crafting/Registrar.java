@@ -40,7 +40,7 @@ public interface Registrar {
 
     private static Block createAutoCrafterBlock() throws RuntimeException {
         try {
-            return new AutoCrafterBlock(FabricBlockSettings.of(new Material(MapColor.GRAY, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3).breakByHand(true)
+            return new AutoCrafterBlock(FabricBlockSettings.of(new Material(MapColor.GRAY, false, true, true, true, false, false, PistonBehavior.BLOCK)).strength(1, 3)
             );
         } catch (IllegalAccessException | InstantiationException e) {
             throw new RuntimeException("Unable to construct auto crafter block!", e);

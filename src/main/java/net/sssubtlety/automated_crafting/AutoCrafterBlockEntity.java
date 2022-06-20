@@ -2,6 +2,7 @@ package net.sssubtlety.automated_crafting;
 
 import com.google.common.collect.Streams;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -133,7 +134,15 @@ public class AutoCrafterBlockEntity extends LootableContainerBlockEntity impleme
     @SuppressWarnings({"deprecation", "UnstableApiUsage"})
     public void tryCraft() {
         try {
-            if (Transaction.getCurrentUnsafe() != null) return;
+            TransactionContext Context = Transaction.getCurrentUnsafe();
+            if (Context != null) {
+                Context.addOuterCloseCallback(
+                        (TransactionContext.Result result) -> {
+                            tryCraft();
+                        }
+                );
+                return;
+            }
             // if null, vanilla transfer and you can just update the stacks directly
             // if not null, transfer api transfer. Do nothing
         } catch (IllegalStateException ex) {

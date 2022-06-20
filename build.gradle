@@ -1,4 +1,16 @@
 //file:noinspection GroovyAssignabilityCheck
+buildscript {
+	dependencies {
+		classpath "de.guntram.mcmod:crowdin-translate:$project.crowdin_translate_version"
+	}
+	repositories {
+		maven {
+			name = 'CrowdinTranslate source'
+			url = "https://minecraft.guntram.de/maven/"
+		}
+	}
+}
+
 plugins {
 	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
@@ -59,7 +71,7 @@ dependencies {
 	bundledMod "io.github.cottonmc:LibGui:$project.libgui_version"
 
 	//Config library
-	requiredApi "me.shedaniel.cloth:cloth-config-fabric:$project.cloth_config_version"
+	modImplementation "me.shedaniel.cloth:cloth-config-fabric:$project.cloth_config_version"
 	// Config menu support
 	optionalMod true, "com.terraformersmc:modmenu:$project.modmenu_version"
 	// translation fetching
@@ -75,8 +87,9 @@ dependencies {
 	//compat testing
 //	optionalMod true, "curse.maven:toms_storage_fabric-396826:3550445"
 //	optionalMod true, "maven.modrinth:modern-industrialization:1.0.4"
-////	optionalMod true, "curse.maven:industrial-revolution-391708:3599880"
+//	optionalMod true, "curse.maven:industrial-revolution-391708:3759591"
 //	optionalMod true, "maven.modrinth:fabric-language-kotlin:1.7.1+kotlin.1.6.10"
+//	implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
 //	optionalMod true, "curse.maven:roughly-enough-items-310111:3638571"
 //	optionalMod true, "dev.architectury:architectury-fabric:3.6.15"
 //	optionalMod true, "dev.cafeteria:fake-player-api:0.3.0"
@@ -94,3 +107,4 @@ dependencies {
 //	optionalApi true, "com.github.Draylar:magna:1.7.0-1.18", ["io.github.prospector", "me.shedaniel.cloth", "net.fabricmc.fabric-api"], []
 }
 
+compileKotlin.kotlinOptions.jvmTarget = "16"
